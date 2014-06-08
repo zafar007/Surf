@@ -125,6 +125,7 @@
     if (retweet)
     {
         NSString *tweetText = retweet[@"text"];
+
         NSURL *url = [NSURL URLWithString:retweet[@"entities"][@"urls"][0][@"expanded_url"]];
         NSArray *indices = retweet[@"entities"][@"urls"][0][@"indices"];
         int index0 = [indices[0] intValue];
@@ -132,7 +133,7 @@
         NSString *host = url.host;
         NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
 
-        cell.textLabel.text = newTweetText;
+        cell.textLabel.text = [self cleanup:newTweetText];
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -148,6 +149,7 @@
     else
     {
         NSString *tweetText = tweet[@"text"];
+
         NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
         NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
         int index0 = [indices[0] intValue];
@@ -155,7 +157,7 @@
         NSString *host = url.host;
         NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
 
-        cell.textLabel.text = newTweetText;
+        cell.textLabel.text = [self cleanup:newTweetText];
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.textLabel.font = [UIFont systemFontOfSize:14];
@@ -167,6 +169,16 @@
     }
 
     return cell;
+}
+
+- (NSString *)cleanup:(NSString *)tweetText
+{
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
+    return tweetText;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
