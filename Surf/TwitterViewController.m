@@ -121,52 +121,32 @@
 
     NSDictionary *tweet = self.tweets[indexPath.row];
     NSDictionary *retweet = tweet[@"retweeted_status"];
-
     if (retweet)
     {
-        NSString *tweetText = retweet[@"text"];
-
-        NSURL *url = [NSURL URLWithString:retweet[@"entities"][@"urls"][0][@"expanded_url"]];
-        NSArray *indices = retweet[@"entities"][@"urls"][0][@"indices"];
-        int index0 = [indices[0] intValue];
-        int index1 = [indices[1] intValue];
-        NSString *host = url.host;
-        NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
-
-        cell.textLabel.text = [self cleanup:newTweetText];
-        cell.textLabel.numberOfLines = 0;
-        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-
-        cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:retweet[@"user"][@"profile_image_url"]]]];
-
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nRetweeted by: %@",retweet[@"user"][@"name"], tweet[@"user"][@"name"]];
+        tweet = retweet;
+    }
+    NSString *tweetText = tweet[@"text"];
+    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
+    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
+    int index0 = [indices[0] intValue];
+    int index1 = [indices[1] intValue];
+    NSString *host = url.host;
+    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
+    cell.textLabel.text = [self cleanup:newTweetText];
+    cell.textLabel.numberOfLines = 0;
+    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
+    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+    if (retweet)
+    {
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nRetweeted by: %@",tweet[@"user"][@"name"], self.tweets[indexPath.row][@"user"][@"name"]];
         cell.detailTextLabel.numberOfLines = 2;
-        cell.detailTextLabel.textColor = [UIColor grayColor];
-
-
     }
     else
     {
-        NSString *tweetText = tweet[@"text"];
-
-        NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
-        NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
-        int index0 = [indices[0] intValue];
-        int index1 = [indices[1] intValue];
-        NSString *host = url.host;
-        NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
-
-        cell.textLabel.text = [self cleanup:newTweetText];
-        cell.textLabel.numberOfLines = 0;
-        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-
-        cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
-
         cell.detailTextLabel.text = tweet[@"user"][@"name"];
-        cell.detailTextLabel.textColor = [UIColor grayColor];
     }
+    cell.detailTextLabel.textColor = [UIColor grayColor];
 
     return cell;
 }
