@@ -66,9 +66,14 @@
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
-    else
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
+    if (self.showingTools)
     {
-        NSLog(@"pressed cancel button or view did load");
         [self.omnibar becomeFirstResponder];
     }
 }
@@ -484,9 +489,16 @@
 
 -(NSString *)googleSearchString:(NSString *)userInput
 {
-    NSString *noSpaces = [userInput stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+//    NSString *noSpaces = [userInput stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    NSString *noSpaces = [self urlEncode:userInput];
     NSString *searchUrl = [NSString stringWithFormat:@"https://www.google.com/search?q=%@&cad=h", noSpaces];
     return searchUrl;
+}
+
+- (NSString *)urlEncode:(NSString *)unencodedString
+{
+    NSString *encodedString = (NSString *)CFBridgingRelease(CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef)unencodedString, NULL, (CFStringRef)@"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8 ));
+    return encodedString;
 }
 
 #pragma mark - Loading Web Page & Hiding/Shwoing Views

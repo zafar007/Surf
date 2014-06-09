@@ -136,7 +136,7 @@
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-//    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
 //    cell.imageView.layer.masksToBounds = YES;
 //    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
     cell.detailTextLabel.textColor = [UIColor grayColor];

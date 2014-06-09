@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface RootViewController : UIViewController
-
+- (void)saveTabs;
 @end
