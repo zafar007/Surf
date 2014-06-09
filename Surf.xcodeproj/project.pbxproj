@@ -22,6 +22,7 @@
 		8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA4FD19450DC200148137 /* RootViewController.m */; };
 		8E6CA50319450DCD00148137 /* Tab.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50019450DCD00148137 /* Tab.m */; };
 		8E6CA50419450DCD00148137 /* TwitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* TwitterViewController.m */; };
+		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		8E6CA50019450DCD00148137 /* Tab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab.m; sourceTree = "<group>"; };
 		8E6CA50119450DCD00148137 /* TwitterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterViewController.h; sourceTree = "<group>"; };
 		8E6CA50219450DCD00148137 /* TwitterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterViewController.m; sourceTree = "<group>"; };
+		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
+		8ED828E719466F9F004D779F /* SBTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +123,8 @@
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E6CA4FF19450DCD00148137 /* Tab.h */,
 				8E6CA50019450DCD00148137 /* Tab.m */,
+				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
+				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
 				8E6CA50119450DCD00148137 /* TwitterViewController.h */,
 				8E6CA50219450DCD00148137 /* TwitterViewController.m */,
 				8E6CA4FC19450DC200148137 /* RootViewController.h */,
@@ -258,6 +263,7 @@
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,
 				8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */,
 				8E6CA50419450DCD00148137 /* TwitterViewController.m in Sources */,
+				8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -455,6 +461,7 @@
 				8E6CA4F819450D8800148137 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8E6CA4F919450D8800148137 /* Build configuration list for PBXNativeTarget "SurfTests" */ = {
 			isa = XCConfigurationList;
@@ -463,6 +470,7 @@
 				8E6CA4FB19450D8800148137 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

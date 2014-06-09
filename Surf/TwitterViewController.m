@@ -6,14 +6,17 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
+#define CellIdentifier @"Cell"
+
 #import "TwitterViewController.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
-#import <QuartzCore/QuartzCore.h>
+#import "SBTableViewCell.h"
 
 @interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource>
 @property NSArray *dataSource;
 @property NSMutableArray *tweets;
+@property UITableViewCell *cellHolder;
 @end
 
 @implementation TwitterViewController
@@ -112,74 +115,20 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    SBTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    [self loadCell:cell atIndexPath:indexPath];
+    [cell layoutWithTweetFrom:self.tweets AtIndexPath:indexPath];
 
     return cell;
 }
 
-- (void)loadCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    NSDictionary *tweet = self.tweets[indexPath.row];
-    NSDictionary *retweet = tweet[@"retweeted_status"];
-    if (retweet)
-    {
-        tweet = retweet;
-    }
-    NSString *tweetText = tweet[@"text"];
-    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
-    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
-    int index0 = [indices[0] intValue];
-    int index1 = [indices[1] intValue];
-    NSString *host = url.host;
-    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
-    cell.textLabel.text = [self cleanup:newTweetText];
-    cell.textLabel.numberOfLines = 0;
-    cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
-    cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
-    cell.imageView.layer.masksToBounds = YES;
-    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
-    cell.detailTextLabel.textColor = [UIColor grayColor];
-    if (retweet)
-    {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nRetweeted by: %@",tweet[@"user"][@"name"], self.tweets[indexPath.row][@"user"][@"name"]];
-        cell.detailTextLabel.numberOfLines = 2;
-    }
-    else
-    {
-        cell.detailTextLabel.text = tweet[@"user"][@"name"];
-    }
-}
-
-- (NSString *)cleanup:(NSString *)tweetText
-{
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
-    return tweetText;
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//    int A = cell.textLabel.frame.size.height;
-//    int B = cell.detailTextLabel.frame.size.height;
-//    return A+B;
-
-    return 120;
+    return [SBTableViewCell heightForCellWithTweet:self.tweets[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
