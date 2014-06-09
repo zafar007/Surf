@@ -9,7 +9,7 @@
 #import "TwitterViewController.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
-//#import <QuartzCore/QuartzCore.h>
+#import <QuartzCore/QuartzCore.h>
 
 @interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource>
 @property NSArray *dataSource;
@@ -119,6 +119,13 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
+    [self loadCell:cell atIndexPath:indexPath];
+
+    return cell;
+}
+
+- (void)loadCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
     NSDictionary *tweet = self.tweets[indexPath.row];
     NSDictionary *retweet = tweet[@"retweeted_status"];
     if (retweet)
@@ -137,8 +144,8 @@
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
-//    cell.imageView.layer.masksToBounds = YES;
-//    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
+    cell.imageView.layer.masksToBounds = YES;
+    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
     cell.detailTextLabel.textColor = [UIColor grayColor];
     if (retweet)
     {
@@ -149,8 +156,6 @@
     {
         cell.detailTextLabel.text = tweet[@"user"][@"name"];
     }
-
-    return cell;
 }
 
 - (NSString *)cleanup:(NSString *)tweetText

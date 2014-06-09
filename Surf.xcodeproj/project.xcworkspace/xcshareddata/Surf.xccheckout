@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>9A66D6CE-655C-46BB-B04B-4B107CCC7F97</string>
+	<string>A75B3B2D-E756-4653-894E-80E49FCF9D86</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Surf</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>EE657432-6177-4553-9F57-361B9D61D94C</key>
-		<string>https://github.com/sapanbhuta/Surf.git</string>
+		<key>63B3033E-4AD7-420D-84F3-C46A6BA8D021</key>
+		<string>https://github.com/sapanbhuta/Surf</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Surf.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>EE657432-6177-4553-9F57-361B9D61D94C</key>
+		<key>63B3033E-4AD7-420D-84F3-C46A6BA8D021</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/sapanbhuta/Surf.git</string>
+	<string>https://github.com/sapanbhuta/Surf</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>EE657432-6177-4553-9F57-361B9D61D94C</string>
+	<string>63B3033E-4AD7-420D-84F3-C46A6BA8D021</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>EE657432-6177-4553-9F57-361B9D61D94C</string>
+			<string>63B3033E-4AD7-420D-84F3-C46A6BA8D021</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Surf</string>
 		</dict>
