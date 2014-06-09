@@ -136,7 +136,10 @@
     cell.textLabel.numberOfLines = 0;
     cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     cell.textLabel.font = [UIFont systemFontOfSize:14];
-    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+//    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+//    cell.imageView.layer.masksToBounds = YES;
+//    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
+    cell.detailTextLabel.textColor = [UIColor grayColor];
     if (retweet)
     {
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@\nRetweeted by: %@",tweet[@"user"][@"name"], self.tweets[indexPath.row][@"user"][@"name"]];
@@ -146,7 +149,6 @@
     {
         cell.detailTextLabel.text = tweet[@"user"][@"name"];
     }
-    cell.detailTextLabel.textColor = [UIColor grayColor];
 
     return cell;
 }
@@ -163,8 +165,6 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    cell.imageView.layer.masksToBounds = YES;
-//    cell.imageView.layer.cornerRadius = cell.imageView.frame.size.width / 2.0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -181,13 +181,15 @@
 {
     NSString *urlString = self.tweets[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
     NSLog(@"%@", urlString);
-    //add Tab and load urlString instead and got to tab.webview
+    [[NSUserDefaults standardUserDefaults] setObject:urlString forKey:@"twitterURL"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)unwind
 {
-    //bring up keyboard to omnibar
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

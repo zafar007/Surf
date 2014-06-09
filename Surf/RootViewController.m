@@ -54,6 +54,31 @@
     self.webCount = 0;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
+    NSString *urlString = [[NSUserDefaults standardUserDefaults] objectForKey:@"twitterURL"];
+
+    if (urlString)
+    {
+        [self addTab:urlString];
+        [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else
+    {
+        NSLog(@"pressed cancel button or view did load");
+        [self.omnibar becomeFirstResponder];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    NSLog(@"View did disapear");
+//    [self saveTabs];
+}
+
 #pragma mark - Setup Scene
 
 - (void)createToolsView
@@ -320,20 +345,18 @@
 {
     self.tabs = [[NSMutableArray alloc] init];
 
-//    NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedUrlStrings"];
-//    if (savedUrlStrings)
-//    {
-//        for (NSString *urlString in savedUrlStrings)
-//        {
-//            [self addTab:urlString];
-//        }
-//    }
-//    else
-//    {
-//        [self addTab:nil];
-//    }
-
-    [self addTab:nil];
+    NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedUrlStrings"];
+    if (savedUrlStrings)
+    {
+        for (NSString *urlString in savedUrlStrings)
+        {
+            [self addTab:urlString];
+        }
+    }
+    else
+    {
+        [self addTab:nil];
+    }
 }
 
 - (void)saveTabs
@@ -407,7 +430,6 @@
     [self.omnibar resignFirstResponder];
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.urlString = [self searchOrLoad:textField.text];
-    tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
     self.omnibar.text = @"";
     [self loadPage:tab];
     return true;
@@ -423,7 +445,7 @@
 
 -(NSString *)isURL:(NSString *)userInput
 {
-    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu"];
+    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to"];
 
     NSString *workingInput = @"";
 
@@ -522,6 +544,10 @@
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
     self.doneLoading = false;
+
+    Tab *tab = self.tabs[self.currentTabIndex];
+    tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
+
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025
                                                       target:self
                                                     selector:@selector(timerCallback)
