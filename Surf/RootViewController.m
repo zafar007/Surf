@@ -78,12 +78,6 @@
     }
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-    NSLog(@"View did disapear");
-//    [self saveTabs];
-}
-
 #pragma mark - Setup Scene
 
 - (void)createToolsView
