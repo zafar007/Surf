@@ -52,6 +52,7 @@
     [self createGestures];
     [self loadTabs];
     self.webCount = 0;
+    self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -129,7 +130,6 @@
 
 - (void)showTwitterLinks
 {
-    self.twitterViewController = [[TwitterViewController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
 }

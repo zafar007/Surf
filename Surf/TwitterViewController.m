@@ -21,12 +21,20 @@
 
 @implementation TwitterViewController
 
+- (id)init
+{
+    if (self = [super init])
+    {
+        [self getTimeLine];     //moved from below [self createTable]; in viewDidLoad for faster tweet fetching
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self createButtons];
     [self createTable];
-    [self getTimeLine];
 }
 
 - (void)createButtons
