@@ -28,14 +28,8 @@
         self.detailTextLabel.text = tweet[@"user"][@"name"];
         self.detailTextLabel.textColor = [UIColor grayColor];
     }
-    NSString *tweetText = tweet[@"text"];
-    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
-    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
-    int index0 = [indices[0] intValue];
-    int index1 = [indices[1] intValue];
-    NSString *host = url.host;
-    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
-    self.textLabel.text = [self cleanup:newTweetText];
+
+    self.textLabel.text = [self modifyTweetText:tweet];
     self.textLabel.numberOfLines = 0;
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.font = [UIFont systemFontOfSize:14];
@@ -45,6 +39,19 @@
                    placeholderImage:[UIImage imageNamed:@"bluewave"]];
     self.imageView.layer.masksToBounds = YES;
     self.imageView.layer.cornerRadius = 48/2;
+}
+
+- (NSString *)modifyTweetText:(NSDictionary *)tweet
+{
+    NSString *tweetText = tweet[@"text"];
+    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
+    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
+    int index0 = [indices[0] intValue];
+    int index1 = [indices[1] intValue];
+    NSString *host = url.host;
+    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
+
+    return [self cleanup:newTweetText];
 }
 
 - (NSString *)cleanup:(NSString *)tweetText
