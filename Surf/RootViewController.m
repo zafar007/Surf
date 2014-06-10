@@ -10,8 +10,13 @@
 #import "Tab.h"
 #import "TwitterViewController.h"
 
-@interface RootViewController () <UITextFieldDelegate, UIWebViewDelegate, UIGestureRecognizerDelegate>
+@interface RootViewController () <UITextFieldDelegate,
+                                    UIWebViewDelegate,
+                                    UIGestureRecognizerDelegate,
+                                    UICollectionViewDataSource,
+                                    UICollectionViewDelegateFlowLayout>
 @property UIView *toolsView;
+@property UICollectionView *tabsCollectionView;
 @property UITextField *omnibar;
 @property UIProgressView *progressBar;
 @property NSMutableArray *tabs;
@@ -46,6 +51,7 @@
 {
     [super viewDidLoad];
     [self createToolsView];
+    [self createCollectionView];
     [self createButtons];
     [self createOmnibar];
     [self createProgressBar];
@@ -132,6 +138,18 @@
     [self.view bringSubviewToFront:self.progressBar];
 }
 
+- (void)createCollectionView
+{
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 20, 320, 148)
+                                                 collectionViewLayout:flowLayout];
+    self.tabsCollectionView.dataSource = self;
+    self.tabsCollectionView.delegate = self;
+    self.tabsCollectionView.backgroundColor = [UIColor whiteColor];
+    [self.tabsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.toolsView addSubview:self.tabsCollectionView];
+}
+
 - (void)showTwitterLinks
 {
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
@@ -189,9 +207,6 @@
         [self share];
     }
 }
-
-//        [self showTwitterLinks];
-
 
 - (void)handleSwipeFromRight:(UISwipeGestureRecognizer *)sender
 {
@@ -392,14 +407,13 @@
     self.currentTabIndex = (int) self.tabs.count-1;
     self.refreshButton.enabled = NO;
 
-//    add newTab blank screenshot to collectionview tab
-
     if([urlString isKindOfClass:[NSString class]])
     {
-//        NSLog(@"urlString is: %@",urlString);
         newTab.urlString = [self searchOrLoad:urlString];
         [self loadPage:newTab];
     }
+
+    [self.tabsCollectionView reloadData];
 }
 
 - (void)switchToTab:(int)newTabIndex
@@ -415,15 +429,45 @@
     self.currentTabIndex = newTabIndex;
 //    newTab.webView.delegate = self; //redundant? Already set in addTab
 //    newTab.webView.scalesPageToFit = YES; //redundant?
-//    switch to newTab's saved screenshot to collectionview tab
 }
 
 - (void)removeTab:(Tab *)tab
 {
-//    first remove tab screnshot from collection view
     [tab.webView removeFromSuperview];
     [self.tabs removeObject:tab];
+    [self.tabsCollectionView reloadData];
     [self switchToTab:0];
+}
+
+#pragma mark - UICollectionView DataSource Methods
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return self.tabs.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+
+    if(!cell)
+    {
+        cell = [[UICollectionViewCell alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+                                                                      self.view.frame.origin.y,
+                                                                      80,
+                                                                      148)];
+    }
+
+    Tab *tab = self.tabs[self.currentTabIndex];
+    UIView *view = tab.screenshots[tab.currentImageIndex];
+    cell.backgroundView = view;
+    
+    return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(80, 148);
 }
 
 #pragma mark - UITextField Delegate Methods
