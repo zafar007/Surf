@@ -8,30 +8,9 @@
 
 #import "SBTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @implementation SBTableViewCell
-
-+ (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet
-{
-    //figure out height using data from Tweet
-
-//    CGFloat topPadding = 10;
-//    CGFloat sizeForThing = [@"" sizeWithAttributes:@{nil: nil}].height;
-//    sizeForThing + topPadding + somethingElse;
-
-    return 120;
-}
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self)
-    {
-        self.imageView.layer.masksToBounds = YES;
-        self.imageView.layer.cornerRadius = 48/2; //self.imageView.frame.size.width / 2.0;
-    }
-    return self;
-}
 
 - (void)layoutWithTweetFrom:(NSMutableArray *)tweets AtIndexPath:(NSIndexPath *)indexPath
 {
@@ -61,7 +40,11 @@
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.font = [UIFont systemFontOfSize:14];
 
-    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+//    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
+    [self.imageView setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]
+                   placeholderImage:[UIImage imageNamed:nil]];
+    self.imageView.layer.masksToBounds = YES;
+    self.imageView.layer.cornerRadius = 48/2;
 }
 
 - (NSString *)cleanup:(NSString *)tweetText
@@ -72,6 +55,17 @@
     tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
     tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
     return tweetText;
+}
+
++ (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet
+{
+    //figure out height using data from Tweet
+
+    //    CGFloat topPadding = 10;
+    //    CGFloat sizeForThing = [@"" sizeWithAttributes:@{nil: nil}].height;
+    //    sizeForThing + topPadding + somethingElse;
+
+    return 120;
 }
 
 @end
