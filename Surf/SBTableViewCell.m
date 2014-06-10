@@ -42,7 +42,7 @@
 
 //    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
     [self.imageView setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]
-                   placeholderImage:[UIImage imageNamed:nil]];
+                   placeholderImage:[UIImage imageNamed:@"bluewave"]];
     self.imageView.layer.masksToBounds = YES;
     self.imageView.layer.cornerRadius = 48/2;
 }
