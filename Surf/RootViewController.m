@@ -67,6 +67,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    else
+    {
+        [self showTools];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -398,7 +402,7 @@
     }
 }
 
-- (void)switchToTab:(NSInteger)newTabIndex
+- (void)switchToTab:(int)newTabIndex
 {
     if (newTabIndex != self.currentTabIndex)
     {

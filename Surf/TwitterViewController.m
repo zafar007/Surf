@@ -146,6 +146,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:urlString forKey:@"twitterURL"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self dismissViewControllerAnimated:YES completion:nil];
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 - (void)unwind
