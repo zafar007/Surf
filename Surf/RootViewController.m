@@ -484,6 +484,7 @@
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     self.currentTabIndex = newTabIndex;
     self.pageControl.currentPage = newTabIndex;
+    [self showWeb];
 //    newTab.webView.delegate = self; //redundant? Already set in addTab
 //    newTab.webView.scalesPageToFit = YES; //redundant?
 }
@@ -501,6 +502,23 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
+    if (self.tabs.count == 1)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-80/2, 40, self.view.frame.size.width, 148);
+    }
+    else if (self.tabs.count == 2)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-85, 40, self.view.frame.size.width, 148);
+    }
+    else if (self.tabs.count == 3)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-130, 40, self.view.frame.size.width, 148);
+    }
+    else
+    {
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
+    }
+
     return self.tabs.count;
 }
 
