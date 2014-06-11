@@ -200,8 +200,8 @@
 {
     if (sender.state == UIGestureRecognizerStateEnded)
     {
-//        CGPoint point = [sender locationInView:self.toolsView];
-//        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:point].item];
+        CGPoint point = [sender locationInView:self.toolsView];
+        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:point].item];
 
 //        for (UICollectionViewCell *cell in self.view.subviews)
 //        {
@@ -248,13 +248,18 @@
 
 - (void)handleSwipeFromLeft:(UISwipeGestureRecognizer *)sender
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    int indexOfToolsView = (int) [self.view.subviews indexOfObject:self.toolsView];
-    int indexOfWebView = (int) [self.view.subviews indexOfObject:tab.webView];
+    CGPoint point = [sender locationInView:self.view];
 
-    if (indexOfToolsView > indexOfWebView)
+    if (point.y > self.tabsCollectionView.frame.size.height)
     {
-        [self showWeb];
+        Tab *tab = self.tabs[self.currentTabIndex];
+        int indexOfToolsView = (int) [self.view.subviews indexOfObject:self.toolsView];
+        int indexOfWebView = (int) [self.view.subviews indexOfObject:tab.webView];
+
+        if (indexOfToolsView > indexOfWebView)
+        {
+            [self showWeb];
+        }
     }
 }
 
@@ -444,7 +449,9 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
-    NSLog(@"Switching to Tab: %i", newTabIndex);
+    Tab *tab = self.tabs[self.currentTabIndex];
+    NSLog(@"Switching to Tab: %i %@", newTabIndex, tab.urls[tab.currentImageIndex]);
+
 
     if (newTabIndex != self.currentTabIndex)
     {
@@ -455,6 +462,7 @@
     Tab *newTab = self.tabs[newTabIndex];
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     self.currentTabIndex = newTabIndex;
+
 //    newTab.webView.delegate = self; //redundant? Already set in addTab
 //    newTab.webView.scalesPageToFit = YES; //redundant?
 }
@@ -485,6 +493,8 @@
                                                                       80,
                                                                       148)];
     }
+
+    cell.backgroundView = nil;
 
     Tab *tab = self.tabs[self.currentTabIndex];
     UIView *view = tab.screenshots[tab.currentImageIndex];
