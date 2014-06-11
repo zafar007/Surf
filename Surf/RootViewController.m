@@ -217,7 +217,17 @@
     if (sender.state == UIGestureRecognizerStateEnded)
     {
         CGPoint point = [sender locationInView:self.toolsView];
-        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y)].item];
+        CGPoint adjPoint = CGPointMake(point.x + self.tabsCollectionView.contentOffset.x, point.y);
+        NSIndexPath *path = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint];
+        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+
+        NSLog(@"point %f/%f",point.x,point.y);
+        NSLog(@"adjPoint %f/%f",adjPoint.x,adjPoint.y);
+
+        if (CGRectContainsPoint(cell.frame, adjPoint))
+        {
+            [self switchToTab:path.item];
+        }
     }
 }
 
@@ -484,7 +494,11 @@
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     self.currentTabIndex = newTabIndex;
     self.pageControl.currentPage = newTabIndex;
-    [self showWeb];
+
+    if (tab.currentImageIndex > 0)
+    {
+        [self showWeb];
+    }
 //    newTab.webView.delegate = self; //redundant? Already set in addTab
 //    newTab.webView.scalesPageToFit = YES; //redundant?
 }
