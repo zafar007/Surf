@@ -9,6 +9,7 @@
 #import "RootViewController.h"
 #import "Tab.h"
 #import "TwitterViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
@@ -44,6 +45,7 @@
 @property UIButton *addButton;
 @property int webCount;
 @property TwitterViewController *twitterViewController;
+@property UIPageControl *pageControl;
 @end
 
 @implementation RootViewController
@@ -58,6 +60,7 @@
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
+    [self createPageControl];
     self.webCount = 0;
     self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
 }
@@ -99,7 +102,7 @@
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
     self.toolsView.backgroundColor = [UIColor whiteColor];
-    self.toolsView.alpha = 0.85;
+    self.toolsView.alpha = 0.9;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
 }
@@ -144,13 +147,24 @@
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 20, 320, 148)
+    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148)
                                                  collectionViewLayout:flowLayout];
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
     self.tabsCollectionView.backgroundColor = [UIColor whiteColor];
     [self.tabsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.toolsView addSubview:self.tabsCollectionView];
+}
+
+- (void)createPageControl
+{
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20)];
+    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    self.pageControl.backgroundColor = [UIColor whiteColor];
+    self.pageControl.currentPage = 0;
+    self.pageControl.numberOfPages = self.tabs.count;
+    [self.toolsView addSubview:self.pageControl];
 }
 
 - (void)showTwitterLinks
@@ -203,28 +217,32 @@
     if (sender.state == UIGestureRecognizerStateEnded)
     {
         CGPoint point = [sender locationInView:self.toolsView];
-        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:point].item];
-
-//        for (UICollectionViewCell *cell in self.view.subviews)
-//        {
-//            NSLog(@"%@",cell.frame);
-//
-//            if (CGRectContainsPoint(cell.frame, point))
-//            {
-//                NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
-//                [self switchToTab:path.item];
-//            }
-//        }
+        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y)].item];
     }
 }
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-
-    if (self.showingTools && tab.currentImageIndex > 0)
+    CGPoint point = [sender locationInView:self.toolsView];
+    if (point.y < self.tabsCollectionView.frame.size.height)
     {
-        [self share];
+//        int index = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y)].item;
+//        [self removeTab:self.tabs[index]];
+    }
+    else
+    {
+        if([self.omnibar isFirstResponder])
+        {
+            Tab *tab = self.tabs[self.currentTabIndex];
+            if (self.showingTools && tab.currentImageIndex > 0)
+            {
+                [self share];
+            }
+        }
+        else
+        {
+            [self.omnibar becomeFirstResponder];
+        }
     }
 }
 
@@ -438,6 +456,7 @@
     newTab.webView.delegate = self;
     newTab.webView.scalesPageToFit = YES;
     self.currentTabIndex = (int) self.tabs.count-1;
+    self.pageControl.numberOfPages = self.tabs.count;
     self.refreshButton.enabled = NO;
 
     if([urlString isKindOfClass:[NSString class]])
@@ -464,7 +483,7 @@
     Tab *newTab = self.tabs[newTabIndex];
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     self.currentTabIndex = newTabIndex;
-
+    self.pageControl.currentPage = newTabIndex;
 //    newTab.webView.delegate = self; //redundant? Already set in addTab
 //    newTab.webView.scalesPageToFit = YES; //redundant?
 }
@@ -473,8 +492,9 @@
 {
     [tab.webView removeFromSuperview];
     [self.tabs removeObject:tab];
-    [self.tabsCollectionView reloadData];
+    [self.tabsCollectionView reloadData];   //add animation here
     [self switchToTab:0];
+    self.pageControl.numberOfPages = self.tabs.count;
 }
 
 #pragma mark - UICollectionView DataSource Methods
@@ -496,12 +516,23 @@
                                                                       148)];
     }
 
-    cell.backgroundView = nil;
-    cell.backgroundColor = [UIColor blackColor];
-    Tab *tab = self.tabs[self.currentTabIndex];
+    cell.backgroundView = nil;  //UNSURE????
+
+    int trueIndex = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
+
+    cell.backgroundColor = [UIColor lightGrayColor];
+    Tab *tab = self.tabs[indexPath.item];
     UIView *view = tab.screenshots[tab.currentImageIndex];
+//    UIView *view = tab.screenshots[0];
     cell.backgroundView = view;
-    
+
+//    UIColor *appBlue = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    view.layer.borderWidth = 1.0f;
+
+    self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
+    NSLog(@"trueIndex %i",trueIndex);
+    NSLog(@"indexPath %i",indexPath.item);
     return cell;
 }
 
@@ -730,13 +761,21 @@
     if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
         self.omnibar.frame = self.omnnibarFrame;
-
         self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
                                           self.view.frame.origin.y,
                                           self.view.frame.size.width,
                                           self.view.frame.size.height);
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
+        self.pageControl.frame = CGRectMake(0, 188, 320, 20);
+
+        Tab *tab = self.tabs[self.currentTabIndex];
+        UIWebView *webView = tab.webView;
+        webView.frame = CGRectMake(self.view.frame.origin.x,
+                                   self.view.frame.origin.y,
+                                   self.view.frame.size.width,
+                                   self.view.frame.size.height);
     }
-    else
+    else    //landscape
     {
         self.omnibar.frame = CGRectMake((self.view.frame.size.height-self.omnibar.frame.size.width)/2,
                                         self.view.frame.origin.y+100,
@@ -747,6 +786,23 @@
                                           self.view.frame.origin.y,
                                           self.view.frame.size.width,
                                           self.view.frame.size.height);
+
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
+                                                   self.view.frame.size.height-148,
+                                                   self.view.frame.size.width,
+                                                   148);
+
+        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
+                                            self.view.frame.size.height-168,
+                                            self.view.frame.size.width,
+                                            20);
+
+        Tab *tab = self.tabs[self.currentTabIndex];
+        UIWebView *webView = tab.webView;
+        webView.frame = CGRectMake(self.view.frame.origin.x,
+                                   self.view.frame.origin.y,
+                                   self.view.frame.size.width,
+                                   self.view.frame.size.height);
     }
 }
 
