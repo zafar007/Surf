@@ -110,7 +110,7 @@
 - (void)createOmnibar
 {
     self.omnibar = [[UITextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
-                                                                 self.toolsView.frame.size.height/2-20,     //264
+                                                                 self.toolsView.frame.size.height/2,        //284
                                                                  self.toolsView.frame.size.width-(2*20),    //280
                                                                  2*20)];                                    //40
     self.omnnibarFrame = self.omnibar.frame;
@@ -843,7 +843,7 @@
                  forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
-    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-50);
+    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -852,7 +852,7 @@
               forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
-    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-50);
+    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.stopButton];
 
     self.twitterListButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -861,7 +861,7 @@
                      forControlEvents:UIControlEventTouchUpInside];
     [self.twitterListButton setImage:[UIImage imageNamed:@"twitter"] forState:UIControlStateNormal];
     self.twitterListButton.frame = CGRectMake(20, 20, 32, 32);
-    self.twitterListButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-50);
+    self.twitterListButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.twitterListButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -870,7 +870,7 @@
                      forControlEvents:UIControlEventTouchUpInside];
     [self.addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     self.addButton.frame = CGRectMake(20, 20, 32, 32);
-    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-50);
+    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.addButton];
 
     [self enableShare:NO Refresh:NO Stop:NO];
