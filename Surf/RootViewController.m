@@ -46,6 +46,7 @@
 @property int webCount;
 @property TwitterViewController *twitterViewController;
 @property UIPageControl *pageControl;
+@property BOOL removingTab;
 @end
 
 @implementation RootViewController
@@ -61,6 +62,7 @@
     [self createGestures];
     [self loadTabs];
     [self createPageControl];
+    self.removingTab = false;
     self.webCount = 0;
     self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
 }
@@ -162,6 +164,7 @@
     self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.pageControl.backgroundColor = [UIColor whiteColor];
+    self.pageControl.hidesForSinglePage = YES;
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = self.tabs.count;
     [self.toolsView addSubview:self.pageControl];
@@ -169,6 +172,7 @@
 
 - (void)showTwitterLinks
 {
+    [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
 }
@@ -214,20 +218,16 @@
 
 - (void)handleTapFrom:(UITapGestureRecognizer *)sender
 {
-    if (sender.state == UIGestureRecognizerStateEnded)
+    CGPoint point = [sender locationInView:self.toolsView];
+    if (point.y < (self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
+        && sender.state == UIGestureRecognizerStateEnded)
     {
-        CGPoint point = [sender locationInView:self.toolsView];
         CGPoint adjPoint = CGPointMake(point.x + self.tabsCollectionView.contentOffset.x, point.y);
-        NSIndexPath *path = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint];
-        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
 
-        NSLog(@"point %f/%f",point.x,point.y);
-        NSLog(@"adjPoint %f/%f",adjPoint.x,adjPoint.y);
+        NSLog(@"tapped on: %i",item);
 
-        if (CGRectContainsPoint(cell.frame, adjPoint))
-        {
-            [self switchToTab:path.item];
-        }
+        [self switchToTab:item];
     }
 }
 
@@ -236,8 +236,12 @@
     CGPoint point = [sender locationInView:self.toolsView];
     if (point.y < self.tabsCollectionView.frame.size.height)
     {
-//        int index = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y)].item;
-//        [self removeTab:self.tabs[index]];
+        CGPoint adjPoint = CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y);
+        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
+
+        NSLog(@"Trying to remove cell at index %i ?", item);
+        self.removingTab = true;
+        [self removeTab:self.tabs[item]];
     }
     else
     {
@@ -480,36 +484,40 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    NSLog(@"Switching to Tab: %i %@", newTabIndex, tab.urls[tab.currentImageIndex]);
-
-
-    if (newTabIndex != self.currentTabIndex)
+    if (!self.removingTab)
     {
-        Tab *oldTab = self.tabs[self.currentTabIndex];
-        [oldTab.webView removeFromSuperview];
-    }
+        NSLog(@"Request to switch to %i", newTabIndex);
 
-    Tab *newTab = self.tabs[newTabIndex];
-    [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
-    self.currentTabIndex = newTabIndex;
-    self.pageControl.currentPage = newTabIndex;
+        if (newTabIndex != self.currentTabIndex)
+        {
+            Tab *oldTab = self.tabs[self.currentTabIndex];
+            [oldTab.webView removeFromSuperview];
+        }
 
-    if (tab.currentImageIndex > 0)
-    {
-        [self showWeb];
+        Tab *newTab = self.tabs[newTabIndex];
+        [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
+        self.currentTabIndex = newTabIndex;
+        self.pageControl.currentPage = newTabIndex;
+
+        if (newTab.currentImageIndex > 0)
+        {
+            [self showWeb];
+        }
+        //    newTab.webView.delegate = self; //redundant? Already set in addTab
+        //    newTab.webView.scalesPageToFit = YES; //redundant?
     }
-//    newTab.webView.delegate = self; //redundant? Already set in addTab
-//    newTab.webView.scalesPageToFit = YES; //redundant?
 }
 
 - (void)removeTab:(Tab *)tab
 {
     [tab.webView removeFromSuperview];
     [self.tabs removeObject:tab];
+//    NSIndexPath *path = [NSIndexPath indexPathForItem:[self.tabs indexOfObject:tab] inSection:0];
+//    [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
     [self.tabsCollectionView reloadData];   //add animation here
     [self switchToTab:0];
     self.pageControl.numberOfPages = self.tabs.count;
+    self.removingTab = false;
 }
 
 #pragma mark - UICollectionView DataSource Methods
@@ -550,7 +558,7 @@
 
     cell.backgroundView = nil;  //UNSURE????
 
-    int trueIndex = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
+//    int trueIndex = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
 
     cell.backgroundColor = [UIColor lightGrayColor];
     Tab *tab = self.tabs[indexPath.item];
@@ -563,8 +571,8 @@
     view.layer.borderWidth = 1.0f;
 
     self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
-    NSLog(@"trueIndex %i",trueIndex);
-    NSLog(@"indexPath %i",indexPath.item);
+//    NSLog(@"trueIndex %i",trueIndex);
+//    NSLog(@"indexPath %i",indexPath.item);
     return cell;
 }
 
