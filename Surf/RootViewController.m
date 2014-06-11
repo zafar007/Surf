@@ -142,6 +142,8 @@
 - (void)createCollectionView
 {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+
     self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 20, 320, 148)
                                                  collectionViewLayout:flowLayout];
     self.tabsCollectionView.dataSource = self;
@@ -495,7 +497,7 @@
     }
 
     cell.backgroundView = nil;
-
+    cell.backgroundColor = [UIColor blackColor];
     Tab *tab = self.tabs[self.currentTabIndex];
     UIView *view = tab.screenshots[tab.currentImageIndex];
     cell.backgroundView = view;

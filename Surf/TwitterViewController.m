@@ -14,6 +14,7 @@
 #import "SBTableViewCell.h"
 
 @interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource>
+@property UITableView *tableView;
 @property NSArray *dataSource;
 @property NSMutableArray *tweets;
 @property UITableViewCell *cellHolder;

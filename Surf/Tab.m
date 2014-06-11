@@ -17,8 +17,7 @@
     self.urls = [NSMutableArray new];
     self.screenshots = [NSMutableArray new];
     [self.urls addObject:@"https://www.google.com"];
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
-    [self.screenshots addObject:imageView];
+    [self.screenshots addObject:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]]];
     self.currentImageIndex = 0;
 
     return self;

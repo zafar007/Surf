@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface TwitterViewController : UIViewController
-@property UITableView *tableView;
 @end
