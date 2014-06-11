@@ -24,6 +24,7 @@
 @property CGRect omnnibarFrame;
 @property UITapGestureRecognizer *tap;
 @property UISwipeGestureRecognizer *swipeUp;
+@property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
 @property UISwipeGestureRecognizer *swipeFromLeft;
 @property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
@@ -169,6 +170,11 @@
     [self.view addGestureRecognizer:self.swipeUp];
     self.swipeUp.delegate = self;
 
+    self.swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeDown:)];
+    self.swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:self.swipeDown];
+    self.swipeDown.delegate = self;
+
     self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
     self.swipeFromRight.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:self.swipeFromRight];
@@ -217,6 +223,14 @@
     if (self.showingTools && tab.currentImageIndex > 0)
     {
         [self share];
+    }
+}
+
+- (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
+{
+    if (self.showingTools)
+    {
+        [self.omnibar resignFirstResponder];
     }
 }
 
@@ -506,7 +520,7 @@
 
 -(NSString *)isURL:(NSString *)userInput
 {
-    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to"];
+    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly"];
 
     NSString *workingInput = @"";
 
@@ -704,6 +718,11 @@
     if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
         self.omnibar.frame = self.omnnibarFrame;
+
+        self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
+                                          self.view.frame.origin.y,
+                                          self.view.frame.size.width,
+                                          self.view.frame.size.height);
     }
     else
     {
@@ -711,6 +730,11 @@
                                         self.view.frame.origin.y+100,
                                         self.omnibar.frame.size.width,
                                         self.omnibar.frame.size.height);
+
+        self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
+                                          self.view.frame.origin.y,
+                                          self.view.frame.size.width,
+                                          self.view.frame.size.height);
     }
 }
 

@@ -42,8 +42,13 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                                                                                  target:self
                                                                                  action:@selector(unwind)];
-
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
+
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                                target:self
+                                                                                action:@selector(add)];
+    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+
 }
 
 - (void)createTable
@@ -149,11 +154,40 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
+#pragma mark - Button Handling
+
 - (void)unwind
 {
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)add
+{
+
+}
+
+#pragma mark - Landscape Layout Adjust
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+
+    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        self.tableView.frame = CGRectMake(self.view.frame.origin.x,
+                                          self.view.frame.origin.y,
+                                          self.view.frame.size.width,
+                                          self.view.frame.size.height);
+    }
+    else
+    {
+        self.tableView.frame = CGRectMake(self.view.frame.origin.x,
+                                          self.view.frame.origin.y,
+                                          self.view.frame.size.width,
+                                          self.view.frame.size.height);
+    }
 }
 
 @end
