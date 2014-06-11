@@ -194,7 +194,19 @@
 {
     if (sender.state == UIGestureRecognizerStateEnded)
     {
+//        CGPoint point = [sender locationInView:self.toolsView];
+//        [self switchToTab:[self.tabsCollectionView indexPathForItemAtPoint:point].item];
 
+//        for (UICollectionViewCell *cell in self.view.subviews)
+//        {
+//            NSLog(@"%@",cell.frame);
+//
+//            if (CGRectContainsPoint(cell.frame, point))
+//            {
+//                NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
+//                [self switchToTab:path.item];
+//            }
+//        }
     }
 }
 
@@ -418,6 +430,8 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
+    NSLog(@"Switching to Tab: %i", newTabIndex);
+
     if (newTabIndex != self.currentTabIndex)
     {
         Tab *oldTab = self.tabs[self.currentTabIndex];
