@@ -10,6 +10,7 @@
 #import "Tab.h"
 #import "TwitterViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "SBCollectionViewCell.h"
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
@@ -23,7 +24,8 @@
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
 @property CGRect omnnibarFrame;
-@property UITapGestureRecognizer *tap;
+//@property UITapGestureRecognizer *tap;
+@property UIPanGestureRecognizer *pan;
 @property UISwipeGestureRecognizer *swipeUp;
 @property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
@@ -181,9 +183,12 @@
 
 - (void)createGestures
 {
-    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
-    [self.view addGestureRecognizer:self.tap];
-    self.tap.delegate = self;
+//    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
+//    [self.view addGestureRecognizer:self.tap];
+//    self.tap.delegate = self;
+
+    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+    self.pan.delegate = self;
 
     self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
     self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
@@ -216,18 +221,31 @@
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
 }
 
-- (void)handleTapFrom:(UITapGestureRecognizer *)sender
+//- (void)handleTapFrom:(UITapGestureRecognizer *)sender
+//{
+//    CGPoint point = [sender locationInView:self.toolsView];
+//    if (point.y < (self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
+//        && sender.state == UIGestureRecognizerStateEnded)
+//    {
+//        CGPoint adjPoint = CGPointMake(point.x + self.tabsCollectionView.contentOffset.x, point.y);
+//        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
+//
+//        NSLog(@"tapped on: %i",item);
+//
+//        [self switchToTab:item];
+//    }
+//}
+
+- (void)handlePanFrom:(UIPanGestureRecognizer *)sender
 {
-    CGPoint point = [sender locationInView:self.toolsView];
-    if (point.y < (self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
-        && sender.state == UIGestureRecognizerStateEnded)
+    CGPoint translation = [sender translationInView:self.view];
+    CGPoint velocity = [sender velocityInView:self.view];
+
+    NSLog(@"pan w/\ntranslation: %f,%f\nvelocity: %f,%f",translation.x,translation.y,velocity.x,velocity.y);
+
+    if (translation.y < -50 || velocity.y < -200)
     {
-        CGPoint adjPoint = CGPointMake(point.x + self.tabsCollectionView.contentOffset.x, point.y);
-        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
-
-        NSLog(@"tapped on: %i",item);
-
-        [self switchToTab:item];
+        NSLog(@"removing");
     }
 }
 
@@ -236,12 +254,12 @@
     CGPoint point = [sender locationInView:self.toolsView];
     if (point.y < self.tabsCollectionView.frame.size.height)
     {
-        CGPoint adjPoint = CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y);
-        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
-
-        NSLog(@"Trying to remove cell at index %i ?", item);
-        self.removingTab = true;
-        [self removeTab:self.tabs[item]];
+//        CGPoint adjPoint = CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y);
+//        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
+//
+//        NSLog(@"Trying to remove cell at index %i ?", item);
+//        self.removingTab = true;
+//        [self removeTab:self.tabs[item]];
     }
     else
     {
@@ -556,20 +574,14 @@
                                                                       148)];
     }
 
+    [cell addGestureRecognizer:self.pan];
     cell.backgroundView = nil;  //UNSURE????
-
-//    int trueIndex = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
-
     cell.backgroundColor = [UIColor lightGrayColor];
     Tab *tab = self.tabs[indexPath.item];
     UIView *view = tab.screenshots[tab.currentImageIndex];
-//    UIView *view = tab.screenshots[0];
     cell.backgroundView = view;
-
-//    UIColor *appBlue = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     view.layer.borderColor = [UIColor lightGrayColor].CGColor;
     view.layer.borderWidth = 1.0f;
-
     self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
 //    NSLog(@"trueIndex %i",trueIndex);
 //    NSLog(@"indexPath %i",indexPath.item);
@@ -579,6 +591,14 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return CGSizeMake(80, 148);
+}
+
+#pragma mark - UICollectionView Delegate Methods
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"tapped on: %ld",indexPath.item);
+    [self switchToTab:(int)indexPath.item];
 }
 
 #pragma mark - UITextField Delegate Methods
