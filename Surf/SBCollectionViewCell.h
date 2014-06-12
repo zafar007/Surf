@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Tab.h"
 
 @interface SBCollectionViewCell : UICollectionViewCell
-
+- (id)initWithFrame:(CGRect)frame Tab:(Tab *)tab;
 @end

@@ -8,24 +8,35 @@
 
 #import "SBCollectionViewCell.h"
 
+@interface SBCollectionViewCell () <UIGestureRecognizerDelegate>
+@property UIPanGestureRecognizer *pan;
+@end
+
 @implementation SBCollectionViewCell
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame Tab:(Tab *)tab
 {
     self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
+    if (self)
+    {
+        self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
+        self.pan.delegate = self;
+        [self addGestureRecognizer:self.pan];
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)handlePanFrom:(UIPanGestureRecognizer *)sender
 {
-    // Drawing code
+    CGPoint translation = [sender translationInView:self];
+    CGPoint velocity = [sender velocityInView:self];
+
+    NSLog(@"pan w/\ntranslation: %f,%f\nvelocity: %f,%f",translation.x,translation.y,velocity.x,velocity.y);
+
+    if (translation.y < -50 || velocity.y < -200)
+    {
+        NSLog(@"removing");
+    }
 }
-*/
 
 @end

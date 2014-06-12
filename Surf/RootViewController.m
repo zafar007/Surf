@@ -156,7 +156,7 @@
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
     self.tabsCollectionView.backgroundColor = [UIColor whiteColor];
-    [self.tabsCollectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.tabsCollectionView registerClass:[SBCollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.toolsView addSubview:self.tabsCollectionView];
 }
 
@@ -186,9 +186,6 @@
 //    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
 //    [self.view addGestureRecognizer:self.tap];
 //    self.tap.delegate = self;
-
-    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
-    self.pan.delegate = self;
 
     self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
     self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
@@ -235,19 +232,6 @@
 //        [self switchToTab:item];
 //    }
 //}
-
-- (void)handlePanFrom:(UIPanGestureRecognizer *)sender
-{
-    CGPoint translation = [sender translationInView:self.view];
-    CGPoint velocity = [sender velocityInView:self.view];
-
-    NSLog(@"pan w/\ntranslation: %f,%f\nvelocity: %f,%f",translation.x,translation.y,velocity.x,velocity.y);
-
-    if (translation.y < -50 || velocity.y < -200)
-    {
-        NSLog(@"removing");
-    }
-}
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
@@ -564,27 +548,27 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+    SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
     if(!cell)
     {
-        cell = [[UICollectionViewCell alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+        cell = [[SBCollectionViewCell alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
                                                                       self.view.frame.origin.y,
                                                                       80,
-                                                                      148)];
+                                                                      148)
+                                                       Tab:self.tabs[indexPath.item]
+                ];
     }
 
-    [cell addGestureRecognizer:self.pan];
-    cell.backgroundView = nil;  //UNSURE????
-    cell.backgroundColor = [UIColor lightGrayColor];
     Tab *tab = self.tabs[indexPath.item];
-    UIView *view = tab.screenshots[tab.currentImageIndex];
-    cell.backgroundView = view;
-    view.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    view.layer.borderWidth = 1.0f;
-    self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
-//    NSLog(@"trueIndex %i",trueIndex);
-//    NSLog(@"indexPath %i",indexPath.item);
+
+    cell.backgroundColor = [UIColor lightGrayColor];
+    cell.backgroundView = tab.screenshots[tab.currentImageIndex];
+    cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    cell.backgroundView.layer.borderWidth = 1.0f;
+
+    [self pingPageControl];
+
     return cell;
 }
 
@@ -599,6 +583,13 @@
 {
     NSLog(@"tapped on: %ld",indexPath.item);
     [self switchToTab:(int)indexPath.item];
+}
+
+#pragma mark - Page Control
+
+- (void)pingPageControl
+{
+    self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
 }
 
 #pragma mark - UITextField Delegate Methods
@@ -703,6 +694,7 @@
 - (void)showTools
 {
     self.showingTools = true;
+    [self updateScreenshot];
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 
@@ -782,6 +774,8 @@
     [self enableShare:YES Refresh:YES Stop:NO];
 }
 
+#pragma mark - Screenshots
+
 - (void)takeScreenshot
 {
     Tab *tab = self.tabs[self.currentTabIndex];
@@ -801,6 +795,15 @@
 
             NSLog(@"index: %i url: %@",tab.currentImageIndex,tab.urls[tab.currentImageIndex]);
         }
+    }
+}
+
+- (void)updateScreenshot
+{
+    Tab *tab = self.tabs[self.currentTabIndex];
+    if (tab.currentImageIndex >0)
+    {
+        tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
     }
 }
 
