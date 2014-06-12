@@ -10,15 +10,20 @@
 
 @interface SBCollectionViewCell () <UIGestureRecognizerDelegate>
 @property UIPanGestureRecognizer *pan;
+@property CGPoint originalCenter;
+@property CGRect originalFrame;
 @end
 
 @implementation SBCollectionViewCell
 
-- (id)initWithFrame:(CGRect)frame Tab:(Tab *)tab
+- (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if (self)
     {
+        self.originalCenter = self.center;
+        self.originalFrame = self.frame;
+        self.backgroundColor = [UIColor lightGrayColor];
         self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
         self.pan.delegate = self;
         [self addGestureRecognizer:self.pan];
@@ -30,12 +35,31 @@
 {
     CGPoint translation = [sender translationInView:self];
     CGPoint velocity = [sender velocityInView:self];
-
     NSLog(@"pan w/\ntranslation: %f,%f\nvelocity: %f,%f",translation.x,translation.y,velocity.x,velocity.y);
 
-    if (translation.y < -50 || velocity.y < -200)
+    if (translation.y < 0)
     {
+        self.transform = CGAffineTransformMakeTranslation(0, translation.y);
+    }
+
+    if (translation.y < -100 || velocity.y < -1000)
+    {
+        //animate off screen transition
+        //self remove from superview
+        //return;
+        [self removeFromSuperview];
+        //call remove tab method in rootVC
+        return;
         NSLog(@"removing");
+    }
+
+    if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
+    {
+//            [ animateWithDuration:.1 animations:^{
+//            self.center = self.originalCenter;
+
+        self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
+//            }];
     }
 }
 

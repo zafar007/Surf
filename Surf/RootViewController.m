@@ -235,31 +235,24 @@
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
-    CGPoint point = [sender locationInView:self.toolsView];
-    if (point.y < self.tabsCollectionView.frame.size.height)
-    {
-//        CGPoint adjPoint = CGPointMake(point.x+self.tabsCollectionView.contentOffset.x, point.y);
-//        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
-//
-//        NSLog(@"Trying to remove cell at index %i ?", item);
-//        self.removingTab = true;
-//        [self removeTab:self.tabs[item]];
-    }
-    else
-    {
-        if([self.omnibar isFirstResponder])
-        {
-            Tab *tab = self.tabs[self.currentTabIndex];
-            if (self.showingTools && tab.currentImageIndex > 0)
-            {
-                [self share];
-            }
-        }
-        else
-        {
-            [self.omnibar becomeFirstResponder];
-        }
-    }
+    [self.omnibar becomeFirstResponder];
+
+//    CGPoint point = [sender locationInView:self.toolsView];
+//    if (point.y > self.tabsCollectionView.frame.size.height)
+//    {
+//        if([self.omnibar isFirstResponder])
+//        {
+//            Tab *tab = self.tabs[self.currentTabIndex];
+//            if (self.showingTools && tab.currentImageIndex > 0)
+//            {
+//                [self share];
+//            }
+//        }
+//        else
+//        {
+//            [self.omnibar becomeFirstResponder];
+//        }
+//    }
 }
 
 - (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
@@ -559,19 +552,13 @@
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
-    if(!cell)
-    {
-        cell = [[SBCollectionViewCell alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
-                                                                      self.view.frame.origin.y,
-                                                                      80,
-                                                                      148)
-                                                       Tab:self.tabs[indexPath.item]
-                ];
-    }
+//    if(!cell)
+//    {
+//        cell = [[SBCollectionViewCell alloc] init];
+//    }
 
     Tab *tab = self.tabs[indexPath.item];
 
-    cell.backgroundColor = [UIColor lightGrayColor];
     cell.backgroundView = tab.screenshots[tab.currentImageIndex];
     cell.backgroundView.layer.borderWidth = 1.0f;
 
@@ -890,14 +877,14 @@
 
 - (void)createButtons
 {
-//    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [self.shareButton addTarget:self
-//                         action:@selector(share)
-//               forControlEvents:UIControlEventTouchUpInside];
-//    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-//    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2);
-//    [self.toolsView addSubview:self.shareButton];
+    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.shareButton addTarget:self
+                         action:@selector(share)
+               forControlEvents:UIControlEventTouchUpInside];
+    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
+    self.shareButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*3/4);
+    [self.toolsView addSubview:self.shareButton];
 
     self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.refreshButton addTarget:self
