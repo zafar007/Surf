@@ -35,7 +35,8 @@
 {
     CGPoint translation = [sender translationInView:self];
     CGPoint velocity = [sender velocityInView:self];
-    NSLog(@"pan w/\ntranslation: %f,%f\nvelocity: %f,%f",translation.x,translation.y,velocity.x,velocity.y);
+    NSLog(@"pan translation: %f,%f",translation.x,translation.y);
+    NSLog(@"pan velocity: %f,%f",velocity.x,velocity.y);
 
     if (translation.y < 0)
     {
@@ -55,11 +56,7 @@
 
     if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
     {
-//            [ animateWithDuration:.1 animations:^{
-//            self.center = self.originalCenter;
-
         self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
-//            }];
     }
 }
 
