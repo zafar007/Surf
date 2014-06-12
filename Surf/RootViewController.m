@@ -106,7 +106,7 @@
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
     self.toolsView.backgroundColor = [UIColor whiteColor];
-    self.toolsView.alpha = 0.9;
+//    self.toolsView.alpha = 1;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
 }
@@ -494,12 +494,21 @@
         {
             Tab *oldTab = self.tabs[self.currentTabIndex];
             [oldTab.webView removeFromSuperview];
+
+            NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
+            UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+            cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+
         }
 
         Tab *newTab = self.tabs[newTabIndex];
         [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
         self.currentTabIndex = newTabIndex;
         self.pageControl.currentPage = newTabIndex;
+
+        NSIndexPath *path = [NSIndexPath indexPathForItem:newTabIndex inSection:0];
+        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
 
         if (newTab.currentImageIndex > 0)
         {
@@ -564,8 +573,16 @@
 
     cell.backgroundColor = [UIColor lightGrayColor];
     cell.backgroundView = tab.screenshots[tab.currentImageIndex];
-    cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
     cell.backgroundView.layer.borderWidth = 1.0f;
+
+    if (self.currentTabIndex == indexPath.item)
+    {
+        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+    }
+    else
+    {
+        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    }
 
     [self pingPageControl];
 
@@ -581,7 +598,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"tapped on: %ld",indexPath.item);
+    NSLog(@"tapped on: %i",(int)indexPath.item);
     [self switchToTab:(int)indexPath.item];
 }
 
