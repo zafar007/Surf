@@ -495,7 +495,7 @@
 
 - (void)removeTab:(UICollectionViewCell *)cell
 {
-    NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
+//    NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
 //    int index = path.item;
 //    Tab *tab = self.tabs[index];
 //    [tab.webView removeFromSuperview];
@@ -687,23 +687,18 @@
 {
     self.showingTools = true;
 
-    for (NSIndexPath *indexPath in [self.tabsCollectionView indexPathsForVisibleItems])
+    NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
+    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+    Tab *tab = self.tabs[self.currentTabIndex];
+    if (tab.currentImageIndex > 0)
     {
-        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:indexPath];
-        Tab *tab = self.tabs[indexPath.item];
-        if (self.currentTabIndex == indexPath.item && tab.currentImageIndex > 0)
-        {
-            UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
-            cell.backgroundView = screenshot;
-            tab.screenshots[tab.currentImageIndex] = screenshot;
-        }
-
-        [self pingBorderControlCell:cell AtIndexPath:indexPath];
+        UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
+        cell.backgroundView = screenshot;
+        tab.screenshots[tab.currentImageIndex] = screenshot;
     }
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 
-    Tab *tab = self.tabs[self.currentTabIndex];
     [self.view insertSubview:tab.webView belowSubview:self.toolsView];
     [self.omnibar becomeFirstResponder];
 }
