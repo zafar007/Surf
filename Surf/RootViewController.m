@@ -24,8 +24,6 @@
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
 @property CGRect omnnibarFrame;
-//@property UITapGestureRecognizer *tap;
-@property UIPanGestureRecognizer *pan;
 @property UISwipeGestureRecognizer *swipeUp;
 @property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
@@ -67,6 +65,7 @@
     self.removingTab = false;
     self.webCount = 0;
     self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -183,10 +182,6 @@
 
 - (void)createGestures
 {
-//    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
-//    [self.view addGestureRecognizer:self.tap];
-//    self.tap.delegate = self;
-
     self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
     self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
     [self.view addGestureRecognizer:self.swipeUp];
@@ -218,41 +213,29 @@
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
 }
 
-//- (void)handleTapFrom:(UITapGestureRecognizer *)sender
-//{
-//    CGPoint point = [sender locationInView:self.toolsView];
-//    if (point.y < (self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
-//        && sender.state == UIGestureRecognizerStateEnded)
-//    {
-//        CGPoint adjPoint = CGPointMake(point.x + self.tabsCollectionView.contentOffset.x, point.y);
-//        int item = [self.tabsCollectionView indexPathForItemAtPoint:adjPoint].item;
-//
-//        NSLog(@"tapped on: %i",item);
-//
-//        [self switchToTab:item];
-//    }
-//}
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return YES;
+}
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
-    [self.omnibar becomeFirstResponder];
-
-//    CGPoint point = [sender locationInView:self.toolsView];
-//    if (point.y > self.tabsCollectionView.frame.size.height)
-//    {
-//        if([self.omnibar isFirstResponder])
-//        {
-//            Tab *tab = self.tabs[self.currentTabIndex];
-//            if (self.showingTools && tab.currentImageIndex > 0)
-//            {
-//                [self share];
-//            }
-//        }
-//        else
-//        {
-//            [self.omnibar becomeFirstResponder];
-//        }
-//    }
+    CGPoint point = [sender locationInView:self.toolsView];
+    if (point.y > self.tabsCollectionView.frame.size.height)
+    {
+        if([self.omnibar isFirstResponder])
+        {
+            Tab *tab = self.tabs[self.currentTabIndex];
+            if (self.showingTools && tab.currentImageIndex > 0)
+            {
+                [self share];
+            }
+        }
+        else
+        {
+            [self.omnibar becomeFirstResponder];
+        }
+    }
 }
 
 - (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
@@ -481,7 +464,7 @@
 {
     if (!self.removingTab)
     {
-        NSLog(@"Request to switch to %i", newTabIndex);
+        NSLog(@"switchToTab");
 
         if (newTabIndex != self.currentTabIndex)
         {
@@ -507,21 +490,26 @@
         {
             [self showWeb];
         }
-        //    newTab.webView.delegate = self; //redundant? Already set in addTab
-        //    newTab.webView.scalesPageToFit = YES; //redundant?
     }
 }
 
-- (void)removeTab:(Tab *)tab
+- (void)removeTab:(UICollectionViewCell *)cell
 {
-    [tab.webView removeFromSuperview];
-    [self.tabs removeObject:tab];
-//    NSIndexPath *path = [NSIndexPath indexPathForItem:[self.tabs indexOfObject:tab] inSection:0];
+    NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
+//    int index = path.item;
+//    Tab *tab = self.tabs[index];
+//    [tab.webView removeFromSuperview];
+//    [cell removeFromSuperview];
+//    [self.tabs removeObjectAtIndex:index];
 //    [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
-    [self.tabsCollectionView reloadData];   //add animation here
-    [self switchToTab:0];
-    self.pageControl.numberOfPages = self.tabs.count;
-    self.removingTab = false;
+//    [self switchToTab:0];
+//    self.pageControl.numberOfPages = self.tabs.count;
+//    self.removingTab = false;
+//
+//    if (index == 0)
+//    {
+//        [self addTab:nil];
+//    }
 }
 
 #pragma mark - UICollectionView DataSource Methods
@@ -552,25 +540,10 @@
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
-//    if(!cell)
-//    {
-//        cell = [[SBCollectionViewCell alloc] init];
-//    }
-
     Tab *tab = self.tabs[indexPath.item];
-
+    NSLog(@"cellForItem: %i", indexPath.item);
     cell.backgroundView = tab.screenshots[tab.currentImageIndex];
-    cell.backgroundView.layer.borderWidth = 1.0f;
-
-    if (self.currentTabIndex == indexPath.item)
-    {
-        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
-    }
-    else
-    {
-        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    }
-
+    [self pingBorderControlCell:cell AtIndexPath:indexPath];
     [self pingPageControl];
 
     return cell;
@@ -585,8 +558,23 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"tapped on: %i",(int)indexPath.item);
     [self switchToTab:(int)indexPath.item];
+}
+
+#pragma mark - Border Control
+
+- (void)pingBorderControlCell:(UICollectionViewCell *)cell AtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundView.layer.borderWidth = 1.0f;
+
+    if (self.currentTabIndex == indexPath.item)
+    {
+        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+    }
+    else
+    {
+        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    }
 }
 
 #pragma mark - Page Control
@@ -698,7 +686,20 @@
 - (void)showTools
 {
     self.showingTools = true;
-    [self updateScreenshot];
+
+    for (NSIndexPath *indexPath in [self.tabsCollectionView indexPathsForVisibleItems])
+    {
+        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:indexPath];
+        Tab *tab = self.tabs[indexPath.item];
+        if (self.currentTabIndex == indexPath.item && tab.currentImageIndex > 0)
+        {
+            UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
+            cell.backgroundView = screenshot;
+            tab.screenshots[tab.currentImageIndex] = screenshot;
+        }
+
+        [self pingBorderControlCell:cell AtIndexPath:indexPath];
+    }
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
 
@@ -802,15 +803,6 @@
     }
 }
 
-- (void)updateScreenshot
-{
-    Tab *tab = self.tabs[self.currentTabIndex];
-    if (tab.currentImageIndex >0)
-    {
-        tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
-    }
-}
-
 #pragma mark - Low Memory Alert
 
 - (void)didReceiveMemoryWarning
@@ -877,14 +869,14 @@
 
 - (void)createButtons
 {
-    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.shareButton addTarget:self
-                         action:@selector(share)
-               forControlEvents:UIControlEventTouchUpInside];
-    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-    self.shareButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*3/4);
-    [self.toolsView addSubview:self.shareButton];
+//    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.shareButton addTarget:self
+//                         action:@selector(share)
+//               forControlEvents:UIControlEventTouchUpInside];
+//    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+//    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*3/4);
+//    [self.toolsView addSubview:self.shareButton];
 
     self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.refreshButton addTarget:self

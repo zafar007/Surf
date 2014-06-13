@@ -45,13 +45,10 @@
 
     if (translation.y < -100 || velocity.y < -1000)
     {
-        //animate off screen transition
-        //self remove from superview
-        //return;
-        [self removeFromSuperview];
-        //call remove tab method in rootVC
-        return;
         NSLog(@"removing");
+        self.transform = CGAffineTransformMakeTranslation(0, -150);     //slowdown
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
+        return;
     }
 
     if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
