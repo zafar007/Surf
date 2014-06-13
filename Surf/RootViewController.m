@@ -65,7 +65,6 @@
     [self createGestures];
     [self loadTabs];
     [self createPageControl];
-    self.removingTab = false;
     self.webCount = 0;
     self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"TwitterBack" object:nil];
@@ -259,7 +258,6 @@
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            NSLog(@"going forward, current img index is: %i",tab.currentImageIndex);
             tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
             self.currentScreenshot = tab.screenshots[tab.currentImageIndex];
             self.futureScreenshot = tab.screenshots[tab.currentImageIndex+1];
@@ -322,7 +320,6 @@
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            NSLog(@"going back, current img index is: %i",tab.currentImageIndex);
             tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
             self.currentScreenshot = tab.screenshots[tab.currentImageIndex];
             self.pastScreenshot = tab.screenshots[tab.currentImageIndex-1];
@@ -392,7 +389,6 @@
     else
     {
         [self addTab:nil];
-        NSLog(@"adding tab and not count is: %i",self.tabs.count);
     }
 }
 
@@ -438,34 +434,29 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
-    if (!self.removingTab)
+    if (newTabIndex != self.currentTabIndex)
     {
-        NSLog(@"switchToTab");
+        Tab *oldTab = self.tabs[self.currentTabIndex];
+        [oldTab.webView removeFromSuperview];
 
-        if (newTabIndex != self.currentTabIndex)
-        {
-            Tab *oldTab = self.tabs[self.currentTabIndex];
-            [oldTab.webView removeFromSuperview];
-
-            NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
-            UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-            cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-
-        }
-
-        Tab *newTab = self.tabs[newTabIndex];
-        [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
-        self.currentTabIndex = newTabIndex;
-        self.pageControl.currentPage = newTabIndex;
-
-        NSIndexPath *path = [NSIndexPath indexPathForItem:newTabIndex inSection:0];
+        NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
         UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
 
-        if (newTab.currentImageIndex > 0)
-        {
-            [self showWeb];
-        }
+    }
+
+    Tab *newTab = self.tabs[newTabIndex];
+    [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
+    self.currentTabIndex = newTabIndex;
+    self.pageControl.currentPage = newTabIndex;
+
+    NSIndexPath *path = [NSIndexPath indexPathForItem:newTabIndex inSection:0];
+    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+    cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+
+    if (newTab.currentImageIndex > 0)
+    {
+        [self showWeb];
     }
 }
 
@@ -473,24 +464,19 @@
 {
     UICollectionViewCell *cell = notification.object;
     NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
-    int index = path.item;
+    Tab *tab = self.tabs[path.item];
 
-    NSLog(@"index: %i && tabcount %i", index, self.tabs.count);
-
-    Tab *tab = self.tabs[index];
     [tab.webView removeFromSuperview];
     [self.tabs removeObject:tab];
     [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
     self.currentTabIndex = 0;
     self.pageControl.numberOfPages = self.tabs.count;
-    self.removingTab = false;
 
     if (self.tabs.count == 0)
     {
         [self addTab:nil];
     }
-
 }
 
 #pragma mark - UICollectionView DataSource Methods
@@ -522,7 +508,6 @@
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
     Tab *tab = self.tabs[indexPath.item];
-    NSLog(@"cellForItem: %i", indexPath.item);
     cell.backgroundView = tab.screenshots[tab.currentImageIndex];
     [self pingBorderControlCell:cell AtIndexPath:indexPath];
     [self pingPageControl];
@@ -765,17 +750,13 @@
     {
         if ([tab.webView.request.URL.absoluteString isEqualToString:tab.urls[tab.currentImageIndex]])
         {
-            NSLog(@"same so replacing");
             tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:YES];
         }
         else
         {
-            NSLog(@"not same, new index: %i",tab.currentImageIndex+1);
             tab.currentImageIndex++;
             [tab.urls insertObject:tab.webView.request.URL.absoluteString atIndex:tab.currentImageIndex];
             [tab.screenshots insertObject:[tab.webView snapshotViewAfterScreenUpdates:YES] atIndex:tab.currentImageIndex];
-
-            NSLog(@"index: %i url: %@",tab.currentImageIndex,tab.urls[tab.currentImageIndex]);
         }
     }
 }

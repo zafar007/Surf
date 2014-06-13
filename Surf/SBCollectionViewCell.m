@@ -35,8 +35,6 @@
 {
     CGPoint translation = [sender translationInView:self];
     CGPoint velocity = [sender velocityInView:self];
-    NSLog(@"pan translation: %f,%f",translation.x,translation.y);
-    NSLog(@"pan velocity: %f,%f",velocity.x,velocity.y);
 
     if (translation.y < 0)
     {
@@ -45,7 +43,6 @@
 
     if (sender.state == UIGestureRecognizerStateEnded && (translation.y < -100 || velocity.y < -1000))
     {
-        NSLog(@"REMOVING");
         self.transform = CGAffineTransformMakeTranslation(0, -150);     //slowdown
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
     }
@@ -57,9 +54,6 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    CGFloat num = [gestureRecognizer translationInView:self].y;
-    NSLog(@"translation: %f",num);
-
     if ([gestureRecognizer translationInView:self].y < -1)
     {
         return YES;
