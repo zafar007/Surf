@@ -148,9 +148,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *urlString = self.tweets[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
-    NSLog(@"%@", urlString);
-    [[NSUserDefaults standardUserDefaults] setObject:urlString forKey:@"twitterURL"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
@@ -159,8 +157,7 @@
 
 - (void)unwind
 {
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:nil];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

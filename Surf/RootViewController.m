@@ -47,9 +47,12 @@
 @property TwitterViewController *twitterViewController;
 @property UIPageControl *pageControl;
 @property BOOL removingTab;
+@property UICollectionViewCell *cell;
 @end
 
 @implementation RootViewController
+
+#pragma mark - View Life Cycle
 
 - (void)viewDidLoad
 {
@@ -65,25 +68,8 @@
     self.removingTab = false;
     self.webCount = 0;
     self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"TwitterBack" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-
-    NSString *urlString = [[NSUserDefaults standardUserDefaults] objectForKey:@"twitterURL"];
-
-    if (urlString)
-    {
-        [self addTab:urlString];
-        [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"twitterURL"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    else
-    {
-        [self showTools];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -171,11 +157,26 @@
     [self.toolsView addSubview:self.pageControl];
 }
 
+#pragma mark - TwitterViewController Handling
+
 - (void)showTwitterLinks
 {
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
+}
+
+- (void)backFromTwitter:(NSNotification *)notification
+{
+    NSString *urlString = notification.object;
+    if (urlString)
+    {
+        [self addTab:urlString];
+    }
+    else
+    {
+        [self showTools];
+    }
 }
 
 #pragma mark - Gestures
@@ -184,12 +185,12 @@
 {
     self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
     self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.view addGestureRecognizer:self.swipeUp];
+    [self.toolsView addGestureRecognizer:self.swipeUp];
     self.swipeUp.delegate = self;
 
     self.swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeDown:)];
     self.swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.view addGestureRecognizer:self.swipeDown];
+    [self.toolsView addGestureRecognizer:self.swipeDown];
     self.swipeDown.delegate = self;
 
     self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
@@ -199,7 +200,7 @@
 
     self.swipeFromLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromLeft:)];
     self.swipeFromLeft.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:self.swipeFromLeft];
+    [self.toolsView addGestureRecognizer:self.swipeFromLeft];
     self.swipeFromLeft.delegate = self;
 
     self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
@@ -220,30 +221,13 @@
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
-    CGPoint point = [sender locationInView:self.toolsView];
-    if (point.y > self.tabsCollectionView.frame.size.height)
-    {
-        if([self.omnibar isFirstResponder])
-        {
-            Tab *tab = self.tabs[self.currentTabIndex];
-            if (self.showingTools && tab.currentImageIndex > 0)
-            {
-                [self share];
-            }
-        }
-        else
-        {
-            [self.omnibar becomeFirstResponder];
-        }
-    }
+    [self.omnibar becomeFirstResponder];
+//    [self share];
 }
 
 - (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
 {
-    if (self.showingTools)
-    {
-        [self.omnibar resignFirstResponder];
-    }
+    [self.omnibar resignFirstResponder];
 }
 
 - (void)handleSwipeFromRight:(UISwipeGestureRecognizer *)sender
@@ -260,18 +244,9 @@
 
 - (void)handleSwipeFromLeft:(UISwipeGestureRecognizer *)sender
 {
-    CGPoint point = [sender locationInView:self.view];
-
-    if (point.y > self.tabsCollectionView.frame.size.height)
+    if ([sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
-        Tab *tab = self.tabs[self.currentTabIndex];
-        int indexOfToolsView = (int) [self.view.subviews indexOfObject:self.toolsView];
-        int indexOfWebView = (int) [self.view.subviews indexOfObject:tab.webView];
-
-        if (indexOfToolsView > indexOfWebView)
-        {
-            [self showWeb];
-        }
+        [self showWeb];
     }
 }
 
@@ -417,6 +392,7 @@
     else
     {
         [self addTab:nil];
+        NSLog(@"adding tab and not count is: %i",self.tabs.count);
     }
 }
 
@@ -493,23 +469,27 @@
     }
 }
 
-- (void)removeTab:(UICollectionViewCell *)cell
+- (void)removeTab:(NSNotification *)notification
 {
-//    NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
-//    int index = path.item;
-//    Tab *tab = self.tabs[index];
-//    [tab.webView removeFromSuperview];
-//    [cell removeFromSuperview];
-//    [self.tabs removeObjectAtIndex:index];
-//    [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
-//    [self switchToTab:0];
-//    self.pageControl.numberOfPages = self.tabs.count;
-//    self.removingTab = false;
-//
-//    if (index == 0)
-//    {
-//        [self addTab:nil];
-//    }
+    UICollectionViewCell *cell = notification.object;
+    NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
+    int index = path.item;
+
+    NSLog(@"index: %i && tabcount %i", index, self.tabs.count);
+
+    Tab *tab = self.tabs[index];
+    [tab.webView removeFromSuperview];
+    [self.tabs removeObject:tab];
+    [cell removeFromSuperview];
+    [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
+    [self switchToTab:0];
+    self.pageControl.numberOfPages = self.tabs.count;
+    self.removingTab = false;
+
+    if (index == 0)
+    {
+        [self addTab:nil];
+    }
 }
 
 #pragma mark - UICollectionView DataSource Methods
@@ -695,6 +675,7 @@
         UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
         cell.backgroundView = screenshot;
         tab.screenshots[tab.currentImageIndex] = screenshot;
+        [self pingBorderControlCell:cell AtIndexPath:path];
     }
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];

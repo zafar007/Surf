@@ -12,6 +12,7 @@
 @property UIPanGestureRecognizer *pan;
 @property CGPoint originalCenter;
 @property CGRect originalFrame;
+@property BOOL removed;
 @end
 
 @implementation SBCollectionViewCell
@@ -21,6 +22,7 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        self.removed = false;
         self.originalCenter = self.center;
         self.originalFrame = self.frame;
         self.backgroundColor = [UIColor lightGrayColor];
@@ -33,27 +35,29 @@
 
 - (void)handlePanFrom:(UIPanGestureRecognizer *)sender
 {
-    CGPoint translation = [sender translationInView:self];
-    CGPoint velocity = [sender velocityInView:self];
-    NSLog(@"pan translation: %f,%f",translation.x,translation.y);
-    NSLog(@"pan velocity: %f,%f",velocity.x,velocity.y);
-
-    if (translation.y < 0)
+    if (!self.removed)
     {
-        self.transform = CGAffineTransformMakeTranslation(0, translation.y);
-    }
+        CGPoint translation = [sender translationInView:self];
+        CGPoint velocity = [sender velocityInView:self];
+        NSLog(@"pan translation: %f,%f",translation.x,translation.y);
+        NSLog(@"pan velocity: %f,%f",velocity.x,velocity.y);
 
-    if (translation.y < -100 || velocity.y < -1000)
-    {
-        NSLog(@"removing");
-        self.transform = CGAffineTransformMakeTranslation(0, -150);     //slowdown
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
-        return;
-    }
+        if (translation.y < 0)
+        {
+            self.transform = CGAffineTransformMakeTranslation(0, translation.y);
+        }
 
-    if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
-    {
-        self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
+        if (translation.y < -100 || velocity.y < -1000)
+        {
+            NSLog(@"REMOVING");
+            self.transform = CGAffineTransformMakeTranslation(0, -150);     //slowdown
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
+            self.removed = true;
+        }
+        else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
+        {
+            self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
+        }
     }
 }
 
