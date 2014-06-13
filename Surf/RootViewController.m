@@ -407,29 +407,20 @@
 
 - (void)addTab:(NSString *)urlString
 {
-    if (self.tabs.count != 0)
-    {
-        Tab *oldTab = self.tabs[self.currentTabIndex];
-        [oldTab.webView removeFromSuperview];
-    }
-
     Tab *newTab = [[Tab alloc] init];
-    [self.tabs addObject:newTab];
-    [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     newTab.webView.userInteractionEnabled = NO; //fixes bug when doubletapping on blank tab.webview
     newTab.webView.delegate = self;
     newTab.webView.scalesPageToFit = YES;
-    self.currentTabIndex = (int) self.tabs.count-1;
+    [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
     self.refreshButton.enabled = NO;
-
+    [self.tabsCollectionView reloadData];
+    [self switchToTab:self.tabs.count-1];
     if([urlString isKindOfClass:[NSString class]])
     {
         newTab.urlString = [self searchOrLoad:urlString];
         [self loadPage:newTab];
     }
-
-    [self.tabsCollectionView reloadData];
 }
 
 - (void)switchToTab:(int)newTabIndex
@@ -438,21 +429,13 @@
     {
         Tab *oldTab = self.tabs[self.currentTabIndex];
         [oldTab.webView removeFromSuperview];
-
-        NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
-        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-
     }
 
     Tab *newTab = self.tabs[newTabIndex];
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
     self.currentTabIndex = newTabIndex;
-    self.pageControl.currentPage = newTabIndex;
-
-    NSIndexPath *path = [NSIndexPath indexPathForItem:newTabIndex inSection:0];
-    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-    cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+    [self pingBorderControl];
+    [self pingPageControlIndexPath:nil];
 
     if (newTab.currentImageIndex > 0)
     {
@@ -471,6 +454,8 @@
     [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
     self.currentTabIndex = 0;
+    [self pingBorderControl];
+    [self pingPageControlIndexPath:nil];
     self.pageControl.numberOfPages = self.tabs.count;
 
     if (self.tabs.count == 0)
@@ -509,8 +494,8 @@
 
     Tab *tab = self.tabs[indexPath.item];
     cell.backgroundView = tab.screenshots[tab.currentImageIndex];
-    [self pingBorderControlCell:cell AtIndexPath:indexPath];
-    [self pingPageControl];
+    [self pingBorderControl];
+    [self pingPageControlIndexPath:indexPath];
 
     return cell;
 }
@@ -529,25 +514,34 @@
 
 #pragma mark - Border Control
 
-- (void)pingBorderControlCell:(UICollectionViewCell *)cell AtIndexPath:(NSIndexPath *)indexPath
+- (void)pingBorderControl
 {
-    cell.backgroundView.layer.borderWidth = 1.0f;
-
-    if (self.currentTabIndex == indexPath.item)
+    for (UICollectionViewCell *cell in [self.tabsCollectionView visibleCells])
     {
-        cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
-    }
-    else
-    {
-        cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        cell.backgroundView.layer.borderWidth = 1.0f;
+        if (self.currentTabIndex == [self.tabsCollectionView indexPathForCell:cell].item)
+        {
+            cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
+        }
+        else
+        {
+            cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        }
     }
 }
 
 #pragma mark - Page Control
 
-- (void)pingPageControl
+- (void)pingPageControlIndexPath:(NSIndexPath *)indexPath
 {
-    self.pageControl.currentPage = [self.tabsCollectionView indexPathForItemAtPoint:CGPointMake(160+self.tabsCollectionView.contentOffset.x,100)].item;
+    if (indexPath)
+    {
+        self.pageControl.currentPage = indexPath.item;
+    }
+    else
+    {
+        self.pageControl.currentPage = self.currentTabIndex;
+    }
 }
 
 #pragma mark - UITextField Delegate Methods
@@ -661,7 +655,8 @@
         UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
         cell.backgroundView = screenshot;
         tab.screenshots[tab.currentImageIndex] = screenshot;
-        [self pingBorderControlCell:cell AtIndexPath:path];
+        [self pingBorderControl];                                       //redundant? b/c of switch tab
+        [self pingPageControlIndexPath:path];                           //redundant? b/c of switch tab
     }
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
