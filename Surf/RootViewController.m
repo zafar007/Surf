@@ -493,7 +493,16 @@
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
     Tab *tab = self.tabs[indexPath.item];
-    cell.backgroundView = tab.screenshots[tab.currentImageIndex];
+
+    if (tab.currentImageIndex >0)
+    {
+        cell.backgroundView = tab.screenshots[tab.currentImageIndex];
+    }
+    else
+    {
+        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
+    }
+
     [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
 
