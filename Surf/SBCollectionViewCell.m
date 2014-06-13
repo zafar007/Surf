@@ -54,9 +54,16 @@
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
 {
-    if ([gestureRecognizer translationInView:self].y < -1)
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
     {
-        return YES;
+        if ([gestureRecognizer translationInView:self].y < -1)
+        {
+            return YES;
+        }
+        else
+        {
+            return NO;
+        }
     }
     else
     {
