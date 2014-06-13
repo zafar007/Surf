@@ -482,14 +482,15 @@
     [self.tabs removeObject:tab];
     [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
-    [self switchToTab:0];
+    self.currentTabIndex = 0;
     self.pageControl.numberOfPages = self.tabs.count;
     self.removingTab = false;
 
-    if (index == 0)
+    if (self.tabs.count == 0)
     {
         [self addTab:nil];
     }
+
 }
 
 #pragma mark - UICollectionView DataSource Methods
