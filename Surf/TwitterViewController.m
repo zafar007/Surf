@@ -13,29 +13,22 @@
 #import <Social/Social.h>
 #import "SBTableViewCell.h"
 
-@interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource>
+@interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
 @property NSArray *dataSource;
 @property NSMutableArray *tweets;
-@property UITableViewCell *cellHolder;
+@property UICollectionView *buttons;
+@property NSArray *buttonItems;
 @end
 
 @implementation TwitterViewController
-
-- (id)init
-{
-    if (self = [super init])
-    {
-        [self getTimeLine];     //moved from below [self createTable]; in viewDidLoad for faster tweet fetching
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     [self createButtons];
     [self createTable];
+    [self getTimeLine];
 }
 
 - (void)createButtons
@@ -50,6 +43,20 @@
                                                                                 action:@selector(add)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
+    self.buttonItems = @[@"twitter",@"add"];
+
+    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
+    flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+
+    self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
+                                                   collectionViewLayout:flow];
+    [self.buttons registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
+
+    self.buttons.delegate = self;
+    self.buttons.dataSource = self;
+
+    self.buttons.backgroundColor = [UIColor clearColor];
+    self.navigationItem.titleView = self.buttons;
 }
 
 - (void)createTable
@@ -88,11 +95,33 @@
                  postRequest.account = twitterAccount;
                  [postRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
                   {
-                      self.dataSource = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingMutableLeaves error:&error];
-                      [self filterTweetsForLinkedPosts];
-                      if (self.tweets.count != 0)
+                      if (!error)
                       {
-                          dispatch_async(dispatch_get_main_queue(), ^{ [self.tableView reloadData]; });
+                          self.dataSource = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                            options:NSJSONReadingMutableLeaves
+                                                                              error:&error];
+                          if (!error)
+                          {
+                              [self filterTweetsForLinkedPosts];
+                              if (self.tweets.count != 0)
+                              {
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      [self.tableView reloadData];
+                                  });
+                              }
+                          }
+                          else
+                          {
+                              // Handle bad json data
+                          }
+                      }
+                      else
+                      {
+                          UIAlertView *alert = [[UIAlertView alloc] init];
+                          alert.title = @"Error Connecting to Twitter";
+                          alert.message = @"Please check your internet connection";
+                          [alert addButtonWithTitle:@"Dismiss"];
+                          [alert show];
                       }
                   }];
              }
@@ -151,6 +180,55 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+#pragma mark - UICollectionView DataSource Methods
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake(32, 32);
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
+    [self makeButtonIn:cell forItem:indexPath.item];
+    return cell;
+}
+
+- (void)makeButtonIn:(UICollectionViewCell *)cell forItem:(int)item
+{
+    UIImage *image;
+    if (self.buttonItems.count-1 >= item)
+    {
+        image = [UIImage imageNamed:self.buttonItems[item]];
+    }
+    else
+    {
+        image = nil;
+    }
+
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button addTarget:self
+                action:@selector(showTwitter)
+      forControlEvents:UIControlEventTouchUpInside];
+    [button setImage:image forState:UIControlStateNormal];
+    button.frame = CGRectMake(cell.backgroundView.frame.origin.x,
+                               cell.backgroundView.frame.origin.y,
+                               cell.backgroundView.frame.size.width,
+                               cell.backgroundView.frame.size.height);
+    button.backgroundColor = self.navigationController.navigationBar.backgroundColor;
+    cell.backgroundView = button;
+}
+
+- (void)showTwitter
+{
+    NSLog(@"Tweet");
 }
 
 #pragma mark - Button Handling

@@ -68,11 +68,30 @@
 {
     //figure out height using data from Tweet
 
-    //    CGFloat topPadding = 10;
-    //    CGFloat sizeForThing = [@"" sizeWithAttributes:@{nil: nil}].height;
-    //    sizeForThing + topPadding + somethingElse;
+    CGFloat padding = 10;
+    CGFloat sizeOfTweetText = [tweet[@"text"] sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}].height;
+    CGFloat sizeOfTweetUserName = [tweet[@"user"][@"name"] sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}].height;
+    CGFloat sizeOfRetweetUserName = 0;
 
-    return 120;
+    if (tweet[@"retweeted_status"])
+    {
+        sizeOfTweetText = [tweet[@"text"] sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}].height;;
+        NSString *retweetUserName = [NSString stringWithFormat:@"Retweeted by: %@", tweet[@"retweeted_status"][@"user"][@"name"]];
+        sizeOfRetweetUserName = [retweetUserName sizeWithAttributes:@{NSFontAttributeName : [UIFont systemFontOfSize:14]}].height;
+    }
+
+    CGFloat totalTextSize = sizeOfTweetText + sizeOfTweetUserName + sizeOfRetweetUserName + padding*2;
+
+    NSLog(@"total: %f", totalTextSize);
+
+    if (totalTextSize*2 < 68)
+    {
+        return 68;
+    }
+    else
+    {
+        return totalTextSize*2;
+    }
 }
 
 @end

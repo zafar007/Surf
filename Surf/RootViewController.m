@@ -46,8 +46,6 @@
 @property int webCount;
 @property TwitterViewController *twitterViewController;
 @property UIPageControl *pageControl;
-@property BOOL removingTab;
-@property UICollectionViewCell *cell;
 @end
 
 @implementation RootViewController
@@ -65,8 +63,8 @@
     [self createGestures];
     [self loadTabs];
     [self createPageControl];
+
     self.webCount = 0;
-    self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"TwitterBack" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
 }
@@ -161,6 +159,7 @@
 - (void)showTwitterLinks
 {
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
+    self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
 }
