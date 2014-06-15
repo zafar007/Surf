@@ -10,4 +10,5 @@
 
 @interface Twitter : NSObject
 - (void)getTimeLine;
++ (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
 @end

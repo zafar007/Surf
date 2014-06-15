@@ -102,4 +102,56 @@
     }
 }
 
++ (NSDictionary *)layoutFrom:(NSDictionary *)tweet
+{
+    NSDictionary *originalTweet = tweet;
+    NSDictionary *retweet = tweet[@"retweeted_status"];
+    NSString *textLabel;
+    NSString *detailTextLabel;
+    NSNumber *numberOfLines = @1;
+    NSString *urlString;
+
+    if (retweet)
+    {
+        tweet = retweet;
+        detailTextLabel = [NSString stringWithFormat:@"%@\nRetweeted by: %@",tweet[@"user"][@"name"], originalTweet[@"user"][@"name"]];
+        numberOfLines = @2;
+    }
+    else
+    {
+        detailTextLabel = tweet[@"user"][@"name"];
+    }
+
+    textLabel = [self modifyTweetText:tweet];
+    urlString = tweet[@"user"][@"profile_image_url"];
+
+    return @{@"textLabel":textLabel,
+             @"detailTextLabel":detailTextLabel,
+             @"numberOfLines":numberOfLines,
+             @"urlString":urlString};
+}
+
++ (NSString *)modifyTweetText:(NSDictionary *)tweet
+{
+    NSString *tweetText = tweet[@"text"];
+    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
+    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
+    int index0 = [indices[0] intValue];
+    int index1 = [indices[1] intValue];
+    NSString *host = url.host;
+    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
+
+    return [self cleanup:newTweetText];
+}
+
++ (NSString *)cleanup:(NSString *)tweetText
+{
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
+    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
+    return tweetText;
+}
+
 @end

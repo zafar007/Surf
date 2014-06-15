@@ -16,7 +16,7 @@
 @property UITableView *tableView;
 @property UICollectionView *buttons;
 @property NSArray *buttonItems;
-@property NSArray *data;
+@property NSArray *tweets;
 @end
 
 @implementation TwitterViewController
@@ -38,7 +38,7 @@
 
 - (void)saveTweets:(NSNotification *)notification
 {
-    self.data = notification.object;
+    self.tweets = notification.object;
     [self.tableView reloadData];
 }
 
@@ -55,17 +55,13 @@
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
     self.buttonItems = @[@"twitter",@"glasses",@"bookmarks"];
-
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-
     self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
                                                    collectionViewLayout:flow];
     [self.buttons registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
-
     self.buttons.delegate = self;
     self.buttons.dataSource = self;
-
     self.buttons.backgroundColor = [UIColor clearColor];
     self.navigationItem.titleView = self.buttons;
 }
@@ -87,7 +83,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.data.count;
+    return self.tweets.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,19 +94,20 @@
         cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    [cell layoutWithTweetFrom:self.data AtIndexPath:indexPath];
+    NSDictionary *layoutData = [Twitter layoutFrom:self.tweets[indexPath.row]];
+    [cell modifyCellLayoutWithData:layoutData];
 
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [SBTableViewCell heightForCellWithTweet:self.data[indexPath.row]];
+    return [SBTableViewCell heightForCellWithTweet:self.tweets[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *urlString = self.data[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
+    NSString *urlString = self.tweets[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];

@@ -12,56 +12,22 @@
 
 @implementation SBTableViewCell
 
-- (void)layoutWithTweetFrom:(NSArray *)tweets AtIndexPath:(NSIndexPath *)indexPath
+- (void)modifyCellLayoutWithData:(NSDictionary *)layoutData
 {
-    NSDictionary *tweet = tweets[indexPath.row];
-    NSDictionary *retweet = tweet[@"retweeted_status"];
-    if (retweet)
-    {
-        tweet = retweet;
-        self.detailTextLabel.text = [NSString stringWithFormat:@"%@\nRetweeted by: %@",tweet[@"user"][@"name"], tweets[indexPath.row][@"user"][@"name"]];
-        self.detailTextLabel.numberOfLines = 2;
-        self.detailTextLabel.textColor = [UIColor grayColor];
-    }
-    else
-    {
-        self.detailTextLabel.text = tweet[@"user"][@"name"];
-        self.detailTextLabel.textColor = [UIColor grayColor];
-    }
-
-    self.textLabel.text = [self modifyTweetText:tweet];
+    self.textLabel.text = layoutData[@"textLabel"];
     self.textLabel.numberOfLines = 0;
     self.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
     self.textLabel.font = [UIFont systemFontOfSize:14];
 
-//    self.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]]];
-    [self.imageView setImageWithURL:[NSURL URLWithString:tweet[@"user"][@"profile_image_url"]]
+    self.detailTextLabel.text = layoutData[@"detailTextLabel"];
+    self.detailTextLabel.numberOfLines = (int)layoutData[@"numberOfLines"];
+    self.detailTextLabel.textColor = [UIColor grayColor];
+
+    [self.imageView setImageWithURL:[NSURL URLWithString:layoutData[@"urlString"]]
                    placeholderImage:[UIImage imageNamed:@"bluewave"]];
     self.imageView.layer.masksToBounds = YES;
     self.imageView.layer.cornerRadius = 48/2;
-}
 
-- (NSString *)modifyTweetText:(NSDictionary *)tweet
-{
-    NSString *tweetText = tweet[@"text"];
-    NSURL *url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
-    NSArray *indices = tweet[@"entities"][@"urls"][0][@"indices"];
-    int index0 = [indices[0] intValue];
-    int index1 = [indices[1] intValue];
-    NSString *host = url.host;
-    NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
-
-    return [self cleanup:newTweetText];
-}
-
-- (NSString *)cleanup:(NSString *)tweetText
-{
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&amp;" withString:@"&"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&lt;" withString:@"<"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&gt;" withString:@">"];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&quot;" withString:@"\""];
-    tweetText = [tweetText stringByReplacingOccurrencesOfString:@"&apos;" withString:@"\'"];
-    return tweetText;
 }
 
 + (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet
