@@ -37,6 +37,7 @@
 		8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA4FD19450DC200148137 /* RootViewController.m */; };
 		8E6CA50319450DCD00148137 /* Tab.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50019450DCD00148137 /* Tab.m */; };
 		8E6CA50419450DCD00148137 /* TwitterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* TwitterViewController.m */; };
+		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
 /* End PBXBuildFile section */
@@ -105,6 +106,8 @@
 		8E6CA50019450DCD00148137 /* Tab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab.m; sourceTree = "<group>"; };
 		8E6CA50119450DCD00148137 /* TwitterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TwitterViewController.h; sourceTree = "<group>"; };
 		8E6CA50219450DCD00148137 /* TwitterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TwitterViewController.m; sourceTree = "<group>"; };
+		8E911ECC194E5B11005FC87F /* Twitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Twitter.h; sourceTree = "<group>"; };
+		8E911ECD194E5B11005FC87F /* Twitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Twitter.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
@@ -209,6 +212,8 @@
 				8E68BA73194687540019658A /* SDWebImage */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
+				8E911ECC194E5B11005FC87F /* Twitter.h */,
+				8E911ECD194E5B11005FC87F /* Twitter.m */,
 				8E6CA4FF19450DCD00148137 /* Tab.h */,
 				8E6CA50019450DCD00148137 /* Tab.m */,
 				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
@@ -352,6 +357,7 @@
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,
 				8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */,
 				8E68BA9A194687540019658A /* SDWebImageManager.m in Sources */,
+				8E911ECE194E5B11005FC87F /* Twitter.m in Sources */,
 				8E68BA95194687540019658A /* SDImageCache.m in Sources */,
 				8E68BA99194687540019658A /* SDWebImageDownloaderOperation.m in Sources */,
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,

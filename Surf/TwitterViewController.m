@@ -9,16 +9,14 @@
 #define CellIdentifier @"Cell"
 
 #import "TwitterViewController.h"
-#import <Accounts/Accounts.h>
-#import <Social/Social.h>
 #import "SBTableViewCell.h"
+#import "Twitter.h"
 
 @interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
-@property NSArray *dataSource;
-@property NSMutableArray *tweets;
 @property UICollectionView *buttons;
 @property NSArray *buttonItems;
+@property NSArray *data;
 @end
 
 @implementation TwitterViewController
@@ -28,7 +26,20 @@
     [super viewDidLoad];
     [self createButtons];
     [self createTable];
-    [self getTimeLine];
+    [self getTweets];
+}
+
+- (void)getTweets
+{
+    Twitter *twitter = [Twitter new];
+    [twitter getTimeLine];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveTweets:) name:@"Twitter" object:nil];
+}
+
+- (void)saveTweets:(NSNotification *)notification
+{
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)createButtons
@@ -72,88 +83,11 @@
     [self.view addSubview:self.tableView];
 }
 
-- (void)getTimeLine
-{
-    ACAccountStore *account = [[ACAccountStore alloc] init];
-    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
-
-    [account requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error)
-     {
-         if (granted == YES)
-         {
-             NSArray *arrayOfAccounts = [account accountsWithAccountType:accountType];
-
-             if ([arrayOfAccounts count] > 0)
-             {
-                 ACAccount *twitterAccount = arrayOfAccounts.lastObject;
-                 NSURL *requestURL = [NSURL URLWithString: @"https://api.twitter.com/1.1/statuses/home_timeline.json"];
-                 NSDictionary *parameters = @{@"count" : @"200"};
-                 SLRequest *postRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
-                                                             requestMethod:SLRequestMethodGET
-                                                                       URL:requestURL
-                                                                parameters:parameters];
-                 postRequest.account = twitterAccount;
-                 [postRequest performRequestWithHandler: ^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
-                  {
-                      if (!error)
-                      {
-                          self.dataSource = [NSJSONSerialization JSONObjectWithData:responseData
-                                                                            options:NSJSONReadingMutableLeaves
-                                                                              error:&error];
-                          if (!error)
-                          {
-                              [self filterTweetsForLinkedPosts];
-                              if (self.tweets.count != 0)
-                              {
-                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                      [self.tableView reloadData];
-                                  });
-                              }
-                          }
-                          else
-                          {
-                              // Handle bad json data
-                          }
-                      }
-                      else
-                      {
-                          UIAlertView *alert = [[UIAlertView alloc] init];
-                          alert.title = @"Error Connecting to Twitter";
-                          alert.message = @"Please check your internet connection";
-                          [alert addButtonWithTitle:@"Dismiss"];
-                          [alert show];
-                      }
-                  }];
-             }
-         }
-         else
-         {
-             // Handle failure to get account access
-         }
-     }
-    ];
-}
-
-- (void)filterTweetsForLinkedPosts
-{
-    self.tweets = [NSMutableArray new];
-
-    for (NSDictionary *tweet in self.dataSource)
-    {
-        NSArray *urls = tweet[@"entities"][@"urls"];
-
-        if (urls.count)
-        {
-            [self.tweets addObject:tweet];
-        }
-    }
-}
-
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.tweets.count;
+    return self.data.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -164,19 +98,19 @@
         cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    [cell layoutWithTweetFrom:self.tweets AtIndexPath:indexPath];
+    [cell layoutWithTweetFrom:self.data AtIndexPath:indexPath];
 
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [SBTableViewCell heightForCellWithTweet:self.tweets[indexPath.row]];
+    return [SBTableViewCell heightForCellWithTweet:self.data[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *urlString = self.tweets[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
+    NSString *urlString = self.data[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];

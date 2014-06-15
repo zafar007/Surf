@@ -12,7 +12,7 @@
 
 @implementation SBTableViewCell
 
-- (void)layoutWithTweetFrom:(NSMutableArray *)tweets AtIndexPath:(NSIndexPath *)indexPath
+- (void)layoutWithTweetFrom:(NSArray *)tweets AtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *tweet = tweets[indexPath.row];
     NSDictionary *retweet = tweet[@"retweeted_status"];

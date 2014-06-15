@@ -11,6 +11,6 @@
 @interface SBTableViewCell : UITableViewCell
 
 + (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet;
-- (void)layoutWithTweetFrom:(NSMutableArray *)tweets AtIndexPath:(NSIndexPath *)indexPath;
+- (void)layoutWithTweetFrom:(NSArray *)tweets AtIndexPath:(NSIndexPath *)indexPath;
 
 @end
