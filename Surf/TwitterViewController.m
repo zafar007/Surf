@@ -43,7 +43,7 @@
                                                                                 action:@selector(add)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
-    self.buttonItems = @[@"twitter",@"add"];
+    self.buttonItems = @[@"twitter",@"glasses",@"bookmarks"];
 
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -215,18 +215,18 @@
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button addTarget:self
-                action:@selector(showTwitter)
+               action:@selector(onButtonPress:)
       forControlEvents:UIControlEventTouchUpInside];
     [button setImage:image forState:UIControlStateNormal];
     button.frame = CGRectMake(cell.backgroundView.frame.origin.x,
-                               cell.backgroundView.frame.origin.y,
-                               cell.backgroundView.frame.size.width,
-                               cell.backgroundView.frame.size.height);
+                              cell.backgroundView.frame.origin.y,
+                              cell.backgroundView.frame.size.width,
+                              cell.backgroundView.frame.size.height);
     button.backgroundColor = self.navigationController.navigationBar.backgroundColor;
     cell.backgroundView = button;
 }
 
-- (void)showTwitter
+- (void)onButtonPress:(UIButton *)sender
 {
     NSLog(@"Tweet");
 }
