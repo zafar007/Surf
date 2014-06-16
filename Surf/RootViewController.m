@@ -33,17 +33,15 @@
 @property BOOL showingTools;
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
-@property UIView *backgroundView;
-@property UIView *currentScreenshot;
-@property UIView *pastScreenshot;
-@property UIView *futureScreenshot;
+@property UIWebView *thisWebView;
+@property UIWebView *rightWebView;
+@property UIWebView *leftWebView;
 @property NSTimer *delayTimer;
 @property UIButton *shareButton;
 @property UIButton *stopButton;
 @property UIButton *refreshButton;
 @property UIButton *twitterListButton;
 @property UIButton *addButton;
-@property int webCount;
 @property TwitterViewController *twitterViewController;
 @property UIPageControl *pageControl;
 @end
@@ -55,6 +53,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self editView];
     [self createToolsView];
     [self createCollectionView];
     [self createButtons];
@@ -64,7 +63,6 @@
     [self loadTabs];
     [self createPageControl];
 
-    self.webCount = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"TwitterBack" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
 }
@@ -80,6 +78,11 @@
 }
 
 #pragma mark - Setup Scene
+- (void)editView
+{
+    [self.view addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]]];
+}
+
 
 - (void)createToolsView
 {
@@ -88,7 +91,7 @@
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
     self.toolsView.backgroundColor = [UIColor whiteColor];
-//    self.toolsView.alpha = 1;
+    self.toolsView.alpha = .9;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
 }
@@ -245,125 +248,100 @@
 
 - (void)handleEdgeSwipeFromRight:(UIScreenEdgePanGestureRecognizer *)sender
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && [tab.webView canGoForward])
+    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1))
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
-            self.currentScreenshot = tab.screenshots[tab.currentImageIndex];
-            self.futureScreenshot = tab.screenshots[tab.currentImageIndex+1];
+            Tab *thisTab = self.tabs[self.currentTabIndex];
+            self.thisWebView = thisTab.webView;
+            Tab *rightTab = self.tabs[self.currentTabIndex+1];
+            self.rightWebView = rightTab.webView;
+
             self.view.userInteractionEnabled = NO;
+            [self.view addSubview:self.rightWebView];
         }
 
-        [self.view addSubview:self.currentScreenshot];
-        [self.view insertSubview:self.futureScreenshot aboveSubview:self.currentScreenshot];
-        self.futureScreenshot.transform = CGAffineTransformMakeTranslation(point.x, self.view.frame.origin.y);
+        self.thisWebView.transform = CGAffineTransformMakeTranslation(-320+point.x, 0);
+        self.rightWebView.transform = CGAffineTransformMakeTranslation(point.x+20, 0);
 
         if (sender.state == UIGestureRecognizerStateEnded)
         {
             if (point.x < self.view.frame.size.width/2)
             {
-                [tab.webView goForward];
                 [UIView animateWithDuration:.1 animations:^{
-                    self.futureScreenshot.transform = CGAffineTransformMakeTranslation(self.view.frame.origin.x, self.view.frame.origin.y);
+                    self.thisWebView.transform = CGAffineTransformMakeTranslation(-340, 0);
+                    self.rightWebView.transform = CGAffineTransformMakeTranslation(0, 0);
                 }];
 
-                //wait for tab.webview to finish loading to prevent flashing
-                self.delayTimer = [NSTimer scheduledTimerWithTimeInterval:.5
-                                                                  target:self
-                                                                selector:@selector(finishGoingForward)
-                                                                userInfo:nil
-                                                                 repeats:NO];
+                self.currentTabIndex++;
+                [self.thisWebView removeFromSuperview];
+                self.thisWebView = nil;
+                self.rightWebView = nil;
             }
             else
             {
                 [UIView animateWithDuration:.1 animations:^{
-                    self.futureScreenshot.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, self.view.frame.origin.y);
+                    self.thisWebView.transform = CGAffineTransformMakeTranslation(0, 0);
+                    self.rightWebView.transform = CGAffineTransformMakeTranslation(340, 0);
                 }];
-                [self.currentScreenshot removeFromSuperview];
-                [self.futureScreenshot removeFromSuperview];
-                self.currentScreenshot = nil;
-                self.futureScreenshot = nil;
+                [self.rightWebView removeFromSuperview];
+                self.thisWebView = nil;
+                self.rightWebView = nil;
             }
             self.view.userInteractionEnabled = YES;
         }
     }
 }
 
-- (void)finishGoingForward
-{
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [self.view insertSubview:tab.webView belowSubview:self.futureScreenshot];
-    tab.currentImageIndex++;
-    [self.currentScreenshot removeFromSuperview];
-    [self.futureScreenshot removeFromSuperview];
-    self.currentScreenshot = nil;
-    self.futureScreenshot = nil;
-
-}
-
 - (void)handleEdgeSwipeFromLeft:(UIScreenEdgePanGestureRecognizer *)sender
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && [tab.webView canGoBack])
+    if (!self.showingTools && (self.currentTabIndex-1) >= 0)
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:NO];
-            self.currentScreenshot = tab.screenshots[tab.currentImageIndex];
-            self.pastScreenshot = tab.screenshots[tab.currentImageIndex-1];
+            Tab *thisTab = self.tabs[self.currentTabIndex];
+            self.thisWebView = thisTab.webView;
+            Tab *leftTab = self.tabs[self.currentTabIndex-1];
+            self.leftWebView = leftTab.webView;
+
             self.view.userInteractionEnabled = NO;
+            [self.view addSubview:self.leftWebView];
         }
 
-        [self.view addSubview:self.currentScreenshot];
-        [self.view insertSubview:self.pastScreenshot belowSubview:self.currentScreenshot];
-        self.currentScreenshot.transform = CGAffineTransformMakeTranslation(point.x, self.view.frame.origin.y);
+        self.thisWebView.transform = CGAffineTransformMakeTranslation(point.x, 0);
+        self.leftWebView.transform = CGAffineTransformMakeTranslation(point.x-340, 0);
 
         if (sender.state == UIGestureRecognizerStateEnded)
         {
             if (point.x > self.view.frame.size.width/2)
             {
-                [tab.webView goBack];
                 [UIView animateWithDuration:.1 animations:^{
-                    self.currentScreenshot.transform = CGAffineTransformMakeTranslation(self.view.frame.size.width, self.view.frame.origin.y);
+                    self.thisWebView.transform = CGAffineTransformMakeTranslation(340, 0);
+                    self.leftWebView.transform = CGAffineTransformMakeTranslation(0, 0);
                 }];
 
-                //wait for tab.webview to finish loading to prevent flashing
-                self.delayTimer = [NSTimer scheduledTimerWithTimeInterval:.5
-                                                                  target:self
-                                                                 selector:@selector(finishGoingBack)
-                                                                userInfo:nil
-                                                                 repeats:NO];
+                self.currentTabIndex--;
+                [self.thisWebView removeFromSuperview];
+                self.thisWebView = nil;
+                self.leftWebView = nil;
             }
             else
             {
                 [UIView animateWithDuration:.1 animations:^{
-                    self.currentScreenshot.transform = CGAffineTransformMakeTranslation(self.view.frame.origin.x,  self.view.frame.origin.y);
+                    self.thisWebView.transform = CGAffineTransformMakeTranslation(0, 0);
+                    self.leftWebView.transform = CGAffineTransformMakeTranslation(-340, 0);
                 }];
-                [self.currentScreenshot removeFromSuperview];
-                [self.pastScreenshot removeFromSuperview];
-                self.currentScreenshot = nil;
-                self.pastScreenshot = nil;
+                [self.leftWebView removeFromSuperview];
+                self.thisWebView = nil;
+                self.leftWebView = nil;
             }
             self.view.userInteractionEnabled = YES;
         }
     }
-}
-
-- (void)finishGoingBack
-{
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [self.view insertSubview:tab.webView belowSubview:self.currentScreenshot];
-    tab.currentImageIndex--;
-    [self.currentScreenshot removeFromSuperview];
-    [self.pastScreenshot removeFromSuperview];
-    self.currentScreenshot = nil;
-    self.pastScreenshot = nil;
 }
 
 #pragma mark - Tabs
@@ -431,7 +409,7 @@
     [self pingBorderControl];
     [self pingPageControlIndexPath:nil];
 
-    if (newTab.currentImageIndex > 0)
+    if (newTab.started)
     {
         [self showWeb];
     }
@@ -487,16 +465,7 @@
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
     Tab *tab = self.tabs[indexPath.item];
-
-    if (tab.currentImageIndex >0)
-    {
-        cell.backgroundView = tab.screenshots[tab.currentImageIndex];
-    }
-    else
-    {
-        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
-    }
-
+    cell.backgroundView = tab.screenshot;
     [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
 
@@ -631,7 +600,7 @@
 - (void)showWeb
 {
     self.showingTools = false;
-
+    self.toolsView.hidden = YES;
     [self.omnibar resignFirstResponder];
 
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
@@ -649,17 +618,14 @@
 - (void)showTools
 {
     self.showingTools = true;
-
+    self.toolsView.hidden = NO;
     NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     Tab *tab = self.tabs[self.currentTabIndex];
-    if (tab.currentImageIndex > 0)
+    if (tab.started)
     {
-        UIView *screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
-        cell.backgroundView = screenshot;
-        tab.screenshots[tab.currentImageIndex] = screenshot;
-        [self pingBorderControl];                                       //redundant? b/c of switch tab
-        [self pingPageControlIndexPath:path];                           //redundant? b/c of switch tab
+        tab.screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
+        cell.backgroundView = tab.screenshot;
     }
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
@@ -681,13 +647,13 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-    self.webCount++;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
     self.doneLoading = false;
 
     Tab *tab = self.tabs[self.currentTabIndex];
+    tab.started = YES;
     tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
 
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025
@@ -724,39 +690,16 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    self.webCount--;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
-    [self takeScreenshot];
     [self enableShare:YES Refresh:YES Stop:NO];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    self.webCount--;
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
     [self enableShare:YES Refresh:YES Stop:NO];
-}
-
-#pragma mark - Screenshots
-
-- (void)takeScreenshot
-{
-    Tab *tab = self.tabs[self.currentTabIndex];
-    if (self.webCount==0) //&& [[tab.webView stringByEvaluatingJavaScriptFromString:@"document.readyState"] isEqual:@"complete"])
-    {
-        if ([tab.webView.request.URL.absoluteString isEqualToString:tab.urls[tab.currentImageIndex]])
-        {
-            tab.screenshots[tab.currentImageIndex] = [tab.webView snapshotViewAfterScreenUpdates:YES];
-        }
-        else
-        {
-            tab.currentImageIndex++;
-            [tab.urls insertObject:tab.webView.request.URL.absoluteString atIndex:tab.currentImageIndex];
-            [tab.screenshots insertObject:[tab.webView snapshotViewAfterScreenUpdates:YES] atIndex:tab.currentImageIndex];
-        }
-    }
 }
 
 #pragma mark - Low Memory Alert

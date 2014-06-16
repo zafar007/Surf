@@ -11,7 +11,6 @@
 @interface Tab : NSObject
 @property NSString *urlString;
 @property UIWebView *webView;
-@property NSMutableArray *screenshots;
-@property NSMutableArray *urls;
-@property int currentImageIndex;
+@property UIView *screenshot;
+@property BOOL started;
 @end

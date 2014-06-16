@@ -14,11 +14,8 @@
 {
     self = [super init];
     self.webView = [UIWebView new];
-    self.urls = [NSMutableArray new];
-    self.screenshots = [NSMutableArray new];
-    [self.urls addObject:@"https://www.google.com"];
-    [self.screenshots addObject:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]]];
-    self.currentImageIndex = 0;
+    self.screenshot = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
+    self.started = NO;
 
     return self;
 }
