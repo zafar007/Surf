@@ -40,6 +40,7 @@
 		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
+		8EFF092C194EA57500379F43 /* ReadSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* ReadSettingsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,8 @@
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
 		8ED828E719466F9F004D779F /* SBTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBTableViewCell.m; sourceTree = "<group>"; };
+		8EFF092A194EA57500379F43 /* ReadSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadSettingsViewController.h; sourceTree = "<group>"; };
+		8EFF092B194EA57500379F43 /* ReadSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadSettingsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,12 +217,14 @@
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E911ECC194E5B11005FC87F /* Twitter.h */,
 				8E911ECD194E5B11005FC87F /* Twitter.m */,
-				8E6CA4FF19450DCD00148137 /* Tab.h */,
-				8E6CA50019450DCD00148137 /* Tab.m */,
 				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
 				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
+				8EFF092A194EA57500379F43 /* ReadSettingsViewController.h */,
+				8EFF092B194EA57500379F43 /* ReadSettingsViewController.m */,
 				8E6CA50119450DCD00148137 /* TwitterViewController.h */,
 				8E6CA50219450DCD00148137 /* TwitterViewController.m */,
+				8E6CA4FF19450DCD00148137 /* Tab.h */,
+				8E6CA50019450DCD00148137 /* Tab.m */,
 				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
 				8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */,
 				8E6CA4FC19450DC200148137 /* RootViewController.h */,
@@ -373,6 +378,7 @@
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
 				8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */,
+				8EFF092C194EA57500379F43 /* ReadSettingsViewController.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
 				8E68BA9E194687540019658A /* UIImage+MultiFormat.m in Sources */,
 				8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */,

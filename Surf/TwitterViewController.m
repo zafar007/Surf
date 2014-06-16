@@ -11,6 +11,7 @@
 #import "TwitterViewController.h"
 #import "SBTableViewCell.h"
 #import "Twitter.h"
+#import "ReadSettingsViewController.h"
 
 @interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
@@ -49,10 +50,10 @@
                                                                                  action:@selector(unwind)];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                                target:self
-                                                                                action:@selector(add)];
-    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+//                                                                                target:self
+//                                                                                action:@selector(add)];
+//    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
     self.buttonItems = @[@"bookmarks",@"glasses",@"twitter",@"rss",@"facebook",@"pinterest"];
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
@@ -173,7 +174,8 @@
 
 - (void)add
 {
-
+    ReadSettingsViewController *settings = [ReadSettingsViewController new];
+    [self presentViewController:settings animated:YES completion:nil];
 }
 
 #pragma mark - Landscape Layout Adjust

@@ -599,12 +599,12 @@
 
 - (void)showWeb
 {
-    self.showingTools = false;
-    self.toolsView.hidden = YES;
-    [self.omnibar resignFirstResponder];
-
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
+    self.showingTools = false;
+    self.toolsView.hidden = YES;
+
+    [self.omnibar resignFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.webView.frame = CGRectMake(self.view.frame.origin.x,
@@ -617,8 +617,11 @@
 
 - (void)showTools
 {
+    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+
     self.showingTools = true;
     self.toolsView.hidden = NO;
+
     NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     Tab *tab = self.tabs[self.currentTabIndex];
@@ -627,8 +630,8 @@
         tab.screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
         cell.backgroundView = tab.screenshot;
     }
-
-    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    [self pingPageControlIndexPath:path];
+    [self pingBorderControl];
 
     [self.view insertSubview:tab.webView belowSubview:self.toolsView];
     [self.omnibar becomeFirstResponder];
