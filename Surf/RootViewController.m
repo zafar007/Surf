@@ -228,11 +228,7 @@
 
 - (void)handleSwipeFromRight:(UISwipeGestureRecognizer *)sender
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    int indexOfToolsView = (int) [self.view.subviews indexOfObject:self.toolsView];
-    int indexOfWebView = (int) [self.view.subviews indexOfObject:tab.webView];
-
-    if (indexOfToolsView < indexOfWebView)
+    if (!self.showingTools)
     {
         [self showTools];
     }
@@ -522,6 +518,7 @@
 {
     [self.omnibar resignFirstResponder];
     Tab *tab = self.tabs[self.currentTabIndex];
+    tab.started = YES;
     tab.urlString = [self searchOrLoad:textField.text];
     self.omnibar.text = @"";
     [self loadPage:tab];
@@ -607,12 +604,19 @@
     [self.omnibar resignFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
-    tab.webView.frame = CGRectMake(self.view.frame.origin.x,
-                                   self.view.frame.origin.y,
-                                   self.view.frame.size.width,
-                                   self.view.frame.size.height);
+    if (tab.started)
+    {
+        tab.webView.frame = CGRectMake(self.view.frame.origin.x,
+                                       self.view.frame.origin.y,
+                                       self.view.frame.size.width,
+                                       self.view.frame.size.height);
 
-    [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
+        [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
+    }
+    else
+    {
+        self.toolsView.hidden = YES;
+    }
 }
 
 - (void)showTools
@@ -656,7 +660,6 @@
     self.doneLoading = false;
 
     Tab *tab = self.tabs[self.currentTabIndex];
-    tab.started = YES;
     tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
 
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025

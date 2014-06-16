@@ -50,12 +50,13 @@
                                                                                  action:@selector(unwind)];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
 
-//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-//                                                                                target:self
-//                                                                                action:@selector(add)];
-//    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                                target:self
+                                                                                action:@selector(add)];
+    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
-    self.buttonItems = @[@"bookmarks",@"glasses",@"twitter",@"rss",@"facebook",@"pinterest"];
+    self.buttonItems = @[@"twitter",@"bookmarks",@"glasses"];
+
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
