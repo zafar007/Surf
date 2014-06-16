@@ -212,11 +212,6 @@
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
 }
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-    return YES;
-}
-
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
     [self.omnibar becomeFirstResponder];
