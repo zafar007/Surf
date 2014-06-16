@@ -54,7 +54,7 @@
                                                                                 action:@selector(add)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
-    self.buttonItems = @[@"twitter",@"glasses",@"bookmarks"];
+    self.buttonItems = @[@"bookmarks",@"glasses",@"twitter",@"rss",@"facebook",@"pinterest"];
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
@@ -160,6 +160,7 @@
 - (void)onButtonPress:(UIButton *)sender
 {
     NSLog(@"Tweet");
+    [self getTweets];
 }
 
 #pragma mark - Button Handling

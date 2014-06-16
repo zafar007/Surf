@@ -109,7 +109,7 @@
     NSString *textLabel;
     NSString *detailTextLabel;
     NSNumber *numberOfLines = @1;
-    NSString *urlString;
+    NSString *imgUrlString;
 
     if (retweet)
     {
@@ -123,12 +123,12 @@
     }
 
     textLabel = [self modifyTweetText:tweet];
-    urlString = tweet[@"user"][@"profile_image_url"];
+    imgUrlString = tweet[@"user"][@"profile_image_url"];
 
     return @{@"textLabel":textLabel,
              @"detailTextLabel":detailTextLabel,
              @"numberOfLines":numberOfLines,
-             @"urlString":urlString};
+             @"imgUrlString":imgUrlString};
 }
 
 + (NSString *)modifyTweetText:(NSDictionary *)tweet
