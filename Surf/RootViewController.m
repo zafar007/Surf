@@ -236,7 +236,9 @@
 
 - (void)handleSwipeFromLeft:(UISwipeGestureRecognizer *)sender
 {
-    if ([sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
+    Tab *tab = self.tabs[self.currentTabIndex];
+    if (tab.started &&
+        [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
         [self showWeb];
     }
@@ -605,15 +607,12 @@
 
     Tab *tab = self.tabs[self.currentTabIndex];
 
-//    if (tab.started)
-//    {
-        tab.webView.frame = CGRectMake(self.view.frame.origin.x,
-                                       self.view.frame.origin.y,
-                                       self.view.frame.size.width,
-                                       self.view.frame.size.height);
+    tab.webView.frame = CGRectMake(self.view.frame.origin.x,
+                                   self.view.frame.origin.y,
+                                   self.view.frame.size.width,
+                                   self.view.frame.size.height);
 
-        [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
-//    }
+    [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
 }
 
 - (void)showTools
@@ -627,11 +626,11 @@
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     Tab *tab = self.tabs[self.currentTabIndex];
 
-//    if (tab.started)
-//    {
+    if (tab.started)
+    {
         tab.screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
         cell.backgroundView = tab.screenshot;
-//    }
+    }
     [self pingPageControlIndexPath:path];
     [self pingBorderControl];
 
