@@ -604,19 +604,16 @@
     [self.omnibar resignFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
-    if (tab.started)
-    {
+
+//    if (tab.started)
+//    {
         tab.webView.frame = CGRectMake(self.view.frame.origin.x,
                                        self.view.frame.origin.y,
                                        self.view.frame.size.width,
                                        self.view.frame.size.height);
 
         [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
-    }
-    else
-    {
-        self.toolsView.hidden = YES;
-    }
+//    }
 }
 
 - (void)showTools
@@ -629,11 +626,12 @@
     NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     Tab *tab = self.tabs[self.currentTabIndex];
-    if (tab.started)
-    {
+
+//    if (tab.started)
+//    {
         tab.screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
         cell.backgroundView = tab.screenshot;
-    }
+//    }
     [self pingPageControlIndexPath:path];
     [self pingBorderControl];
 

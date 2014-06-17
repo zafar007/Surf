@@ -27,7 +27,6 @@
     [super viewDidLoad];
     [self createButtons];
     [self createTable];
-    [self getTweets];
 }
 
 - (void)getTweets
@@ -39,6 +38,7 @@
 
 - (void)saveTweets:(NSNotification *)notification
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
     self.tweets = notification.object;
     [self.tableView reloadData];
 }
@@ -55,7 +55,7 @@
                                                                                 action:@selector(add)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
-    self.buttonItems = @[@"twitter",@"bookmarks",@"glasses"];
+    self.buttonItems = @[@"twitter",@"bookmarks",@"glasses",@"facebook",@"pinterest",@"hackernews",@"dribbble"];
 
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -136,16 +136,8 @@
 
 - (void)makeButtonIn:(UICollectionViewCell *)cell forItem:(int)item
 {
-    UIImage *image;
-    if (self.buttonItems.count-1 >= item)
-    {
-        image = [UIImage imageNamed:self.buttonItems[item]];
-    }
-    else
-    {
-        image = nil;
-    }
-
+    [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    UIImage *image = [UIImage imageNamed:self.buttonItems[item]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button addTarget:self
                action:@selector(onButtonPress:)
@@ -155,14 +147,27 @@
                               cell.backgroundView.frame.origin.y,
                               cell.backgroundView.frame.size.width,
                               cell.backgroundView.frame.size.height);
-    button.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-    cell.backgroundView = button;
+    button.tag = item;
+    button.frame = cell.bounds;
+    [cell.contentView addSubview:button];
 }
 
 - (void)onButtonPress:(UIButton *)sender
 {
-    NSLog(@"Tweet");
-    [self getTweets];
+    switch (sender.tag)
+    {
+        case 0:
+            NSLog(@"Tweet");
+            [self getTweets];
+            break;
+
+        case 1:
+            NSLog(@"Bookmark");
+            break;
+
+        default:
+            break;
+    }
 }
 
 #pragma mark - Button Handling
