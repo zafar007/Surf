@@ -11,7 +11,7 @@
 #import "ReadingViewController.h"
 #import "SBTableViewCell.h"
 #import "Twitter.h"
-#import "ReadSettingsViewController.h"
+#import "SettingsViewController.h"
 
 @interface ReadingViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
@@ -290,7 +290,7 @@
 
 - (void)add
 {
-    ReadSettingsViewController *settings = [ReadSettingsViewController new];
+    SettingsViewController *settings = [SettingsViewController new];
     [self presentViewController:settings animated:YES completion:nil];
 }
 

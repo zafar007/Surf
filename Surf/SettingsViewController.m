@@ -6,13 +6,13 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
-#import "ReadSettingsViewController.h"
+#import "SettingsViewController.h"
 
-@interface ReadSettingsViewController ()
+@interface SettingsViewController ()
 
 @end
 
-@implementation ReadSettingsViewController
+@implementation SettingsViewController
 
 - (void)viewDidLoad
 {

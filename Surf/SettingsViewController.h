@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ReadSettingsViewController : UIViewController
+@interface SettingsViewController : UIViewController
 
 @end
