@@ -285,13 +285,14 @@
 - (void)unwind
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:nil];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (void)add
 {
-    SettingsViewController *settings = [SettingsViewController new];
-    [self presentViewController:settings animated:YES completion:nil];
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    [self presentViewController:navigationController animated:NO completion:nil];
 }
 
 #pragma mark - Landscape Layout Adjust
