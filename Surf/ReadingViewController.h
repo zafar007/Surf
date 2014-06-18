@@ -8,5 +8,5 @@
 
 #import <UIKit/UIKit.h>
 
-@interface TwitterViewController : UIViewController
+@interface ReadingViewController : UIViewController
 @end

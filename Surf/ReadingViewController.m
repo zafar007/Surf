@@ -8,39 +8,59 @@
 
 #define CellIdentifier @"Cell"
 
-#import "TwitterViewController.h"
+#import "ReadingViewController.h"
 #import "SBTableViewCell.h"
 #import "Twitter.h"
 #import "ReadSettingsViewController.h"
 
-@interface TwitterViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface ReadingViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
 @property UICollectionView *buttons;
 @property NSArray *buttonItems;
-@property NSArray *tweets;
+@property NSArray *data;
+@property Twitter *twitter;
 @end
 
-@implementation TwitterViewController
+@implementation ReadingViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.buttonItems = @[@"twitter",
+                         @"feedly",
+                         @"pocket",
+                         @"instapaper",
+                         @"readability",
+                         @"facebook",
+                         @"pinterest",
+                         @"dribbble",
+                         @"bookmarks",
+                         @"glasses",
+                         @"hackernews",
+                         @"reddit"];
+
+    [self loadServiceObservers];
     [self createButtons];
     [self createTable];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
 }
 
-- (void)getTweets
+- (void)loadServiceObservers
 {
-    Twitter *twitter = [Twitter new];
-    [twitter getTimeLine];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveTweets:) name:@"Twitter" object:nil];
-}
-
-- (void)saveTweets:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
-    self.tweets = notification.object;
-    [self.tableView reloadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadTwitter) name:@"twitter" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedly) name:@"feedly" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadPocket) name:@"pocket" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadInstapaper) name:@"instapaper" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReadability) name:@"readability" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFacebook) name:@"facebook" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadPinterest) name:@"pinterest" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackerNews) name:@"hackernews" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
 }
 
 - (void)createButtons
@@ -54,8 +74,6 @@
                                                                                 target:self
                                                                                 action:@selector(add)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
-
-    self.buttonItems = @[@"twitter",@"bookmarks",@"glasses",@"facebook",@"pinterest",@"hackernews",@"dribbble"];
 
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -85,7 +103,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.tweets.count;
+    return self.data.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -96,7 +114,7 @@
         cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    NSDictionary *layoutData = [Twitter layoutFrom:self.tweets[indexPath.row]];
+    NSDictionary *layoutData = [Twitter layoutFrom:self.data[indexPath.row]];
     [cell modifyCellLayoutWithData:layoutData];
 
     return cell;
@@ -104,12 +122,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [SBTableViewCell heightForCellWithTweet:self.tweets[indexPath.row]];
+    return [SBTableViewCell heightForCellWithTweet:self.data[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *urlString = self.tweets[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
+    NSString *urlString = self.data[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -130,7 +148,7 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-    [self makeButtonIn:cell forItem:indexPath.item];
+    [self makeButtonIn:cell forItem:(int)indexPath.item];
     return cell;
 }
 
@@ -154,20 +172,112 @@
 
 - (void)onButtonPress:(UIButton *)sender
 {
-    switch (sender.tag)
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[sender.tag] object:nil];
+}
+
+#pragma mark - Services
+
+- (void)parseService:(int)tag
+{
+
+}
+
+- (void)loadTwitter
+{
+    if (!self.twitter)
     {
-        case 0:
-            NSLog(@"Tweet");
-            [self getTweets];
-            break;
-
-        case 1:
-            NSLog(@"Bookmark");
-            break;
-
-        default:
-            break;
+        self.twitter = [Twitter new];
     }
+    [self.twitter getTimeLine];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactTwitter:) name:@"Twitter" object:nil];
+}
+
+- (void)reactTwitter:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
+}
+
+- (void)loadFeedly
+{
+    self.data = nil;
+    [self.tableView reloadData];
+}
+
+- (void)reactFeedly
+{
+
+}
+
+- (void)loadPocket
+{
+
+}
+
+- (void)reactPocket
+{
+
+}
+
+- (void)loadInstapaper
+{
+
+}
+
+- (void)reactInstapaper
+{
+
+}
+
+- (void)loadReadability
+{
+
+}
+
+- (void)reactReadability
+{
+
+}
+
+- (void)loadFacebook
+{
+
+}
+
+- (void)reactFacebook
+{
+
+}
+
+- (void)loadPinterest
+{
+
+}
+
+- (void)loadDribbble
+{
+
+}
+
+- (void)loadBookmarks
+{
+
+}
+
+- (void)loadGlasses
+{
+
+}
+
+- (void)loadHackerNews
+{
+
+}
+
+- (void)loadReddit
+{
+
 }
 
 #pragma mark - Button Handling

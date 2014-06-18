@@ -8,7 +8,7 @@
 
 #import "RootViewController.h"
 #import "Tab.h"
-#import "TwitterViewController.h"
+#import "ReadingViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SBCollectionViewCell.h"
 
@@ -40,9 +40,9 @@
 @property UIButton *shareButton;
 @property UIButton *stopButton;
 @property UIButton *refreshButton;
-@property UIButton *twitterListButton;
+@property UIButton *readButton;
 @property UIButton *addButton;
-@property TwitterViewController *twitterViewController;
+@property ReadingViewController *readingViewController;
 @property UIPageControl *pageControl;
 @end
 
@@ -162,8 +162,8 @@
 - (void)showTwitterLinks
 {
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
-    self.twitterViewController = [[TwitterViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.twitterViewController];
+    self.readingViewController = [[ReadingViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.readingViewController];
     [self presentViewController:navigationController animated:YES completion:nil];
 }
 
@@ -385,7 +385,7 @@
     self.pageControl.numberOfPages = self.tabs.count;
     self.refreshButton.enabled = NO;
     [self.tabsCollectionView reloadData];
-    [self switchToTab:self.tabs.count-1];
+    [self switchToTab:(int)self.tabs.count-1];
     if([urlString isKindOfClass:[NSString class]])
     {
         newTab.urlString = [self searchOrLoad:urlString];
@@ -798,14 +798,14 @@
     self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.stopButton];
 
-    self.twitterListButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.twitterListButton addTarget:self
+    self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.readButton addTarget:self
                                action:@selector(showTwitterLinks)
                      forControlEvents:UIControlEventTouchUpInside];
-    [self.twitterListButton setImage:[UIImage imageNamed:@"twitter"] forState:UIControlStateNormal];
-    self.twitterListButton.frame = CGRectMake(20, 20, 32, 32);
-    self.twitterListButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-30);
-    [self.toolsView addSubview:self.twitterListButton];
+    [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
+    self.readButton.frame = CGRectMake(20, 20, 48, 48);
+    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-30);
+    [self.toolsView addSubview:self.readButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.addButton addTarget:self
