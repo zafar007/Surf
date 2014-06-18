@@ -28,6 +28,7 @@
     [super viewDidLoad];
 
     self.buttonItems = @[@"twitter",
+                         @"global",
                          @"feedly",
                          @"pocket",
                          @"instapaper",
@@ -50,6 +51,7 @@
 - (void)loadServiceObservers
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadTwitter) name:@"twitter" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlobal) name:@"global" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFeedly) name:@"feedly" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadPocket) name:@"pocket" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadInstapaper) name:@"instapaper" object:nil];
@@ -128,7 +130,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSString *urlString = self.data[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:urlString];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
@@ -177,11 +179,6 @@
 
 #pragma mark - Services
 
-- (void)parseService:(int)tag
-{
-
-}
-
 - (void)loadTwitter
 {
     if (!self.twitter)
@@ -197,6 +194,16 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
     self.data = notification.object;
     [self.tableView reloadData];
+}
+
+- (void)loadGlobal
+{
+
+}
+
+- (void)reactGlobal
+{
+
 }
 
 - (void)loadFeedly
@@ -284,7 +291,7 @@
 
 - (void)unwind
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"TwitterBack" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:nil];
     [self dismissViewControllerAnimated:NO completion:nil];
 }
 

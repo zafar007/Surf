@@ -38,6 +38,7 @@
 		8E6CA50319450DCD00148137 /* Tab.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50019450DCD00148137 /* Tab.m */; };
 		8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* ReadingViewController.m */; };
 		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
+		8E97B4A41951CA6400068AEB /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4A31951CA6400068AEB /* Global.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
@@ -109,6 +110,8 @@
 		8E6CA50219450DCD00148137 /* ReadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadingViewController.m; sourceTree = "<group>"; };
 		8E911ECC194E5B11005FC87F /* Twitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Twitter.h; sourceTree = "<group>"; };
 		8E911ECD194E5B11005FC87F /* Twitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Twitter.m; sourceTree = "<group>"; };
+		8E97B4A21951CA6400068AEB /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
+		8E97B4A31951CA6400068AEB /* Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Global.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 			children = (
 				8E911ECC194E5B11005FC87F /* Twitter.h */,
 				8E911ECD194E5B11005FC87F /* Twitter.m */,
+				8E97B4A21951CA6400068AEB /* Global.h */,
+				8E97B4A31951CA6400068AEB /* Global.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -225,18 +230,8 @@
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,
-				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
-				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
-				8EFF092A194EA57500379F43 /* SettingsViewController.h */,
-				8EFF092B194EA57500379F43 /* SettingsViewController.m */,
-				8E6CA50119450DCD00148137 /* ReadingViewController.h */,
-				8E6CA50219450DCD00148137 /* ReadingViewController.m */,
-				8E6CA4FF19450DCD00148137 /* Tab.h */,
-				8E6CA50019450DCD00148137 /* Tab.m */,
-				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
-				8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */,
-				8E6CA4FC19450DC200148137 /* RootViewController.h */,
-				8E6CA4FD19450DC200148137 /* RootViewController.m */,
+				8E97B4A51951CB1600068AEB /* ReadVC */,
+				8E97B4A61951CB2600068AEB /* RootVC */,
 				8E6CA4DF19450D8800148137 /* Images.xcassets */,
 				8E6CA4D419450D8800148137 /* Supporting Files */,
 			);
@@ -270,6 +265,32 @@
 				8E6CA4EF19450D8800148137 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8E97B4A51951CB1600068AEB /* ReadVC */ = {
+			isa = PBXGroup;
+			children = (
+				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
+				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
+				8EFF092A194EA57500379F43 /* SettingsViewController.h */,
+				8EFF092B194EA57500379F43 /* SettingsViewController.m */,
+				8E6CA50119450DCD00148137 /* ReadingViewController.h */,
+				8E6CA50219450DCD00148137 /* ReadingViewController.m */,
+			);
+			name = ReadVC;
+			sourceTree = "<group>";
+		};
+		8E97B4A61951CB2600068AEB /* RootVC */ = {
+			isa = PBXGroup;
+			children = (
+				8E6CA4FF19450DCD00148137 /* Tab.h */,
+				8E6CA50019450DCD00148137 /* Tab.m */,
+				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
+				8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */,
+				8E6CA4FC19450DC200148137 /* RootViewController.h */,
+				8E6CA4FD19450DC200148137 /* RootViewController.m */,
+			);
+			name = RootVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -384,6 +405,7 @@
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
+				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
 				8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */,
 				8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */,

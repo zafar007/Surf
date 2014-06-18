@@ -63,7 +63,7 @@
     [self loadTabs];
     [self createPageControl];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"TwitterBack" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"BackFromReadVC" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
 }
 
@@ -90,7 +90,7 @@
                                                               self.view.frame.origin.y,
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
-    self.toolsView.backgroundColor = [UIColor whiteColor];
+    self.toolsView.backgroundColor = [UIColor blackColor];
     self.toolsView.alpha = .9;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
@@ -110,6 +110,7 @@
     self.omnibar.keyboardType = UIKeyboardTypeEmailAddress;
     self.omnibar.returnKeyType = UIReturnKeyGo;
     self.omnibar.placeholder = @"search";
+    self.omnibar.textColor = [UIColor lightGrayColor];
     self.omnibar.adjustsFontSizeToFitWidth = YES;
     self.omnibar.textAlignment = NSTextAlignmentCenter;
     self.omnibar.font = [UIFont systemFontOfSize:32];
@@ -140,7 +141,7 @@
                                                  collectionViewLayout:flowLayout];
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
-    self.tabsCollectionView.backgroundColor = [UIColor whiteColor];
+    self.tabsCollectionView.backgroundColor = [UIColor blackColor];
     [self.tabsCollectionView registerClass:[SBCollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.toolsView addSubview:self.tabsCollectionView];
 }
@@ -148,9 +149,9 @@
 - (void)createPageControl
 {
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20)];
-    self.pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
-    self.pageControl.backgroundColor = [UIColor whiteColor];
+    self.pageControl.pageIndicatorTintColor = [UIColor grayColor];
+    self.pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];//[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    self.pageControl.backgroundColor = [UIColor blackColor];
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.currentPage = 0;
     self.pageControl.numberOfPages = self.tabs.count;
