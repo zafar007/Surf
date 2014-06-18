@@ -1,5 +1,5 @@
 //
-//  Global.h
+//  Feedly.h
 //  Surf
 //
 //  Created by Sapan Bhuta on 6/18/14.
@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Global : NSObject
+@interface Feedly : NSObject
 - (void)getData;
-+ (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
 @end

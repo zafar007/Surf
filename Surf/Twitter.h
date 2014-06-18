@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface Twitter : NSObject
-- (void)getTimeLine;
+- (void)getData;
 + (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
 @end

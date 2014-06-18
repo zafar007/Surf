@@ -1,5 +1,5 @@
 //
-//  Global.h
+//  Glasses.h
 //  Surf
 //
 //  Created by Sapan Bhuta on 6/18/14.
@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Global : NSObject
+@interface Glasses : NSObject
 - (void)getData;
-+ (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
 @end

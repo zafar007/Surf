@@ -10,15 +10,42 @@
 
 #import "ReadingViewController.h"
 #import "SBTableViewCell.h"
-#import "Twitter.h"
 #import "SettingsViewController.h"
+#import "Twitter.h"
+#import "Global.h"
+#import "Feedly.h"
+#import "Pocket.h"
+#import "Instapaper.h"
+#import "Readability.h"
+#import "Facebook.h"
+#import "Pinterest.h"
+#import "Dribbble.h"
+#import "Bookmarks.h"
+#import "Glasses.h"
+#import "Hackernews.h"
+#import "Reddit.h"
 
-@interface ReadingViewController () <UITableViewDelegate, UITableViewDataSource, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface ReadingViewController () <UITableViewDelegate,
+                                        UITableViewDataSource,
+                                        UICollectionViewDataSource,
+                                        UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
 @property UICollectionView *buttons;
 @property NSArray *buttonItems;
 @property NSArray *data;
 @property Twitter *twitter;
+@property Global *global;
+@property Feedly *feedly;
+@property Pocket *pocket;
+@property Instapaper *instapaper;
+@property Readability *readability;
+@property Facebook *facebook;
+@property Pinterest *pinterest;
+@property Dribbble *dribbble;
+@property Bookmarks *bookmarks;
+@property Glasses *glasses;
+@property Hackernews *hackernews;
+@property Reddit *reddit;
 @end
 
 @implementation ReadingViewController
@@ -185,7 +212,7 @@
     {
         self.twitter = [Twitter new];
     }
-    [self.twitter getTimeLine];
+    [self.twitter getData];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactTwitter:) name:@"Twitter" object:nil];
 }
 
@@ -198,23 +225,36 @@
 
 - (void)loadGlobal
 {
-
+    if (!self.global)
+    {
+        self.global = [Global new];
+    }
+    [self.global getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactGlobal:) name:@"Global" object:nil];
 }
 
-- (void)reactGlobal
+- (void)reactGlobal:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadFeedly
 {
-    self.data = nil;
-    [self.tableView reloadData];
+    if (!self.feedly)
+    {
+        self.feedly = [Feedly new];
+    }
+    [self.feedly getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactFeedly:) name:@"Feedly" object:nil];
 }
 
-- (void)reactFeedly
+- (void)reactFeedly:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadPocket
@@ -222,7 +262,7 @@
 
 }
 
-- (void)reactPocket
+- (void)reactPocket:(NSNotification *)notification
 {
 
 }
@@ -232,7 +272,7 @@
 
 }
 
-- (void)reactInstapaper
+- (void)reactInstapaper:(NSNotification *)notification
 {
 
 }
@@ -242,7 +282,7 @@
 
 }
 
-- (void)reactReadability
+- (void)reactReadability:(NSNotification *)notification
 {
 
 }
@@ -252,7 +292,7 @@
 
 }
 
-- (void)reactFacebook
+- (void)reactFacebook:(NSNotification *)notification
 {
 
 }
@@ -262,7 +302,17 @@
 
 }
 
+- (void)reactPinterest:(NSNotification *)notification
+{
+
+}
+
 - (void)loadDribbble
+{
+
+}
+
+- (void)reactDribbble:(NSNotification *)notification
 {
 
 }
@@ -272,7 +322,17 @@
 
 }
 
+- (void)reactBookmarks:(NSNotification *)notification
+{
+
+}
+
 - (void)loadGlasses
+{
+
+}
+
+- (void)reactGlasses:(NSNotification *)notification
 {
 
 }
@@ -282,7 +342,17 @@
 
 }
 
+- (void)reactHackernews:(NSNotification *)notification
+{
+
+}
+
 - (void)loadReddit
+{
+
+}
+
+- (void)reactReddit:(NSNotification *)notification
 {
 
 }

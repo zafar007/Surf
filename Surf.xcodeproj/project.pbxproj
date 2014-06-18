@@ -39,6 +39,17 @@
 		8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* ReadingViewController.m */; };
 		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
 		8E97B4A41951CA6400068AEB /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4A31951CA6400068AEB /* Global.m */; };
+		8E97B4A91951CFE300068AEB /* Feedly.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4A81951CFE300068AEB /* Feedly.m */; };
+		8E97B4AC1951CFE900068AEB /* Pocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4AB1951CFE900068AEB /* Pocket.m */; };
+		8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B11951D01E00068AEB /* Instapaper.m */; };
+		8E97B4B51951D06000068AEB /* Readability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B41951D06000068AEB /* Readability.m */; };
+		8E97B4B81951D08400068AEB /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B71951D08400068AEB /* Facebook.m */; };
+		8E97B4BB1951D09600068AEB /* Pinterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4BA1951D09600068AEB /* Pinterest.m */; };
+		8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4BD1951D0A100068AEB /* Dribbble.m */; };
+		8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C01951D0B400068AEB /* Bookmarks.m */; };
+		8E97B4C41951D0C000068AEB /* Glasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Glasses.m */; };
+		8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C61951D0CF00068AEB /* Hackernews.m */; };
+		8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C91951D0DA00068AEB /* Reddit.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
@@ -112,6 +123,28 @@
 		8E911ECD194E5B11005FC87F /* Twitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Twitter.m; sourceTree = "<group>"; };
 		8E97B4A21951CA6400068AEB /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		8E97B4A31951CA6400068AEB /* Global.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Global.m; sourceTree = "<group>"; };
+		8E97B4A71951CFE300068AEB /* Feedly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Feedly.h; sourceTree = "<group>"; };
+		8E97B4A81951CFE300068AEB /* Feedly.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Feedly.m; sourceTree = "<group>"; };
+		8E97B4AA1951CFE900068AEB /* Pocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pocket.h; sourceTree = "<group>"; };
+		8E97B4AB1951CFE900068AEB /* Pocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pocket.m; sourceTree = "<group>"; };
+		8E97B4B01951D01E00068AEB /* Instapaper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Instapaper.h; sourceTree = "<group>"; };
+		8E97B4B11951D01E00068AEB /* Instapaper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Instapaper.m; sourceTree = "<group>"; };
+		8E97B4B31951D06000068AEB /* Readability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Readability.h; sourceTree = "<group>"; };
+		8E97B4B41951D06000068AEB /* Readability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Readability.m; sourceTree = "<group>"; };
+		8E97B4B61951D08400068AEB /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
+		8E97B4B71951D08400068AEB /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
+		8E97B4B91951D09600068AEB /* Pinterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pinterest.h; sourceTree = "<group>"; };
+		8E97B4BA1951D09600068AEB /* Pinterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pinterest.m; sourceTree = "<group>"; };
+		8E97B4BC1951D0A100068AEB /* Dribbble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dribbble.h; sourceTree = "<group>"; };
+		8E97B4BD1951D0A100068AEB /* Dribbble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dribbble.m; sourceTree = "<group>"; };
+		8E97B4BF1951D0B400068AEB /* Bookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmarks.h; sourceTree = "<group>"; };
+		8E97B4C01951D0B400068AEB /* Bookmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmarks.m; sourceTree = "<group>"; };
+		8E97B4C21951D0C000068AEB /* Glasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Glasses.h; sourceTree = "<group>"; };
+		8E97B4C31951D0C000068AEB /* Glasses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Glasses.m; sourceTree = "<group>"; };
+		8E97B4C51951D0CF00068AEB /* Hackernews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hackernews.h; sourceTree = "<group>"; };
+		8E97B4C61951D0CF00068AEB /* Hackernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hackernews.m; sourceTree = "<group>"; };
+		8E97B4C81951D0DA00068AEB /* Reddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reddit.h; sourceTree = "<group>"; };
+		8E97B4C91951D0DA00068AEB /* Reddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reddit.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
@@ -151,6 +184,28 @@
 				8E911ECD194E5B11005FC87F /* Twitter.m */,
 				8E97B4A21951CA6400068AEB /* Global.h */,
 				8E97B4A31951CA6400068AEB /* Global.m */,
+				8E97B4A71951CFE300068AEB /* Feedly.h */,
+				8E97B4A81951CFE300068AEB /* Feedly.m */,
+				8E97B4AA1951CFE900068AEB /* Pocket.h */,
+				8E97B4AB1951CFE900068AEB /* Pocket.m */,
+				8E97B4B01951D01E00068AEB /* Instapaper.h */,
+				8E97B4B11951D01E00068AEB /* Instapaper.m */,
+				8E97B4B31951D06000068AEB /* Readability.h */,
+				8E97B4B41951D06000068AEB /* Readability.m */,
+				8E97B4B61951D08400068AEB /* Facebook.h */,
+				8E97B4B71951D08400068AEB /* Facebook.m */,
+				8E97B4B91951D09600068AEB /* Pinterest.h */,
+				8E97B4BA1951D09600068AEB /* Pinterest.m */,
+				8E97B4BC1951D0A100068AEB /* Dribbble.h */,
+				8E97B4BD1951D0A100068AEB /* Dribbble.m */,
+				8E97B4BF1951D0B400068AEB /* Bookmarks.h */,
+				8E97B4C01951D0B400068AEB /* Bookmarks.m */,
+				8E97B4C21951D0C000068AEB /* Glasses.h */,
+				8E97B4C31951D0C000068AEB /* Glasses.m */,
+				8E97B4C51951D0CF00068AEB /* Hackernews.h */,
+				8E97B4C61951D0CF00068AEB /* Hackernews.m */,
+				8E97B4C81951D0DA00068AEB /* Reddit.h */,
+				8E97B4C91951D0DA00068AEB /* Reddit.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -388,6 +443,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E97B4C41951D0C000068AEB /* Glasses.m in Sources */,
+				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
+				8E97B4BB1951D09600068AEB /* Pinterest.m in Sources */,
+				8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */,
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,
 				8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */,
 				8E68BA9A194687540019658A /* SDWebImageManager.m in Sources */,
@@ -395,8 +454,11 @@
 				8E68BA95194687540019658A /* SDImageCache.m in Sources */,
 				8E68BA99194687540019658A /* SDWebImageDownloaderOperation.m in Sources */,
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,
+				8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */,
+				8E97B4B81951D08400068AEB /* Facebook.m in Sources */,
 				8E68BA9C194687540019658A /* UIButton+WebCache.m in Sources */,
 				8E68BA94194687540019658A /* NSData+ImageContentType.m in Sources */,
+				8E97B4B51951D06000068AEB /* Readability.m in Sources */,
 				8E68BA9B194687540019658A /* SDWebImagePrefetcher.m in Sources */,
 				8E68BA98194687540019658A /* SDWebImageDownloader.m in Sources */,
 				8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */,
@@ -404,12 +466,16 @@
 				8E68BAA1194687540019658A /* UIImageView+WebCache.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
+				8E97B4A91951CFE300068AEB /* Feedly.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
 				8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */,
 				8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */,
+				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
+				8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */,
+				8E97B4AC1951CFE900068AEB /* Pocket.m in Sources */,
 				8E68BA9E194687540019658A /* UIImage+MultiFormat.m in Sources */,
 				8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */,
 				8E68BA9D194687540019658A /* UIImage+GIF.m in Sources */,

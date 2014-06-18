@@ -1,5 +1,5 @@
 //
-//  Global.h
+//  Bookmarks.h
 //  Surf
 //
 //  Created by Sapan Bhuta on 6/18/14.
@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Global : NSObject
+@interface Bookmarks : NSObject
 - (void)getData;
-+ (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
 @end
