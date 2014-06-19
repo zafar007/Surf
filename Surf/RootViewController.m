@@ -65,6 +65,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"BackFromReadVC" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentURL) name:@"CurrentURL" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -91,7 +92,7 @@
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
     self.toolsView.backgroundColor = [UIColor blackColor];
-    self.toolsView.alpha = .9;
+    self.toolsView.alpha = .85;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
 }
@@ -861,6 +862,13 @@
                                          UIActivityTypePostToVimeo];
 
     [self presentViewController:controller animated:YES completion:nil];
+}
+
+- (void)currentURL
+{
+    Tab *tab = self.tabs[self.currentTabIndex];
+    NSString *url = tab.webView.request.URL.absoluteString;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"url" object:url];
 }
 
 @end

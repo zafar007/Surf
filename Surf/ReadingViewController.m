@@ -241,6 +241,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
     self.data = notification.object;
+    NSLog(@"data: %@",self.data);
     [self.tableView reloadData];
 }
 

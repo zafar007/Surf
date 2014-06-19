@@ -6,18 +6,27 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
+#define kAPI @"https://api.twitter.com/1.1/search/tweets.json"
+
 #import "Global.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 
 @interface Global ()
-@property NSArray *dataSource;
+@property NSDictionary *dataSource;
+@property NSString *url;
 @property NSMutableArray *tweets;
 @end
 
 @implementation Global
+
 - (void)getData
 {
+    NSLog(@"Global");
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveURL:) name:@"url" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"CurrentURL" object:nil];
+
     ACAccountStore *account = [[ACAccountStore alloc] init];
     ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 
@@ -30,8 +39,12 @@
              if ([arrayOfAccounts count] > 0)
              {
                  ACAccount *twitterAccount = arrayOfAccounts.lastObject;
-                 NSURL *requestURL = [NSURL URLWithString: @"https://api.twitter.com/1.1/statuses/home_timeline.json"];
-                 NSDictionary *parameters = @{@"count" : @"200"};
+                 NSURL *requestURL = [NSURL URLWithString: kAPI];
+
+                 NSData *asciiData = [self.url dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+                 NSString *asciiString = [[NSString alloc] initWithData:asciiData encoding:NSASCIIStringEncoding];
+                 NSDictionary *parameters = @{@"q" : asciiString};
+
                  SLRequest *postRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                              requestMethod:SLRequestMethodGET
                                                                        URL:requestURL
@@ -82,23 +95,23 @@
              [alert addButtonWithTitle:@"Dismiss"];
              [alert show];
          }
-     }
-     ];
+     }];
 }
 
 - (void)filterTweetsForLinkedPosts
 {
     self.tweets = [NSMutableArray new];
 
-    for (NSDictionary *tweet in self.dataSource)
+    for (NSDictionary *tweet in self.dataSource[@"statuses"])
     {
-        NSArray *urls = tweet[@"entities"][@"urls"];
-
-        if (urls.count)
-        {
             [self.tweets addObject:tweet];
-        }
     }
+}
+
+- (void)saveURL:(NSNotification *)notification
+{
+    self.url = notification.object;
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"url" object:nil];
 }
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)tweet
