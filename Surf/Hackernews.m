@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Hackernews" object:nil];
+    NSLog(@"Hackernews");
 }
 
 @end

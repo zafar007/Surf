@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Reddit" object:nil];
+    NSLog(@"Reddit");
 }
 
 @end

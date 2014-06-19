@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Bookmarks" object:nil];
+    NSLog(@"Bookmarks");
 }
 
 @end

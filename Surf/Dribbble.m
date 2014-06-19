@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Dribbble" object:nil];
+    NSLog(@"Dribbble");
 }
 
 @end

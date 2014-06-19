@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Feedly" object:nil];
+    NSLog(@"Feedly");
 }
 
 @end

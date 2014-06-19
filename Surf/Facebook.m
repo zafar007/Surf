@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Facebook" object:nil];
+    NSLog(@"Facebook");
 }
 
 @end

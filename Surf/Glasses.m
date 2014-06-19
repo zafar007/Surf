@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Glasses" object:nil];
+    NSLog(@"Glasses");
 }
 
 @end

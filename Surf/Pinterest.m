@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Pinterest" object:nil];
+    NSLog(@"Pinterest");
 }
 
 @end

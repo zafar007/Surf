@@ -66,7 +66,15 @@
                          @"bookmarks",
                          @"glasses",
                          @"hackernews",
-                         @"reddit"];
+                         @"reddit"];            //readwrite, producthunt
+
+                                                //    TheVerge
+                                                //    TechCrunch
+                                                //    ProductHunt
+                                                //    Dribble
+                                                //    ReadWrite
+                                                //    HackerNews
+                                                //    Twitter
 
     [self loadServiceObservers];
     [self createButtons];
@@ -88,7 +96,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackerNews) name:@"hackernews" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
 }
 
@@ -252,109 +260,179 @@
 
 - (void)reactFeedly:(NSNotification *)notification
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Feedly" object:nil];
     self.data = notification.object;
     [self.tableView reloadData];
 }
 
 - (void)loadPocket
 {
-
+    if (!self.pocket)
+    {
+        self.pocket = [Pocket new];
+    }
+    [self.pocket getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactPocket:) name:@"Pocket" object:nil];
 }
 
 - (void)reactPocket:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pocket" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadInstapaper
 {
-
+    if (!self.instapaper)
+    {
+        self.instapaper = [Instapaper new];
+    }
+    [self.instapaper getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactInstapaper:) name:@"Instapaper" object:nil];
 }
 
 - (void)reactInstapaper:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Instapaper" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadReadability
 {
-
+    if (!self.readability)
+    {
+        self.readability = [Readability new];
+    }
+    [self.readability getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactReadability:) name:@"Readability" object:nil];
 }
 
 - (void)reactReadability:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Readability" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadFacebook
 {
-
+    if (!self.facebook)
+    {
+        self.facebook = [Facebook new];
+    }
+    [self.facebook getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactFacebook:) name:@"Facebook" object:nil];
 }
 
 - (void)reactFacebook:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadPinterest
 {
-
+    if (!self.pinterest)
+    {
+        self.pinterest = [Pinterest new];
+    }
+    [self.pinterest getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactPinterest:) name:@"Pinterest" object:nil];
 }
 
 - (void)reactPinterest:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pinterest" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadDribbble
 {
-
+    if (!self.dribbble)
+    {
+        self.dribbble = [Dribbble new];
+    }
+    [self.dribbble getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactDribbble:) name:@"Dribbble" object:nil];
 }
 
 - (void)reactDribbble:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Dribbble" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadBookmarks
 {
-
+    if (!self.bookmarks)
+    {
+        self.bookmarks = [Bookmarks new];
+    }
+    [self.bookmarks getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactBookmarks:) name:@"Bookmarks" object:nil];
 }
 
 - (void)reactBookmarks:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadGlasses
 {
-
+    if (!self.glasses)
+    {
+        self.glasses = [Glasses new];
+    }
+    [self.glasses getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactGlasses:) name:@"Glasses" object:nil];
 }
 
 - (void)reactGlasses:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Glasses" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
-- (void)loadHackerNews
+- (void)loadHackernews
 {
-
+    if (!self.hackernews)
+    {
+        self.hackernews = [Hackernews new];
+    }
+    [self.hackernews getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactHackernews:) name:@"Hackernews" object:nil];
 }
 
 - (void)reactHackernews:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Hackernews" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 - (void)loadReddit
 {
-
+    if (!self.reddit)
+    {
+        self.reddit = [Reddit new];
+    }
+    [self.reddit getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactReddit:) name:@"Reddit" object:nil];
 }
 
 - (void)reactReddit:(NSNotification *)notification
 {
-
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Reddit" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
 }
 
 #pragma mark - Button Handling

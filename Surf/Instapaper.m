@@ -12,7 +12,8 @@
 
 - (void)getData
 {
-
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Instapaper" object:nil];
+    NSLog(@"Instapaper");
 }
 
 @end

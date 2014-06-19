@@ -325,10 +325,10 @@
 		8E97B4A51951CB1600068AEB /* ReadVC */ = {
 			isa = PBXGroup;
 			children = (
-				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
-				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
 				8EFF092A194EA57500379F43 /* SettingsViewController.h */,
 				8EFF092B194EA57500379F43 /* SettingsViewController.m */,
+				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
+				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
 				8E6CA50119450DCD00148137 /* ReadingViewController.h */,
 				8E6CA50219450DCD00148137 /* ReadingViewController.m */,
 			);
