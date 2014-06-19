@@ -24,6 +24,7 @@
 #import "Glasses.h"
 #import "Hackernews.h"
 #import "Reddit.h"
+#import "Producthunt.h"
 
 @interface ReadingViewController () <UITableViewDelegate,
                                         UITableViewDataSource,
@@ -46,6 +47,7 @@
 @property Glasses *glasses;
 @property Hackernews *hackernews;
 @property Reddit *reddit;
+@property Producthunt *producthunt;
 @end
 
 @implementation ReadingViewController
@@ -66,21 +68,14 @@
                          @"bookmarks",
                          @"glasses",
                          @"hackernews",
-                         @"reddit"];            //readwrite, producthunt
-
-                                                //    TheVerge
-                                                //    TechCrunch
-                                                //    ProductHunt
-                                                //    Dribble
-                                                //    ReadWrite
-                                                //    HackerNews
-                                                //    Twitter
+                         @"reddit",
+                         @"producthunt"];
 
     [self loadServiceObservers];
     [self createButtons];
     [self createTable];
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];     //TEMPORARY
 }
 
 - (void)loadServiceObservers
@@ -98,6 +93,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
 }
 
 - (void)createButtons
@@ -431,6 +427,23 @@
 - (void)reactReddit:(NSNotification *)notification
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Reddit" object:nil];
+    self.data = notification.object;
+    [self.tableView reloadData];
+}
+
+- (void)loadProducthunt
+{
+    if (!self.producthunt)
+    {
+        self.producthunt = [Producthunt new];
+    }
+    [self.producthunt getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactProducthunt:) name:@"Producthunt" object:nil];
+}
+
+- (void)reactProducthunt:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Producthunt" object:nil];
     self.data = notification.object;
     [self.tableView reloadData];
 }

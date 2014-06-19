@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
+#define kAPI @"https://api.twitter.com/1.1/statuses/home_timeline.json"
+
 #import "Twitter.h"
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
@@ -31,7 +33,7 @@
              if ([arrayOfAccounts count] > 0)
              {
                  ACAccount *twitterAccount = arrayOfAccounts.lastObject;
-                 NSURL *requestURL = [NSURL URLWithString: @"https://api.twitter.com/1.1/statuses/home_timeline.json"];
+                 NSURL *requestURL = [NSURL URLWithString: kAPI];
                  NSDictionary *parameters = @{@"count" : @"200"};
                  SLRequest *postRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                              requestMethod:SLRequestMethodGET
