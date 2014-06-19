@@ -43,7 +43,7 @@
 
                  NSData *asciiData = [self.url dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
                  NSString *asciiString = [[NSString alloc] initWithData:asciiData encoding:NSASCIIStringEncoding];
-                 NSDictionary *parameters = @{@"q" : asciiString, @"count":@"100"};
+                 NSDictionary *parameters = @{@"q" : asciiString, @"count":@"100", @"lang":@"en"};
 
                  SLRequest *postRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
                                                              requestMethod:SLRequestMethodGET
