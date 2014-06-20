@@ -80,7 +80,39 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    return @{};
+    NSLog(@"%@",post);
+
+    NSString *textLabel;
+    NSString *detailTextLabel;
+    NSNumber *numberOfLines = @1;
+    NSString *imgUrlString;
+
+    if (post[@"story"])
+    {
+        textLabel = post[@"story"];
+    }
+    else if (post[@"message"])
+    {
+        textLabel = post[@"message"];
+    }
+    else
+    {
+        textLabel = @"facebook";
+    }
+//    NSString *textLabel = post[@"message"];
+//    NSString *detailTextLabel = post[@"from"][@"name"];
+//    NSNumber *numberOfLines = @0;
+//    NSString *imgUrlString = post[@"picture"];
+
+//    return @{@"textLabel":textLabel,
+//             @"detailTextLabel":detailTextLabel,
+//             @"numberOfLines":numberOfLines,
+//             @"imgUrlString":imgUrlString};
+
+    return @{@"textLabel":textLabel,
+             @"detailTextLabel":@"facebook",
+             @"numberOfLines":@"facebook",
+             @"imgUrlString":@"facebook"};
 }
 
 
