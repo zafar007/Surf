@@ -61,12 +61,11 @@
                           if (!error)
                           {
                               [self filterTweetsForLinkedPosts];
-//                              if (self.tweets.count != 0)
-                              {
-                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"Global" object:self.tweets];
-                                  });
-                              }
+
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"Global" object:self.tweets];
+                              });
+
                           }
                           else
                           {

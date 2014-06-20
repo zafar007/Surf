@@ -43,6 +43,7 @@
 @property UIButton *readButton;
 @property UIButton *addButton;
 @property ReadingViewController *readingViewController;
+@property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
 @end
 
@@ -161,12 +162,15 @@
 
 #pragma mark - TwitterViewController Handling
 
-- (void)showTwitterLinks
+- (void)showReadingLinks
 {
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
-    self.readingViewController = [[ReadingViewController alloc] init];      //moved from 1st line of showTwitterLinks for faster tweet fetching
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:self.readingViewController];
-    [self presentViewController:navigationController animated:YES completion:nil];
+    if (!self.readingNavController)
+    {
+        self.readingViewController = [[ReadingViewController alloc] init];  //move to view did load if want faster fetching
+        self.readingNavController = [[UINavigationController alloc] initWithRootViewController:self.readingViewController];
+    }
+    [self presentViewController:self.readingNavController animated:YES completion:nil];
 }
 
 - (void)backFromTwitter:(NSNotification *)notification
@@ -802,7 +806,7 @@
 
     self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.readButton addTarget:self
-                               action:@selector(showTwitterLinks)
+                               action:@selector(showReadingLinks)
                      forControlEvents:UIControlEventTouchUpInside];
     [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
     self.readButton.frame = CGRectMake(20, 20, 48, 48);
