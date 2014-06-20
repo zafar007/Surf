@@ -75,6 +75,7 @@
     [self createButtons];
     [self createTable];
 
+    NSLog(@"View did load");
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];     //TEMPORARY
 }
 
@@ -147,7 +148,7 @@
         cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    NSDictionary *layoutData = [Twitter layoutFrom:self.data[indexPath.row]];
+    NSDictionary *layoutData = [[self.data[indexPath.row] class] layoutFrom:self.data[indexPath.row]];
     [cell modifyCellLayoutWithData:layoutData];
 
     return cell;
@@ -241,7 +242,6 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
     self.data = notification.object;
-    NSLog(@"data: %@",self.data);
     [self.tableView reloadData];
 }
 
