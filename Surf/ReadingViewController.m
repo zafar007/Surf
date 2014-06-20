@@ -69,8 +69,7 @@
                          @"producthunt",
                          @"pocket",
                          @"instapaper",
-                         @"readability",
-                         @"settings"];
+                         @"readability"];
 
     [self loadServiceObservers];
     [self createButtons];
@@ -102,7 +101,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadSettings) name:@"settings" object:nil];
 }
 
 - (void)createButtons
@@ -112,10 +110,10 @@
                                                                                  action:@selector(unwind)];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
 
-//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-//                                                                                target:self
-//                                                                                action:@selector(add)];
-//    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                                target:self
+                                                                                action:@selector(settings)];
+    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -497,7 +495,7 @@
     [self.activity stopAnimating];
 }
 
-- (void)loadSettings
+- (void)settings
 {
     SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
     UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
