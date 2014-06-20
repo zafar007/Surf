@@ -121,6 +121,7 @@
     self.buttons.dataSource = self;
     self.buttons.backgroundColor = [UIColor clearColor];
     self.navigationItem.titleView = self.buttons;
+    self.buttons.tag = 1;
 }
 
 - (void)createTable
@@ -134,6 +135,7 @@
     self.tableView.dataSource = self;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     [self.view addSubview:self.tableView];
+    self.tableView.tag = 0;
 }
 
 #pragma mark - UITableViewDataSource
