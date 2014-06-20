@@ -32,6 +32,7 @@
                                         UICollectionViewDelegateFlowLayout>
 @property UITableView *tableView;
 @property UICollectionView *buttons;
+@property Class selectedClass;
 @property NSArray *buttonItems;
 @property NSArray *data;
 @property Twitter *twitter;
@@ -69,7 +70,8 @@
                          @"glasses",
                          @"hackernews",
                          @"reddit",
-                         @"producthunt"];
+                         @"producthunt",
+                         @"settings"];
 
     [self loadServiceObservers];
     [self createButtons];
@@ -95,6 +97,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadSettings) name:@"settings" object:nil];
 }
 
 - (void)createButtons
@@ -104,10 +107,10 @@
                                                                                  action:@selector(unwind)];
     self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
 
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                                target:self
-                                                                                action:@selector(add)];
-    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+//    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+//                                                                                target:self
+//                                                                                action:@selector(add)];
+//    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -148,9 +151,7 @@
         cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
 
-    NSDictionary *layoutData = [[self.data[indexPath.row] class] layoutFrom:self.data[indexPath.row]];
-    [cell modifyCellLayoutWithData:layoutData];
-
+    [cell modifyCellLayoutWithData:[self.selectedClass layoutFrom:self.data[indexPath.row]]];
     return cell;
 }
 
@@ -225,6 +226,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Twitter class];
     [self.tableView reloadData];
 }
 
@@ -242,6 +244,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Global class];
     [self.tableView reloadData];
 }
 
@@ -259,6 +262,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Feedly" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Feedly class];
     [self.tableView reloadData];
 }
 
@@ -276,6 +280,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pocket" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Pocket class];
     [self.tableView reloadData];
 }
 
@@ -293,6 +298,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Instapaper" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Instapaper class];
     [self.tableView reloadData];
 }
 
@@ -310,6 +316,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Readability" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Readability class];
     [self.tableView reloadData];
 }
 
@@ -327,6 +334,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Facebook class];
     [self.tableView reloadData];
 }
 
@@ -344,6 +352,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pinterest" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Pinterest class];
     [self.tableView reloadData];
 }
 
@@ -361,6 +370,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Dribbble" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Dribbble class];
     [self.tableView reloadData];
 }
 
@@ -378,6 +388,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Bookmarks class];
     [self.tableView reloadData];
 }
 
@@ -395,6 +406,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Glasses" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Glasses class];
     [self.tableView reloadData];
 }
 
@@ -405,6 +417,7 @@
         self.hackernews = [Hackernews new];
     }
     [self.hackernews getData];
+    self.selectedClass = [Hackernews class];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactHackernews:) name:@"Hackernews" object:nil];
 }
 
@@ -422,6 +435,7 @@
         self.reddit = [Reddit new];
     }
     [self.reddit getData];
+    self.selectedClass = [Reddit class];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactReddit:) name:@"Reddit" object:nil];
 }
 
@@ -446,22 +460,21 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Producthunt" object:nil];
     self.data = notification.object;
+    self.selectedClass = [Producthunt class];
     [self.tableView reloadData];
 }
 
-#pragma mark - Button Handling
+- (void)loadSettings
+{
+    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
+    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
+    [self presentViewController:navigationController animated:NO completion:nil];
+}
 
 - (void)unwind
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:nil];
     [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (void)add
-{
-    SettingsViewController *settingsViewController = [[SettingsViewController alloc] init];
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:settingsViewController];
-    [self presentViewController:navigationController animated:NO completion:nil];
 }
 
 #pragma mark - Landscape Layout Adjust

@@ -10,4 +10,5 @@
 
 @interface Facebook : NSObject
 - (void)getData;
++ (NSDictionary *)layoutFrom:(NSDictionary *)post;
 @end

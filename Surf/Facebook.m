@@ -28,54 +28,60 @@
                               ACFacebookAudienceKey: ACFacebookAudienceFriends};
 
     [accountStore requestAccessToAccountsWithType:accountTypeFacebook options:options completion:^(BOOL granted, NSError *error)
-    {
-        if(granted)
-        {
-            NSArray *accounts = [accountStore accountsWithAccountType:accountTypeFacebook];
-            ACAccount *facebookAccount = accounts.lastObject;
-            NSDictionary *parameters = @{@"access_token":facebookAccount.credential.oauthToken};
-            
-            NSURL *feedURL = [NSURL URLWithString:@"https://graph.facebook.com/v2.0/me/home"];
-            SLRequest *feedRequest = [SLRequest requestForServiceType:SLServiceTypeFacebook
-                                                        requestMethod:SLRequestMethodGET
-                                                                  URL:feedURL
-                                                           parameters:parameters];
+     {
+         if(granted)
+         {
+             NSArray *accounts = [accountStore accountsWithAccountType:accountTypeFacebook];
+             ACAccount *facebookAccount = accounts.lastObject;
+             NSDictionary *parameters = @{@"access_token":facebookAccount.credential.oauthToken};
 
-            [feedRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
-            {
-                if (!error)
-                {
-                    self.dataSource = [NSJSONSerialization JSONObjectWithData:responseData
-                                                                      options:NSJSONReadingMutableLeaves
-                                                                        error:&error];
-                    if (!error)
-                    {
-                        self.posts = self.dataSource[@"data"];
+             NSURL *feedURL = [NSURL URLWithString:@"https://graph.facebook.com/v2.0/me/home"];
+             SLRequest *feedRequest = [SLRequest requestForServiceType:SLServiceTypeFacebook
+                                                         requestMethod:SLRequestMethodGET
+                                                                   URL:feedURL
+                                                            parameters:parameters];
 
-                        if (self.posts.count != 0)
-                        {
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [[NSNotificationCenter defaultCenter] postNotificationName:@"Facebook" object:self.posts];
-                            });
-                        }
-                    }
-                    else
-                    {
-                        NSLog(@"Error understanding api data: %@", error);
-                    }
-                }
-                else
-                {
-                    NSLog(@"Request failed, %@", [urlResponse description]);
-                }
-            }];
-        }
-        else
-        {
-            NSLog(@"Access Denied");
-            NSLog(@"[%@]",[error localizedDescription]);
-        }
-    }];
+             [feedRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
+              {
+                  if (!error)
+                  {
+                      self.dataSource = [NSJSONSerialization JSONObjectWithData:responseData
+                                                                        options:NSJSONReadingMutableLeaves
+                                                                          error:&error];
+                      if (!error)
+                      {
+                          self.posts = self.dataSource[@"data"];
+
+                          if (self.posts.count != 0)
+                          {
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"Facebook" object:self.posts];
+                              });
+                          }
+                      }
+                      else
+                      {
+                          NSLog(@"Error understanding api data: %@", error);
+                      }
+                  }
+                  else
+                  {
+                      NSLog(@"Request failed, %@", [urlResponse description]);
+                  }
+              }];
+         }
+         else
+         {
+             NSLog(@"Access Denied");
+             NSLog(@"[%@]",[error localizedDescription]);
+         }
+     }];
 }
+
++ (NSDictionary *)layoutFrom:(NSDictionary *)post
+{
+    return @{};
+}
+
 
 @end
