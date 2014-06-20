@@ -61,8 +61,6 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    NSLog(@"%@",post);
-
     return @{@"textLabel":post[@"title"],
              @"detailTextLabel":post[@"subtitle"],
              @"numberOfLines":@0,
