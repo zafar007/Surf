@@ -9,10 +9,12 @@
 #import "Facebook.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
+#import "SDWebImage/UIImageView+WebCache.h"
 
 @interface Facebook ()
 @property NSDictionary *dataSource;
-@property NSArray *posts;
+//@property NSArray *posts;
+@property NSMutableArray *posts;
 @end
 
 @implementation Facebook
@@ -50,7 +52,9 @@
                                                                           error:&error];
                       if (!error)
                       {
-                          self.posts = self.dataSource[@"data"];
+//                          self.posts = self.dataSource[@"data"];
+
+                          [self filterDataForLinkedPosts];
 
                           if (self.posts.count != 0)
                           {
@@ -78,11 +82,23 @@
      }];
 }
 
+- (void)filterDataForLinkedPosts
+{
+    self.posts = [NSMutableArray new];
+
+    for (NSDictionary *post in self.dataSource[@"data"])
+    {
+//        if ([post[@"status_type"] isEqualToString:@"shared_story"])
+        {
+            [self.posts addObject:post];
+        }
+    }
+}
+
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
     NSString *textLabel;
     NSString *detailTextLabel;
-    NSNumber *numberOfLines = @0;
     NSString *imgUrlString;
 
     if (post[@"story"])
@@ -116,14 +132,26 @@
         imgUrlString = @"facebook";
     }
 
-//    NSLog(@"textLabel %@", textLabel);
-//    NSLog(@"detailTextLabel %@",detailTextLabel);
-//    NSLog(@"imgUrlString %@",imgUrlString);
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+    contentView.backgroundColor = [UIColor whiteColor];
 
-    return @{@"textLabel":textLabel,
-             @"detailTextLabel":detailTextLabel,
-             @"numberOfLines":numberOfLines,
-             @"imgUrlString":imgUrlString};
+//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10+48+10, 0, 320-68-5, contentView.frame.size.height)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,contentView.frame.size.width,contentView.frame.size.height)];
+//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+//                                                                  contentView.frame.size.height-.5,
+//                                                                  contentView.frame.size.width-20,
+//                                                                  .5)];
+
+//    textView.text = [NSString stringWithFormat:@"%@\n\n%@",textLabel,detailTextLabel];
+//    textView.font = [UIFont systemFontOfSize:13];
+//    textView.editable = NO;
+//    textView.selectable = NO;
+//    textView.userInteractionEnabled = NO;
+
+    [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+    [contentView addSubview:imageView];
+
+    return @{@"contentView":contentView};
 }
 
 + (NSString *)selected:(NSDictionary *)post
@@ -131,8 +159,13 @@
     return post[@"action"][0][@"link"];
 }
 
++ (CGFloat)width:(NSDictionary *)post
+{
+    return 320/4;
+}
+
 + (CGFloat)height:(NSDictionary *)post
 {
-    return 120;
+    return 320/4;
 }
 @end

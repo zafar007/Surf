@@ -141,11 +141,14 @@
 
 #pragma mark - UICollectionView DataSource Methods
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView.tag == 0)
     {
-        return CGSizeMake(self.view.frame.size.width, [self.selectedClass height:self.data[indexPath.item]]);
+        return CGSizeMake([self.selectedClass width:self.data[indexPath.item]],
+                          [self.selectedClass height:self.data[indexPath.item]]);
     }
     else
     {
@@ -153,7 +156,8 @@
     }
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section
 {
     if (collectionView.tag == 0)
     {
@@ -165,12 +169,13 @@
     }
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView.tag == 0)
     {
         SBReadCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
-        [cell modifyCellLayoutWithData:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
+        [cell modifyCellLayoutWith:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
         return cell;
     }
     else

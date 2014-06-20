@@ -61,10 +61,28 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    return @{@"textLabel":post[@"title"],
-             @"detailTextLabel":post[@"subtitle"],
-             @"numberOfLines":@0,
-             @"imgUrlString":@""};
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+    contentView.backgroundColor = [UIColor whiteColor];
+
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
+    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+                                                                  contentView.frame.size.height-.5,
+                                                                  contentView.frame.size.width-20,
+                                                                  .5)];
+
+    textView.text = [NSString stringWithFormat:@"%@\n%@",post[@"title"],post[@"subtitle"]];
+    textView.font = [UIFont systemFontOfSize:13];
+    textView.editable = NO;
+    textView.selectable = NO;
+    textView.userInteractionEnabled = NO;
+
+    borderView.backgroundColor = [UIColor lightGrayColor];
+
+    [contentView addSubview:textView];
+    [contentView addSubview:borderView];
+
+    return @{@"contentView":contentView};
+
 }
 
 + (NSString *)selected:(NSDictionary *)post
@@ -72,9 +90,14 @@
     return post[@"productLink"];
 }
 
++ (CGFloat)width:(NSDictionary *)post
+{
+    return 320;
+}
+
 + (CGFloat)height:(NSDictionary *)post
 {
-    return 120;
+    return 68;
 }
 
 @end

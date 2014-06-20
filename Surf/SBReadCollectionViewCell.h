@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SBReadCollectionViewCell : UICollectionViewCell
-- (void)modifyCellLayoutWithData:(NSDictionary *)layoutData;
+- (void)modifyCellLayoutWith:(NSDictionary *)layoutView;
 @end
