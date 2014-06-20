@@ -13,7 +13,6 @@
 
 @interface Facebook ()
 @property NSDictionary *dataSource;
-//@property NSArray *posts;
 @property NSMutableArray *posts;
 @end
 
@@ -52,8 +51,6 @@
                                                                           error:&error];
                       if (!error)
                       {
-//                          self.posts = self.dataSource[@"data"];
-
                           [self filterDataForLinkedPosts];
 
                           if (self.posts.count != 0)
