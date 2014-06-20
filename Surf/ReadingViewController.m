@@ -157,12 +157,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [SBTableViewCell heightForCellWithTweet:self.data[indexPath.row]];
+    return [self.selectedClass height:self.data[indexPath.row]];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *urlString = self.data[indexPath.row][@"entities"][@"urls"][0][@"expanded_url"];
+    NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
     [self dismissViewControllerAnimated:YES completion:nil];
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];

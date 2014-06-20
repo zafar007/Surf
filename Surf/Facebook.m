@@ -84,7 +84,7 @@
 
     NSString *textLabel;
     NSString *detailTextLabel;
-    NSNumber *numberOfLines = @1;
+    NSNumber *numberOfLines = @0;
     NSString *imgUrlString;
 
     if (post[@"story"])
@@ -99,21 +99,42 @@
     {
         textLabel = @"facebook";
     }
-//    NSString *textLabel = post[@"message"];
-//    NSString *detailTextLabel = post[@"from"][@"name"];
-//    NSNumber *numberOfLines = @0;
-//    NSString *imgUrlString = post[@"picture"];
 
-//    return @{@"textLabel":textLabel,
-//             @"detailTextLabel":detailTextLabel,
-//             @"numberOfLines":numberOfLines,
-//             @"imgUrlString":imgUrlString};
+    if (post[@"from"][@"name"])
+    {
+        detailTextLabel = post[@"from"][@"name"];
+    }
+    else
+    {
+        detailTextLabel = @"facebook";
+    }
+
+    if (post[@"picture"])
+    {
+        imgUrlString = post[@"picture"];
+    }
+    else
+    {
+        imgUrlString = @"facebook";
+    }
+
+    NSLog(@"textLabel %@", textLabel);
+    NSLog(@"detailTextLabel %@",detailTextLabel);
+    NSLog(@"imgUrlString %@",imgUrlString);
 
     return @{@"textLabel":textLabel,
-             @"detailTextLabel":@"facebook",
-             @"numberOfLines":@"facebook",
-             @"imgUrlString":@"facebook"};
+             @"detailTextLabel":detailTextLabel,
+             @"numberOfLines":numberOfLines,
+             @"imgUrlString":imgUrlString};
 }
 
++ (NSString *)selected:(NSDictionary *)post
+{
+    return post[@"action"][0][@"link"];
+}
 
++ (CGFloat)height:(NSDictionary *)post
+{
+    return 120;
+}
 @end

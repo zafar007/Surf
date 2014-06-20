@@ -166,4 +166,14 @@
     return tweetText;
 }
 
++ (NSString *)selected:(NSDictionary *)tweet
+{
+    return tweet[@"entities"][@"urls"][0][@"expanded_url"];
+}
+
++ (CGFloat)height:(NSDictionary *)tweet
+{
+    return 120;
+}
+
 @end

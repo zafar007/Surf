@@ -11,4 +11,6 @@
 @interface Global : NSObject
 - (void)getData;
 + (NSDictionary *)layoutFrom:(NSDictionary *)tweet;
++ (NSString *)selected:(NSDictionary *)tweet;
++ (CGFloat)height:(NSDictionary *)tweet;
 @end

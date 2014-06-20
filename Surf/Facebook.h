@@ -11,4 +11,6 @@
 @interface Facebook : NSObject
 - (void)getData;
 + (NSDictionary *)layoutFrom:(NSDictionary *)post;
++ (NSString *)selected:(NSDictionary *)post;
++ (CGFloat)height:(NSDictionary *)post;
 @end
