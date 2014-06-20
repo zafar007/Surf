@@ -46,7 +46,6 @@
 		8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B11951D01E00068AEB /* Instapaper.m */; };
 		8E97B4B51951D06000068AEB /* Readability.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B41951D06000068AEB /* Readability.m */; };
 		8E97B4B81951D08400068AEB /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B71951D08400068AEB /* Facebook.m */; };
-		8E97B4BB1951D09600068AEB /* Pinterest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4BA1951D09600068AEB /* Pinterest.m */; };
 		8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4BD1951D0A100068AEB /* Dribbble.m */; };
 		8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C01951D0B400068AEB /* Bookmarks.m */; };
 		8E97B4C41951D0C000068AEB /* Glasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Glasses.m */; };
@@ -139,8 +138,6 @@
 		8E97B4B41951D06000068AEB /* Readability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Readability.m; sourceTree = "<group>"; };
 		8E97B4B61951D08400068AEB /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
 		8E97B4B71951D08400068AEB /* Facebook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Facebook.m; sourceTree = "<group>"; };
-		8E97B4B91951D09600068AEB /* Pinterest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Pinterest.h; sourceTree = "<group>"; };
-		8E97B4BA1951D09600068AEB /* Pinterest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Pinterest.m; sourceTree = "<group>"; };
 		8E97B4BC1951D0A100068AEB /* Dribbble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dribbble.h; sourceTree = "<group>"; };
 		8E97B4BD1951D0A100068AEB /* Dribbble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dribbble.m; sourceTree = "<group>"; };
 		8E97B4BF1951D0B400068AEB /* Bookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmarks.h; sourceTree = "<group>"; };
@@ -198,6 +195,8 @@
 				8E97B4BD1951D0A100068AEB /* Dribbble.m */,
 				8E97B4C51951D0CF00068AEB /* Hackernews.h */,
 				8E97B4C61951D0CF00068AEB /* Hackernews.m */,
+				8E97B4C81951D0DA00068AEB /* Reddit.h */,
+				8E97B4C91951D0DA00068AEB /* Reddit.m */,
 				8E97B4A71951CFE300068AEB /* Feedly.h */,
 				8E97B4A81951CFE300068AEB /* Feedly.m */,
 				8E97B4AA1951CFE900068AEB /* Pocket.h */,
@@ -206,14 +205,10 @@
 				8E97B4B11951D01E00068AEB /* Instapaper.m */,
 				8E97B4B31951D06000068AEB /* Readability.h */,
 				8E97B4B41951D06000068AEB /* Readability.m */,
-				8E97B4B91951D09600068AEB /* Pinterest.h */,
-				8E97B4BA1951D09600068AEB /* Pinterest.m */,
 				8E97B4BF1951D0B400068AEB /* Bookmarks.h */,
 				8E97B4C01951D0B400068AEB /* Bookmarks.m */,
 				8E97B4C21951D0C000068AEB /* Glasses.h */,
 				8E97B4C31951D0C000068AEB /* Glasses.m */,
-				8E97B4C81951D0DA00068AEB /* Reddit.h */,
-				8E97B4C91951D0DA00068AEB /* Reddit.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -463,7 +458,6 @@
 			files = (
 				8E97B4C41951D0C000068AEB /* Glasses.m in Sources */,
 				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
-				8E97B4BB1951D09600068AEB /* Pinterest.m in Sources */,
 				8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */,
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,
 				8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */,

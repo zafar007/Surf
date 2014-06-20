@@ -18,7 +18,6 @@
 #import "Instapaper.h"
 #import "Readability.h"
 #import "Facebook.h"
-#import "Pinterest.h"
 #import "Dribbble.h"
 #import "Bookmarks.h"
 #import "Glasses.h"
@@ -41,7 +40,6 @@
 @property Instapaper *instapaper;
 @property Readability *readability;
 @property Facebook *facebook;
-@property Pinterest *pinterest;
 @property Dribbble *dribbble;
 @property Bookmarks *bookmarks;
 @property Glasses *glasses;
@@ -56,20 +54,21 @@
 {
     [super viewDidLoad];
 
-    self.buttonItems = @[@"twitter",
-                         @"global",
-                         @"feedly",
-                         @"facebook",
-                         @"pinterest",
-                         @"dribbble",
+    self.buttonItems = @[
                          @"bookmarks",
                          @"glasses",
+                         @"global",
+                         @"twitter",
                          @"hackernews",
-                         @"reddit",
                          @"producthunt",
+                         @"dribbble",
+                         @"facebook",
+                         @"reddit",
+                         @"feedly",
                          @"pocket",
                          @"instapaper",
-                         @"readability"];
+                         @"readability"
+                         ];
 
     [self loadServiceObservers];
     [self createButtons];
@@ -94,7 +93,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadInstapaper) name:@"instapaper" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReadability) name:@"readability" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFacebook) name:@"facebook" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadPinterest) name:@"pinterest" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
@@ -358,25 +356,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
     self.data = notification.object;
     self.selectedClass = [Facebook class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
-}
-
-- (void)loadPinterest
-{
-    if (!self.pinterest)
-    {
-        self.pinterest = [Pinterest new];
-    }
-    [self.pinterest getData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactPinterest:) name:@"Pinterest" object:nil];
-}
-
-- (void)reactPinterest:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pinterest" object:nil];
-    self.data = notification.object;
-    self.selectedClass = [Pinterest class];
     [self.collectionView reloadData];
     [self.activity stopAnimating];
 }
