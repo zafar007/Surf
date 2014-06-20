@@ -55,15 +55,15 @@
     [super viewDidLoad];
 
     self.buttonItems = @[
-                         @"bookmarks",
-                         @"glasses",
-                         @"global",
                          @"twitter",
+                         @"global",
                          @"hackernews",
                          @"producthunt",
                          @"dribbble",
                          @"facebook",
                          @"reddit",
+                         @"bookmarks",
+                         @"glasses",
                          @"feedly",
                          @"pocket",
                          @"instapaper",
@@ -72,16 +72,12 @@
 
     [self loadServiceObservers];
     [self createButtons];
-    [self createTable];
-
-    self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    self.activity.center = self.collectionView.center;
-    self.activity.hidesWhenStopped = YES;
-    [self.collectionView addSubview:self.activity];
-
-//    NSLog(@"View did load");
+    [self createCells];
+    [self createActivityIndicator];
     [self.activity startAnimating];
-    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];     //TEMPORARY
+
+    //TEMPORARY
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
 }
 
 - (void)loadServiceObservers
@@ -125,7 +121,7 @@
     self.buttons.tag = 1;
 }
 
-- (void)createTable
+- (void)createCells
 {
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -142,6 +138,14 @@
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
     self.collectionView.tag = 0;
     [self.view addSubview:self.collectionView];
+}
+
+- (void)createActivityIndicator
+{
+    self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activity.center = self.collectionView.center;
+    self.activity.hidesWhenStopped = YES;
+    [self.collectionView addSubview:self.activity];
 }
 
 #pragma mark - UICollectionView DataSource Methods
