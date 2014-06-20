@@ -21,6 +21,8 @@
 
 - (void)getData
 {
+    NSLog(@"Twitter");
+
     ACAccountStore *account = [[ACAccountStore alloc] init];
     ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
 

@@ -20,6 +20,7 @@
 - (void)getData
 {
     NSLog(@"Producthunt");
+    self.posts = [NSMutableArray new];
 
     [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kAPI]]
                                        queue:[NSOperationQueue mainQueue]
@@ -35,7 +36,7 @@
                  NSString *productLink = hunt[@"url"];
                  NSString *title = hunt[@"title"];
                  NSString *subtitle = hunt[@"tagline"];
-                 NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com/%@", hunt[@"permalink"]];
+                 NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com%@", hunt[@"permalink"]];
 
                  NSDictionary *post = @{@"productLink":productLink,
                                         @"title":title,
@@ -56,6 +57,26 @@
              [alert show];
          }
      }];
+}
+
++ (NSDictionary *)layoutFrom:(NSDictionary *)post
+{
+    NSLog(@"%@",post);
+
+    return @{@"textLabel":post[@"title"],
+             @"detailTextLabel":post[@"subtitle"],
+             @"numberOfLines":@0,
+             @"imgUrlString":@""};
+}
+
++ (NSString *)selected:(NSDictionary *)post
+{
+    return post[@"productLink"];
+}
+
++ (CGFloat)height:(NSDictionary *)post
+{
+    return 120;
 }
 
 @end

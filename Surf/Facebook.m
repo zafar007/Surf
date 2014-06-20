@@ -80,8 +80,6 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    NSLog(@"%@",post);
-
     NSString *textLabel;
     NSString *detailTextLabel;
     NSNumber *numberOfLines = @0;
@@ -118,9 +116,9 @@
         imgUrlString = @"facebook";
     }
 
-    NSLog(@"textLabel %@", textLabel);
-    NSLog(@"detailTextLabel %@",detailTextLabel);
-    NSLog(@"imgUrlString %@",imgUrlString);
+//    NSLog(@"textLabel %@", textLabel);
+//    NSLog(@"detailTextLabel %@",detailTextLabel);
+//    NSLog(@"imgUrlString %@",imgUrlString);
 
     return @{@"textLabel":textLabel,
              @"detailTextLabel":detailTextLabel,
