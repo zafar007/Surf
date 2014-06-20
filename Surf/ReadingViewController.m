@@ -9,7 +9,7 @@
 #define CellIdentifier @"Cell"
 
 #import "ReadingViewController.h"
-#import "SBTableViewCell.h"
+#import "SBReadCollectionViewCell.h"
 #import "SettingsViewController.h"
 #import "Twitter.h"
 #import "Global.h"
@@ -26,11 +26,9 @@
 #import "Reddit.h"
 #import "Producthunt.h"
 
-@interface ReadingViewController () <UITableViewDelegate,
-                                        UITableViewDataSource,
-                                        UICollectionViewDataSource,
-                                        UICollectionViewDelegateFlowLayout>
-@property UITableView *tableView;
+@interface ReadingViewController () <UICollectionViewDataSource,
+                                     UICollectionViewDelegateFlowLayout>
+@property UICollectionView *collectionView;
 @property UICollectionView *buttons;
 @property Class selectedClass;
 @property NSArray *buttonItems;
@@ -116,7 +114,7 @@
     flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
                                                    collectionViewLayout:flow];
-    [self.buttons registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
+    [self.buttons registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"CellButton"];
     self.buttons.delegate = self;
     self.buttons.dataSource = self;
     self.buttons.backgroundColor = [UIColor clearColor];
@@ -126,67 +124,75 @@
 
 - (void)createTable
 {
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
-                                                                   self.view.frame.origin.y,
-                                                                   self.view.frame.size.width,
-                                                                   self.view.frame.size.height)
-                                                  style:UITableViewStylePlain];
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    [self.view addSubview:self.tableView];
-    self.tableView.tag = 0;
-}
-
-#pragma mark - UITableViewDataSource
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return self.data.count;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    SBTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (!cell)
-    {
-        cell = [[SBTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-    }
-
-    [cell modifyCellLayoutWithData:[self.selectedClass layoutFrom:self.data[indexPath.row]]];
-    return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return [self.selectedClass height:self.data[indexPath.row]];
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
-    [self dismissViewControllerAnimated:YES completion:nil];
-    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
+    flow.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+                                                                             self.view.frame.origin.y,
+                                                                             self.view.frame.size.width,
+                                                                             self.view.frame.size.height)
+                                             collectionViewLayout:flow];
+    [self.collectionView registerClass:[SBReadCollectionViewCell class] forCellWithReuseIdentifier:@"CellPost"];
+    self.collectionView.delegate = self;
+    self.collectionView.dataSource = self;
+    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.tag = 0;
+    [self.view addSubview:self.collectionView];
 }
 
 #pragma mark - UICollectionView DataSource Methods
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(32, 32);
+    if (collectionView.tag == 0)
+    {
+        return CGSizeMake(self.view.frame.size.width, [self.selectedClass height:self.data[indexPath.item]]);
+    }
+    else
+    {
+        return CGSizeMake(32, 32);
+    }
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return self.buttonItems.count;
+    if (collectionView.tag == 0)
+    {
+        return self.data.count;
+    }
+    else
+    {
+        return self.buttonItems.count;
+    }
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-    [self makeButtonIn:cell forItem:(int)indexPath.item];
-    return cell;
+    if (collectionView.tag == 0)
+    {
+        SBReadCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
+        [cell modifyCellLayoutWithData:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
+        return cell;
+    }
+    else
+    {
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellButton" forIndexPath:indexPath];
+        [self makeButtonIn:cell forItem:(int)indexPath.item];
+        return cell;
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView.tag == 0)
+    {
+        NSString *urlString = [self.selectedClass selected:self.data[indexPath.item]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+    else
+    {
+        //nothing
+    }
 }
 
 - (void)makeButtonIn:(UICollectionViewCell *)cell forItem:(int)item
@@ -194,14 +200,8 @@
     [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     UIImage *image = [UIImage imageNamed:self.buttonItems[item]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button addTarget:self
-               action:@selector(onButtonPress:)
-      forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
     [button setImage:image forState:UIControlStateNormal];
-    button.frame = CGRectMake(cell.backgroundView.frame.origin.x,
-                              cell.backgroundView.frame.origin.y,
-                              cell.backgroundView.frame.size.width,
-                              cell.backgroundView.frame.size.height);
     button.tag = item;
     button.frame = cell.bounds;
     [cell.contentView addSubview:button];
@@ -229,7 +229,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
     self.data = notification.object;
     self.selectedClass = [Twitter class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadGlobal
@@ -247,7 +247,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
     self.data = notification.object;
     self.selectedClass = [Global class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadFeedly
@@ -265,7 +265,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Feedly" object:nil];
     self.data = notification.object;
     self.selectedClass = [Feedly class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadPocket
@@ -283,7 +283,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pocket" object:nil];
     self.data = notification.object;
     self.selectedClass = [Pocket class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadInstapaper
@@ -301,7 +301,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Instapaper" object:nil];
     self.data = notification.object;
     self.selectedClass = [Instapaper class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadReadability
@@ -319,7 +319,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Readability" object:nil];
     self.data = notification.object;
     self.selectedClass = [Readability class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadFacebook
@@ -337,7 +337,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
     self.data = notification.object;
     self.selectedClass = [Facebook class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadPinterest
@@ -355,7 +355,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pinterest" object:nil];
     self.data = notification.object;
     self.selectedClass = [Pinterest class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadDribbble
@@ -373,7 +373,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Dribbble" object:nil];
     self.data = notification.object;
     self.selectedClass = [Dribbble class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadBookmarks
@@ -391,7 +391,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
     self.data = notification.object;
     self.selectedClass = [Bookmarks class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadGlasses
@@ -409,7 +409,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Glasses" object:nil];
     self.data = notification.object;
     self.selectedClass = [Glasses class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadHackernews
@@ -427,7 +427,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Hackernews" object:nil];
     self.data = notification.object;
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadReddit
@@ -445,7 +445,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Reddit" object:nil];
     self.data = notification.object;
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadProducthunt
@@ -463,7 +463,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Producthunt" object:nil];
     self.data = notification.object;
     self.selectedClass = [Producthunt class];
-    [self.tableView reloadData];
+    [self.collectionView reloadData];
 }
 
 - (void)loadSettings
@@ -485,20 +485,12 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 
-    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
-    {
-        self.tableView.frame = CGRectMake(self.view.frame.origin.x,
-                                          self.view.frame.origin.y,
-                                          self.view.frame.size.width,
-                                          self.view.frame.size.height);
-    }
-    else
-    {
-        self.tableView.frame = CGRectMake(self.view.frame.origin.x,
-                                          self.view.frame.origin.y,
-                                          self.view.frame.size.width,
-                                          self.view.frame.size.height);
-    }
+//    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+//    {
+//    }
+//    else
+//    {
+//    }
 }
 
 @end

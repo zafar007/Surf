@@ -53,7 +53,7 @@
 		8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C61951D0CF00068AEB /* Hackernews.m */; };
 		8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C91951D0DA00068AEB /* Reddit.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
-		8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBTableViewCell.m */; };
+		8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -153,8 +153,8 @@
 		8E97B4C91951D0DA00068AEB /* Reddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reddit.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
-		8ED828E619466F9F004D779F /* SBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBTableViewCell.h; sourceTree = "<group>"; };
-		8ED828E719466F9F004D779F /* SBTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBTableViewCell.m; sourceTree = "<group>"; };
+		8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBReadCollectionViewCell.h; sourceTree = "<group>"; };
+		8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBReadCollectionViewCell.m; sourceTree = "<group>"; };
 		8EFF092A194EA57500379F43 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		8EFF092B194EA57500379F43 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -345,8 +345,8 @@
 		8E97B4A51951CB1600068AEB /* ReadVC */ = {
 			isa = PBXGroup;
 			children = (
-				8ED828E619466F9F004D779F /* SBTableViewCell.h */,
-				8ED828E719466F9F004D779F /* SBTableViewCell.m */,
+				8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */,
+				8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */,
 				8E6CA50119450DCD00148137 /* ReadingViewController.h */,
 				8E6CA50219450DCD00148137 /* ReadingViewController.m */,
 			);
@@ -490,7 +490,7 @@
 				8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
-				8ED828E819466F9F004D779F /* SBTableViewCell.m in Sources */,
+				8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */,
 				8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */,
 				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,

@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SBTableViewCell : UITableViewCell
+@interface SBReadCollectionViewCell : UICollectionViewCell
 - (void)modifyCellLayoutWithData:(NSDictionary *)layoutData;
 @end
