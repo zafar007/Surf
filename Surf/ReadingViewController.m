@@ -30,6 +30,7 @@
                                      UICollectionViewDelegateFlowLayout>
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
+@property UIActivityIndicatorView *activity;
 @property Class selectedClass;
 @property NSArray *buttonItems;
 @property NSArray *data;
@@ -58,9 +59,6 @@
     self.buttonItems = @[@"twitter",
                          @"global",
                          @"feedly",
-                         @"pocket",
-                         @"instapaper",
-                         @"readability",
                          @"facebook",
                          @"pinterest",
                          @"dribbble",
@@ -69,13 +67,22 @@
                          @"hackernews",
                          @"reddit",
                          @"producthunt",
+                         @"pocket",
+                         @"instapaper",
+                         @"readability",
                          @"settings"];
 
     [self loadServiceObservers];
     [self createButtons];
     [self createTable];
 
-    NSLog(@"View did load");
+    self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.activity.center = self.collectionView.center;
+    self.activity.hidesWhenStopped = YES;
+    [self.collectionView addSubview:self.activity];
+
+//    NSLog(@"View did load");
+    [self.activity startAnimating];
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];     //TEMPORARY
 }
 
@@ -126,6 +133,8 @@
 {
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionVertical;
+    flow.minimumInteritemSpacing = 0;
+    flow.minimumLineSpacing = 0;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
                                                                              self.view.frame.origin.y,
                                                                              self.view.frame.size.width,
@@ -134,7 +143,7 @@
     [self.collectionView registerClass:[SBReadCollectionViewCell class] forCellWithReuseIdentifier:@"CellPost"];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
-    self.collectionView.backgroundColor = [UIColor whiteColor];
+    self.collectionView.backgroundColor = [UIColor lightGrayColor];
     self.collectionView.tag = 0;
     [self.view addSubview:self.collectionView];
 }
@@ -214,6 +223,9 @@
 
 - (void)onButtonPress:(UIButton *)sender
 {
+    [self.activity startAnimating];
+    self.data = nil;
+    [self.collectionView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[sender.tag] object:nil];
 }
 
@@ -235,6 +247,7 @@
     self.data = notification.object;
     self.selectedClass = [Twitter class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadGlobal
@@ -253,6 +266,7 @@
     self.data = notification.object;
     self.selectedClass = [Global class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadFeedly
@@ -271,6 +285,7 @@
     self.data = notification.object;
     self.selectedClass = [Feedly class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadPocket
@@ -289,6 +304,7 @@
     self.data = notification.object;
     self.selectedClass = [Pocket class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadInstapaper
@@ -307,6 +323,7 @@
     self.data = notification.object;
     self.selectedClass = [Instapaper class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadReadability
@@ -325,6 +342,7 @@
     self.data = notification.object;
     self.selectedClass = [Readability class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadFacebook
@@ -343,6 +361,7 @@
     self.data = notification.object;
     self.selectedClass = [Facebook class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadPinterest
@@ -361,6 +380,7 @@
     self.data = notification.object;
     self.selectedClass = [Pinterest class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadDribbble
@@ -379,6 +399,7 @@
     self.data = notification.object;
     self.selectedClass = [Dribbble class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadBookmarks
@@ -397,6 +418,7 @@
     self.data = notification.object;
     self.selectedClass = [Bookmarks class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadGlasses
@@ -415,6 +437,7 @@
     self.data = notification.object;
     self.selectedClass = [Glasses class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadHackernews
@@ -433,6 +456,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Hackernews" object:nil];
     self.data = notification.object;
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadReddit
@@ -451,6 +475,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Reddit" object:nil];
     self.data = notification.object;
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadProducthunt
@@ -469,6 +494,7 @@
     self.data = notification.object;
     self.selectedClass = [Producthunt class];
     [self.collectionView reloadData];
+    [self.activity stopAnimating];
 }
 
 - (void)loadSettings

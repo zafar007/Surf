@@ -88,7 +88,7 @@
 
     for (NSDictionary *post in self.dataSource[@"data"])
     {
-//        if ([post[@"status_type"] isEqualToString:@"shared_story"])
+        if ([post[@"status_type"] isEqualToString:@"shared_story"])
         {
             [self.posts addObject:post];
         }
@@ -97,6 +97,9 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+    contentView.backgroundColor = [UIColor whiteColor];
+
     NSString *textLabel;
     NSString *detailTextLabel;
     NSString *imgUrlString;
@@ -109,34 +112,21 @@
     {
         textLabel = post[@"message"];
     }
-    else
-    {
-        textLabel = @"facebook";
-    }
 
     if (post[@"from"][@"name"])
     {
         detailTextLabel = post[@"from"][@"name"];
     }
-    else
-    {
-        detailTextLabel = @"facebook";
-    }
 
     if (post[@"picture"])
     {
         imgUrlString = post[@"picture"];
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,contentView.frame.size.width,contentView.frame.size.height)];
+        [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+        [contentView addSubview:imageView];
     }
-    else
-    {
-        imgUrlString = @"facebook";
-    }
-
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-    contentView.backgroundColor = [UIColor whiteColor];
 
 //    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10+48+10, 0, 320-68-5, contentView.frame.size.height)];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,contentView.frame.size.width,contentView.frame.size.height)];
 //    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
 //                                                                  contentView.frame.size.height-.5,
 //                                                                  contentView.frame.size.width-20,
@@ -148,8 +138,6 @@
 //    textView.selectable = NO;
 //    textView.userInteractionEnabled = NO;
 
-    [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-    [contentView addSubview:imageView];
 
     return @{@"contentView":contentView};
 }
