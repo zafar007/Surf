@@ -30,9 +30,4 @@
 
 }
 
-+ (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet
-{
-    return 120;
-}
-
 @end

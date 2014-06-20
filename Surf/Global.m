@@ -104,7 +104,10 @@
 
     for (NSDictionary *tweet in self.dataSource[@"statuses"])
     {
+        if (!tweet[@"retweeted_status"])
+        {
             [self.tweets addObject:tweet];
+        }
     }
 }
 

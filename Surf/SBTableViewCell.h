@@ -9,8 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SBTableViewCell : UITableViewCell
-
-+ (CGFloat)heightForCellWithTweet:(NSDictionary *)tweet;
 - (void)modifyCellLayoutWithData:(NSDictionary *)layoutData;
-
 @end
