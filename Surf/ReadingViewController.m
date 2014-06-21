@@ -119,7 +119,7 @@
     self.pickerView.dataSource = self;
     self.pickerView.backgroundColor = [UIColor clearColor];
     CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
-    rotate = CGAffineTransformScale(rotate, 0.25, 2.0);
+//    rotate = CGAffineTransformScale(rotate, 0.25, 2.0);
     [self.pickerView setTransform:rotate];
     self.navigationItem.titleView = self.pickerView;
 }

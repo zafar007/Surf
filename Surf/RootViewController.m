@@ -180,10 +180,6 @@
     {
         [self addTab:urlString];
     }
-    else
-    {
-        [self showTools];
-    }
 }
 
 #pragma mark - Gestures
@@ -207,7 +203,7 @@
 
     self.swipeFromLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromLeft:)];
     self.swipeFromLeft.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.toolsView addGestureRecognizer:self.swipeFromLeft];
+    [self.view addGestureRecognizer:self.swipeFromLeft];
     self.swipeFromLeft.delegate = self;
 
     self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
@@ -242,8 +238,13 @@
 
 - (void)handleSwipeFromLeft:(UISwipeGestureRecognizer *)sender
 {
+    if (!self.showingTools)
+    {
+        [self showReadingLinks];
+    }
+
     Tab *tab = self.tabs[self.currentTabIndex];
-    if (tab.started &&
+    if (self.showingTools && tab.started &&
         [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
         [self showWeb];
