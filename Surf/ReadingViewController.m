@@ -26,9 +26,10 @@
 #import "Producthunt.h"
 
 @interface ReadingViewController () <UICollectionViewDataSource,
-                                     UICollectionViewDelegateFlowLayout>
+                                     UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource>
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
+@property UIPickerView *pickerView;
 @property UIActivityIndicatorView *activity;
 @property Class selectedClass;
 @property NSArray *buttonItems;
@@ -76,8 +77,9 @@
     [self createActivityIndicator];
     [self.activity startAnimating];
 
-    //TEMPORARY
-    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
+//    //TEMPORARY
+//    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
+//    [self.pickerView selectRow:0 inComponent:0 animated:YES];
 }
 
 - (void)loadServiceObservers
@@ -109,16 +111,17 @@
                                                                                 action:@selector(settings)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 
-    UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
-    flow.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
-                                                   collectionViewLayout:flow];
-    [self.buttons registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"CellButton"];
-    self.buttons.delegate = self;
-    self.buttons.dataSource = self;
-    self.buttons.backgroundColor = [UIColor clearColor];
-    self.navigationItem.titleView = self.buttons;
-    self.buttons.tag = 1;
+//    self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
+//                                                   collectionViewLayout:flow];
+
+    self.pickerView = [[UIPickerView alloc] initWithFrame:self.navigationItem.titleView.bounds];
+    self.pickerView.delegate = self;
+    self.pickerView.dataSource = self;
+    self.pickerView.backgroundColor = [UIColor clearColor];
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
+    rotate = CGAffineTransformScale(rotate, 0.25, 2.0);
+    [self.pickerView setTransform:rotate];
+    self.navigationItem.titleView = self.pickerView;
 }
 
 - (void)createCells
@@ -136,7 +139,6 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
-    self.collectionView.tag = 0;
     [self.view addSubview:self.collectionView];
 }
 
@@ -148,85 +150,86 @@
     [self.collectionView addSubview:self.activity];
 }
 
+#pragma mark - UIPickerView Delegate Methods
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self.buttonItems.count;
+}
+/*
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+//    CGSizeMake(32, 32);
+//    view = nil;
+    UIImage *image = [UIImage imageNamed:self.buttonItems[row]];
+//    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [button addTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
+//    [button setImage:image forState:UIControlStateNormal];
+//    button.frame = view.bounds;
+//    [view addSubview:button];
+
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    [view addSubview:imageView];
+    imageView.center = view.center;
+
+
+ UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, pickerView.frame.size.width, 44)];
+ label.backgroundColor = [UIColor blackColor];
+ label.textColor = [UIColor whiteColor];
+ label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
+ label.text = [NSString stringWithFormat:@" %@", self.filters[row]];
+ return label;
+
+
+    return view;
+}
+*/
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+{
+    return self.buttonItems[row];
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    NSLog(@"%@",self.buttonItems[row]);
+    [self.activity startAnimating];
+    self.data = nil;
+    [self.collectionView reloadData];
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[row] object:nil];
+}
+
 #pragma mark - UICollectionView DataSource Methods
 
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == 0)
-    {
-        return CGSizeMake([self.selectedClass width:self.data[indexPath.item]],
-                          [self.selectedClass height:self.data[indexPath.item]]);
-    }
-    else
-    {
-        return CGSizeMake(32, 32);
-    }
+    return CGSizeMake([self.selectedClass width:self.data[indexPath.item]],
+                      [self.selectedClass height:self.data[indexPath.item]]);
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView
-     numberOfItemsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (collectionView.tag == 0)
-    {
-        return self.data.count;
-    }
-    else
-    {
-        return self.buttonItems.count;
-    }
+    return self.data.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
-                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == 0)
-    {
-        SBReadCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
-        [cell modifyCellLayoutWith:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
-        return cell;
-    }
-    else
-    {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellButton" forIndexPath:indexPath];
-        [self makeButtonIn:cell forItem:(int)indexPath.item];
-        return cell;
-    }
+    SBReadCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
+    [cell modifyCellLayoutWith:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
+    return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView.tag == 0)
-    {
-        NSString *urlString = [self.selectedClass selected:self.data[indexPath.item]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
-    else
-    {
-        //nothing
-    }
-}
-
-- (void)makeButtonIn:(UICollectionViewCell *)cell forItem:(int)item
-{
-    [cell.contentView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    UIImage *image = [UIImage imageNamed:self.buttonItems[item]];
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button addTarget:self action:@selector(onButtonPress:) forControlEvents:UIControlEventTouchUpInside];
-    [button setImage:image forState:UIControlStateNormal];
-    button.tag = item;
-    button.frame = cell.bounds;
-    [cell.contentView addSubview:button];
-}
-
-- (void)onButtonPress:(UIButton *)sender
-{
-    [self.activity startAnimating];
-    self.data = nil;
-    [self.collectionView reloadData];
-    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[sender.tag] object:nil];
+    NSString *urlString = [self.selectedClass selected:self.data[indexPath.item]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Services

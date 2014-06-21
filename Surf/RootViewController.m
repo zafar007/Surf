@@ -526,7 +526,6 @@
 {
     [self.omnibar resignFirstResponder];
     Tab *tab = self.tabs[self.currentTabIndex];
-    tab.started = YES;
     tab.urlString = [self searchOrLoad:textField.text];
     self.omnibar.text = @"";
     [self loadPage:tab];
@@ -661,8 +660,8 @@
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
     self.doneLoading = false;
-
     Tab *tab = self.tabs[self.currentTabIndex];
+    tab.started = YES;
     tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
 
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025
