@@ -29,7 +29,7 @@
          if (!connectionError)
          {
              NSDictionary *output = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&connectionError];
-             NSArray *children = output[@"children"];
+             NSArray *children = output[@"data"][@"children"];
 
              for (NSDictionary *child in children)
              {
@@ -42,7 +42,6 @@
                  NSString *title = child[@"data"][@"title"];
                  NSString *url = child[@"data"][@"url"];
                  NSString *score = child[@"data"][@"score"];
-                 NSString *time = child[@"data"][@"created_utc"];
                  NSString *author = child[@"data"][@"author"];
                  NSString *permalink = child[@"data"][@"permalink"];
                  NSString *thumbnail = child[@"data"][@"thumbnail"];
@@ -50,12 +49,16 @@
                  NSDictionary *post = @{@"title":title,
                                         @"url":url,
                                         @"score":score,
-                                        @"time":time,
                                         @"author":author,
                                         @"permalink":permalink,
                                         @"thumbnail":thumbnail};
 
-                 [self.posts addObject:post];
+                 NSURL *urlF = [NSURL URLWithString:url];
+                 NSString *host = urlF.host;
+                 if (![host hasPrefix:@"www.reddit"])
+                 {
+                     [self.posts addObject:post];
+                 }
              }
 
              [[NSNotificationCenter defaultCenter] postNotificationName:@"Reddit" object:self.posts];
@@ -76,11 +79,11 @@
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
     contentView.backgroundColor = [UIColor whiteColor];
 
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,48,48)];
-    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(65, 0, 320-60, contentView.frame.size.height)];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,50,50)];
+    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+10,
                                                                   contentView.frame.size.height-.5,
-                                                                  contentView.frame.size.width-20,
+                                                                  contentView.frame.size.width-10,
                                                                   .5)];
 
     NSURL *url = [NSURL URLWithString:post[@"url"]];
@@ -89,8 +92,7 @@
     {
         host = [host substringFromIndex:[@"www." length]];
     }
-
-    textView.text = [NSString stringWithFormat:@"%@\n%@\n\n%@ points by %@\n%@ | %@ comments",post[@"title"], host, post[@"points"], post[@"postedBy"], post[@"postedAgo"], post[@"commentsCount"]];
+    textView.text = [NSString stringWithFormat:@"%@\n%@\n%@\n%@",post[@"title"], post[@"author"], host, post[@"score"]];
     textView.font = [UIFont systemFontOfSize:13];
     textView.editable = NO;
     textView.selectable = NO;
@@ -98,8 +100,13 @@
 
     borderView.backgroundColor = [UIColor lightGrayColor];
 
+    [imageView setImageWithURL:[NSURL URLWithString:post[@"thumbnail"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+    imageView.center = CGPointMake(35, CGRectGetMidY(contentView.frame));
+    imageView.layer.masksToBounds = YES;
+
     [contentView addSubview:textView];
     [contentView addSubview:borderView];
+    [contentView addSubview:imageView];
 
     return @{@"contentView":contentView};
 
@@ -107,7 +114,7 @@
 
 + (NSString *)selected:(NSDictionary *)post
 {
-    return post[@"url"];
+    return [NSString stringWithFormat:@"http://www.reddit.com%@",post[@"permalink"]];
 }
 
 + (CGFloat)width:(NSDictionary *)post

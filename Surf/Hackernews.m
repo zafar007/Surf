@@ -9,7 +9,6 @@
 #define kAPI @"http://api.ihackernews.com/page"
 
 #import "Hackernews.h"
-#import "SDWebImage/UIImageView+WebCache.h"
 
 @interface Hackernews ()
 @property NSMutableArray *posts;
