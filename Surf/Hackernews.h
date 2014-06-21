@@ -10,7 +10,8 @@
 
 @interface Hackernews : NSObject
 - (void)getData;
-//+ (UIView *)layoutFrom:(NSDictionary *)post;
-//+ (NSString *)selected:(NSDictionary *)post;
-//+ (CGFloat)height:(NSDictionary *)post;
++ (NSDictionary *)layoutFrom:(NSDictionary *)post;
++ (NSString *)selected:(NSDictionary *)post;
++ (CGFloat)width:(NSDictionary *)post;
++ (CGFloat)height:(NSDictionary *)post;
 @end

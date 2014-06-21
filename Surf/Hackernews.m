@@ -75,8 +75,6 @@
                                                                   contentView.frame.size.width-20,
                                                                   .5)];
 
-//95 points by pjenvey 1 hour ago | 8 comments
-
     NSURL *url = [NSURL URLWithString:post[@"url"]];
     NSString *host = url.host;
     if ([host hasPrefix:@"www."])
