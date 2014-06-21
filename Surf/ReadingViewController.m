@@ -26,7 +26,9 @@
 #import "Producthunt.h"
 
 @interface ReadingViewController () <UICollectionViewDataSource,
-                                     UICollectionViewDelegateFlowLayout, UIPickerViewDelegate, UIPickerViewDataSource>
+                                    UICollectionViewDelegateFlowLayout,
+                                    UIPickerViewDelegate,
+                                    UIPickerViewDataSource>
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
 @property UIPickerView *pickerView;
@@ -114,12 +116,13 @@
 //    self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
 //                                                   collectionViewLayout:flow];
 
-    self.pickerView = [[UIPickerView alloc] initWithFrame:self.navigationItem.titleView.bounds];
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];  //self.navigationItem.titleView.bounds
     self.pickerView.delegate = self;
     self.pickerView.dataSource = self;
     self.pickerView.backgroundColor = [UIColor clearColor];
+
     CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
-//    rotate = CGAffineTransformScale(rotate, 0.25, 2.0);
+    rotate = CGAffineTransformScale(rotate, 1, 1);
     [self.pickerView setTransform:rotate];
     self.navigationItem.titleView = self.pickerView;
 }
@@ -161,42 +164,24 @@
 {
     return self.buttonItems.count;
 }
-/*
+
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
 {
-//    CGSizeMake(32, 32);
-//    view = nil;
+    CGAffineTransform rotateItem = CGAffineTransformScale(CGAffineTransformMakeRotation(3.14/2), 1, 1);
+
     UIImage *image = [UIImage imageNamed:self.buttonItems[row]];
-//    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [button addTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
-//    [button setImage:image forState:UIControlStateNormal];
-//    button.frame = view.bounds;
-//    [view addSubview:button];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button addTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
+    [button setImage:image forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 32, 32);
+    button.center = view.center;
+    button.transform = rotateItem;
 
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    [view addSubview:imageView];
-    imageView.center = view.center;
-
-
- UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, pickerView.frame.size.width, 44)];
- label.backgroundColor = [UIColor blackColor];
- label.textColor = [UIColor whiteColor];
- label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:18];
- label.text = [NSString stringWithFormat:@" %@", self.filters[row]];
- return label;
-
-
-    return view;
-}
-*/
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-    return self.buttonItems[row];
+    return button;
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    NSLog(@"%@",self.buttonItems[row]);
     [self.activity startAnimating];
     self.data = nil;
     [self.collectionView reloadData];

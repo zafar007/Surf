@@ -78,12 +78,12 @@
 
 + (CGFloat)width:(NSDictionary *)post
 {
-    return 320/3;
+    return (320/2);
 }
 
 + (CGFloat)height:(NSDictionary *)post
 {
-    return 320/3;
+    return (320/2)*152/202;
 }
 
 
