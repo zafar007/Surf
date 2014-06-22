@@ -153,12 +153,7 @@
 
 - (void)createPicker
 {
-//    UIView *view = [[UIView alloc] initWithFrame: self.navigationItem.titleView.bounds];
-//    self.navigationItem.titleView = view;
-//    view.backgroundColor = [UIColor greenColor];
-
-                                                                        //CGRectMake(0,10,320,44)
-    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];  //self.navigationItem.titleView.bounds
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];
     self.pickerView.delegate = self;
     self.pickerView.dataSource = self;
     self.pickerView.backgroundColor = [UIColor clearColor];
@@ -218,6 +213,14 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
+//    for (NSString *item in self.buttonItems)
+//    {
+//        if (![item isEqualToString:self.buttonItems[row]])
+//        {
+//            [[NSNotificationCenter defaultCenter] removeObserver:self name:item object:nil];
+//        }
+//    }
+
     [self.activity startAnimating];
     self.data = nil;
     [self.collectionView reloadData];
