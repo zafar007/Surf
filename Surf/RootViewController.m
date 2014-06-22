@@ -37,13 +37,14 @@
 @property UIWebView *rightWebView;
 @property UIWebView *leftWebView;
 @property NSTimer *delayTimer;
-@property UIButton *shareButton;
 @property UIButton *stopButton;
 @property UIButton *refreshButton;
 @property UIButton *readButton;
 @property UIButton *addButton;
 @property UIButton *backButton;
 @property UIButton *forwardButton;
+@property UIButton *shareButton;
+@property UIButton *saveButton;
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
@@ -222,7 +223,6 @@
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
 {
     [self.omnibar becomeFirstResponder];
-//    [self share];
 }
 
 - (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
@@ -674,7 +674,8 @@
                                                     selector:@selector(timerCallback)
                                                     userInfo:nil
                                                      repeats:YES];
-    [self enableShare:YES Refresh:NO Stop:YES];
+    [self enableShare:YES Refresh:NO Stop:YES  Save:YES];
+    [self checkBackForwardButtons];
 }
 
 -(void)timerCallback
@@ -705,14 +706,14 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
-    [self enableShare:YES Refresh:YES Stop:NO];
+    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
-    [self enableShare:YES Refresh:YES Stop:NO];
+    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
 }
 
 #pragma mark - Low Memory Alert
@@ -781,15 +782,6 @@
 
 - (void)createButtons
 {
-//    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [self.shareButton addTarget:self
-//                         action:@selector(share)
-//               forControlEvents:UIControlEventTouchUpInside];
-//    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
-//    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height*3/4);
-//    [self.toolsView addSubview:self.shareButton];
-
     self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
@@ -822,25 +814,41 @@
     [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(20, 20, 32, 32);
-    self.backButton.center = CGPointMake(self.view.frame.size.width/2-100, self.view.frame.size.height/2-30);
+    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.backButton];
 
     self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
     self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
-    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+100, self.view.frame.size.height/2-30);
+    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.forwardButton];
 
-    [self enableShare:NO Refresh:NO Stop:NO];
+    self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
+    [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
+    self.shareButton.frame = CGRectMake(20, 20, 32, 32);
+    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-30);
+    [self.toolsView addSubview:self.shareButton];
+
+    self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.saveButton addTarget:self action:@selector(save) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
+    self.saveButton.frame = CGRectMake(20, 20, 32, 32);
+    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
+    [self.toolsView addSubview:self.saveButton];
+
+
+    [self enableShare:NO Refresh:NO Stop:NO Save:NO];
     self.refreshButton.hidden = NO;
-    self.refreshButton.enabled = NO;
+//    self.refreshButton.enabled = NO;
 }
 
-- (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3
+- (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
 {
     self.shareButton.enabled = B1;
-    self.shareButton.hidden = !B1;
+    self.saveButton.enabled = B4;
+
     self.refreshButton.enabled = B2;
     self.refreshButton.hidden = !B2;
     self.stopButton.enabled = B3;
@@ -856,14 +864,12 @@
 
 - (void)goBack
 {
-    NSLog(@"B");
     Tab *tab = self.tabs[self.currentTabIndex];
     [tab.webView goBack];
 }
 
 - (void)goForward
 {
-    NSLog(@"F");
     Tab *tab = self.tabs[self.currentTabIndex];
     [tab.webView goForward];
 }
@@ -878,6 +884,11 @@
 {
     Tab *tab = self.tabs[self.currentTabIndex];
     [tab.webView stopLoading];
+}
+
+- (void)save
+{
+    NSLog(@"save");
 }
 
 - (void)share

@@ -58,6 +58,8 @@
     [super viewDidLoad];
 
     self.buttonItems = @[
+                         @"bookmarks",
+                         @"glasses",
                          @"twitter",
                          @"global",
                          @"hackernews",
@@ -65,8 +67,6 @@
                          @"dribbble",
                          @"facebook",
                          @"reddit",
-                         @"bookmarks",
-                         @"glasses",
                          @"feedly",
                          @"pocket",
                          @"instapaper",
