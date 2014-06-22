@@ -42,6 +42,8 @@
 @property UIButton *refreshButton;
 @property UIButton *readButton;
 @property UIButton *addButton;
+@property UIButton *backButton;
+@property UIButton *forwardButton;
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
@@ -413,6 +415,7 @@
     self.currentTabIndex = newTabIndex;
     [self pingBorderControl];
     [self pingPageControlIndexPath:nil];
+    [self checkBackForwardButtons];
 
     if (newTab.started)
     {
@@ -639,6 +642,7 @@
     }
     [self pingPageControlIndexPath:path];
     [self pingBorderControl];
+    [self checkBackForwardButtons];
 
     [self.view insertSubview:tab.webView belowSubview:self.toolsView];
     [self.omnibar becomeFirstResponder];
@@ -787,40 +791,46 @@
 //    [self.toolsView addSubview:self.shareButton];
 
     self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.refreshButton addTarget:self
-                           action:@selector(refreshPage)
-                 forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
     self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.stopButton addTarget:self
-                        action:@selector(cancelPage)
-              forControlEvents:UIControlEventTouchUpInside];
+    [self.stopButton addTarget:self action:@selector(cancelPage) forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
     self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.stopButton];
 
     self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.readButton addTarget:self
-                               action:@selector(showReadingLinks)
-                     forControlEvents:UIControlEventTouchUpInside];
+    [self.readButton addTarget:self action:@selector(showReadingLinks) forControlEvents:UIControlEventTouchUpInside];
     [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
     self.readButton.frame = CGRectMake(20, 20, 48, 48);
     self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.readButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.addButton addTarget:self
-                       action:@selector(addTab:)
-                     forControlEvents:UIControlEventTouchUpInside];
+    [self.addButton addTarget:self action:@selector(addTab:) forControlEvents:UIControlEventTouchUpInside];
     [self.addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     self.addButton.frame = CGRectMake(20, 20, 32, 32);
     self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-30);
     [self.toolsView addSubview:self.addButton];
+
+    self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
+    self.backButton.frame = CGRectMake(20, 20, 32, 32);
+    self.backButton.center = CGPointMake(self.view.frame.size.width/2-100, self.view.frame.size.height/2-30);
+    [self.toolsView addSubview:self.backButton];
+
+    self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
+    [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
+    self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
+    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+100, self.view.frame.size.height/2-30);
+    [self.toolsView addSubview:self.forwardButton];
 
     [self enableShare:NO Refresh:NO Stop:NO];
     self.refreshButton.hidden = NO;
@@ -835,6 +845,27 @@
     self.refreshButton.hidden = !B2;
     self.stopButton.enabled = B3;
     self.stopButton.hidden = !B3;
+}
+
+- (void)checkBackForwardButtons
+{
+    Tab *tab = self.tabs[self.currentTabIndex];
+    self.backButton.enabled = [tab.webView canGoBack];
+    self.forwardButton.enabled = [tab.webView canGoForward];
+}
+
+- (void)goBack
+{
+    NSLog(@"B");
+    Tab *tab = self.tabs[self.currentTabIndex];
+    [tab.webView goBack];
+}
+
+- (void)goForward
+{
+    NSLog(@"F");
+    Tab *tab = self.tabs[self.currentTabIndex];
+    [tab.webView goForward];
 }
 
 - (void)refreshPage
