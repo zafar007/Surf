@@ -76,6 +76,7 @@
     [self loadServiceObservers];
     [self createButtons];
     [self createCells];
+    [self createPicker];
     [self createActivityIndicator];
     [self.activity startAnimating];
 
@@ -112,19 +113,6 @@
                                                                                 target:self
                                                                                 action:@selector(settings)];
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
-
-//    self.buttons = [[UICollectionView alloc] initWithFrame:CGRectMake(0,10,320,44)
-//                                                   collectionViewLayout:flow];
-
-    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];  //self.navigationItem.titleView.bounds
-    self.pickerView.delegate = self;
-    self.pickerView.dataSource = self;
-    self.pickerView.backgroundColor = [UIColor clearColor];
-
-    CGAffineTransform rotate = CGAffineTransformMakeRotation(-M_PI_2);
-    rotate = CGAffineTransformScale(rotate, 1, 1);
-    [self.pickerView setTransform:rotate];
-    self.navigationItem.titleView = self.pickerView;
 }
 
 - (void)createCells
@@ -143,6 +131,26 @@
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
     [self.view addSubview:self.collectionView];
+}
+
+- (void)createPicker
+{
+//    UIView *view = [[UIView alloc] initWithFrame: self.navigationItem.titleView.bounds];
+//    self.navigationItem.titleView = view;
+//    view.backgroundColor = [UIColor greenColor];
+
+                                                                        //CGRectMake(0,10,320,44)
+    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];  //self.navigationItem.titleView.bounds
+    self.pickerView.delegate = self;
+    self.pickerView.dataSource = self;
+    self.pickerView.backgroundColor = [UIColor clearColor];
+    self.pickerView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    self.navigationItem.titleView = self.pickerView;
+    self.pickerView.frame = CGRectMake(52, -52, 216, 162);  //to remove height error
+    NSArray *subviews = self.pickerView.subviews;
+    [subviews[1] setBackgroundColor:[UIColor clearColor]];
+    [subviews[2] setBackgroundColor:[UIColor clearColor]];
+
 }
 
 - (void)createActivityIndicator
@@ -167,15 +175,13 @@
 
 - (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
 {
-    CGAffineTransform rotateItem = CGAffineTransformScale(CGAffineTransformMakeRotation(3.14/2), 1, 1);
-
     UIImage *image = [UIImage imageNamed:self.buttonItems[row]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button addTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
     [button setImage:image forState:UIControlStateNormal];
     button.frame = CGRectMake(0, 0, 32, 32);
     button.center = view.center;
-    button.transform = rotateItem;
+    button.transform = CGAffineTransformMakeRotation(M_PI_2);
 
     return button;
 }
