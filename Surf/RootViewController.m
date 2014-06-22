@@ -80,6 +80,8 @@
     {
         [self.omnibar becomeFirstResponder];
     }
+
+    [[UIApplication sharedApplication]setStatusBarHidden:!self.showingTools withAnimation:UIStatusBarAnimationFade];
 }
 
 #pragma mark - Setup Scene
