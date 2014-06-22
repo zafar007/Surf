@@ -686,7 +686,7 @@
     [self checkBackForwardButtons];
 }
 
--(void)timerCallback
+- (void)timerCallback
 {
     if (self.doneLoading)
     {
