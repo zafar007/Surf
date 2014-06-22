@@ -364,7 +364,7 @@
 {
     self.tabs = [[NSMutableArray alloc] init];
 
-    NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedUrlStrings"];
+    NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabs"];
     if (savedUrlStrings)
     {
         for (NSString *urlString in savedUrlStrings)
@@ -387,7 +387,7 @@
         [tempArrayOfUrlStrings addObject:tab.webView.request.URL.absoluteString];
     }
 
-    [[NSUserDefaults standardUserDefaults] setObject:tempArrayOfUrlStrings forKey:@"savedUrlStrings"];
+    [[NSUserDefaults standardUserDefaults] setObject:tempArrayOfUrlStrings forKey:@"savedTabs"];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
@@ -402,6 +402,7 @@
     self.refreshButton.enabled = NO;
     [self.tabsCollectionView reloadData];
     [self switchToTab:(int)self.tabs.count-1];
+
     if([urlString isKindOfClass:[NSString class]])
     {
         newTab.urlString = [self searchOrLoad:urlString];
@@ -895,14 +896,69 @@
 
 - (void)saveToCloud
 {
-    NSLog(@"save");
+    Tab *tab = self.tabs[self.currentTabIndex];
+    NSString *url = tab.webView.request.URL.absoluteString;
+    NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+
+    NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
+    NSMutableArray *cloudM;
+    if (!cloud)
+    {
+        cloudM = [NSMutableArray new];
+    }
+    else
+    {
+        cloudM = [NSMutableArray arrayWithArray:cloud];
+    }
+    [cloudM addObject:@{@"url":url, @"title":title}];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
+    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:cell];
 }
 
 - (void)saveAllToCloud:(UILongPressGestureRecognizer *)sender
 {
-    if (sender.state == UIGestureRecognizerStateEnded)
+    if (sender.state == UIGestureRecognizerStateBegan)
     {
         NSLog(@"save all");
+
+
+        NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
+        NSMutableArray *cloudM;
+        if (!cloud)
+        {
+            cloudM = [NSMutableArray new];
+        }
+        else
+        {
+            cloudM = [NSMutableArray arrayWithArray:cloud];
+        }
+
+        for (Tab *tab in self.tabs)
+        {
+            NSString *url = tab.webView.request.URL.absoluteString;
+            NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+
+            [cloudM addObject:@{@"url":url, @"title":title}];
+            [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
+        }
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        self.tabs = [NSMutableArray new];
+        [self.tabsCollectionView reloadData];
+
+        for (UIView *view in self.view.subviews)
+        {
+            if ([view isKindOfClass:[UIWebView class]])
+            {
+                [view removeFromSuperview];
+            }
+        }
+        self.currentTabIndex = 0;
+        [self addTab:nil];
     }
 }
 
