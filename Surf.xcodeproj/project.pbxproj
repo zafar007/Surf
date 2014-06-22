@@ -51,6 +51,8 @@
 		8E97B4C41951D0C000068AEB /* Glasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Glasses.m */; };
 		8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C61951D0CF00068AEB /* Hackernews.m */; };
 		8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C91951D0DA00068AEB /* Reddit.m */; };
+		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
+		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
@@ -148,6 +150,10 @@
 		8E97B4C61951D0CF00068AEB /* Hackernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hackernews.m; sourceTree = "<group>"; };
 		8E97B4C81951D0DA00068AEB /* Reddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reddit.h; sourceTree = "<group>"; };
 		8E97B4C91951D0DA00068AEB /* Reddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reddit.m; sourceTree = "<group>"; };
+		8EA54256195668B9007733D3 /* History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = History.h; sourceTree = "<group>"; };
+		8EA54257195668B9007733D3 /* History.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = History.m; sourceTree = "<group>"; };
+		8EA5425919566B42007733D3 /* Designernews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Designernews.h; sourceTree = "<group>"; };
+		8EA5425A19566B42007733D3 /* Designernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Designernews.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBReadCollectionViewCell.h; sourceTree = "<group>"; };
@@ -193,6 +199,8 @@
 				8E4E0FCF195300E400477A54 /* Producthunt.m */,
 				8E97B4BC1951D0A100068AEB /* Dribbble.h */,
 				8E97B4BD1951D0A100068AEB /* Dribbble.m */,
+				8EA5425919566B42007733D3 /* Designernews.h */,
+				8EA5425A19566B42007733D3 /* Designernews.m */,
 				8E97B4C51951D0CF00068AEB /* Hackernews.h */,
 				8E97B4C61951D0CF00068AEB /* Hackernews.m */,
 				8E97B4C81951D0DA00068AEB /* Reddit.h */,
@@ -209,6 +217,8 @@
 				8E97B4C01951D0B400068AEB /* Bookmarks.m */,
 				8E97B4C21951D0C000068AEB /* Glasses.h */,
 				8E97B4C31951D0C000068AEB /* Glasses.m */,
+				8EA54256195668B9007733D3 /* History.h */,
+				8EA54257195668B9007733D3 /* History.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -477,9 +487,11 @@
 				8E68BA9F194687540019658A /* UIImage+WebP.m in Sources */,
 				8E68BAA1194687540019658A /* UIImageView+WebCache.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
+				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
 				8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
 				8E97B4A91951CFE300068AEB /* Feedly.m in Sources */,
+				8EA54258195668B9007733D3 /* History.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
 				8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,

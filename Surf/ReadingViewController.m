@@ -19,8 +19,10 @@
 #import "Readability.h"
 #import "Facebook.h"
 #import "Dribbble.h"
+#import "Designernews.h"
 #import "Bookmarks.h"
 #import "Glasses.h"
+#import "History.h"
 #import "Hackernews.h"
 #import "Reddit.h"
 #import "Producthunt.h"
@@ -28,14 +30,17 @@
 @interface ReadingViewController () <UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
                                     UIPickerViewDelegate,
-                                    UIPickerViewDataSource>
+                                    UIPickerViewDataSource,
+                                    UIGestureRecognizerDelegate>
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
 @property UIPickerView *pickerView;
 @property UIActivityIndicatorView *activity;
-@property Class selectedClass;
 @property NSArray *buttonItems;
 @property NSArray *data;
+@property UISwipeGestureRecognizer *swipeLeft;
+
+@property Class selectedClass;
 @property Twitter *twitter;
 @property Global *global;
 @property Feedly *feedly;
@@ -44,8 +49,10 @@
 @property Readability *readability;
 @property Facebook *facebook;
 @property Dribbble *dribbble;
+@property Designernews *designernews;
 @property Bookmarks *bookmarks;
 @property Glasses *glasses;
+@property History *history;
 @property Hackernews *hackernews;
 @property Reddit *reddit;
 @property Producthunt *producthunt;
@@ -60,11 +67,13 @@
     self.buttonItems = @[
                          @"bookmarks",
                          @"glasses",
+                         @"history",
                          @"twitter",
                          @"global",
                          @"hackernews",
                          @"producthunt",
                          @"dribbble",
+                         @"designernews",
                          @"facebook",
                          @"reddit",
                          @"feedly",
@@ -77,12 +86,19 @@
     [self createButtons];
     [self createCells];
     [self createPicker];
+    [self createGestures];
     [self createActivityIndicator];
     [self.activity startAnimating];
 
 //    //TEMPORARY
 //    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
 //    [self.pickerView selectRow:0 inComponent:0 animated:YES];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 }
 
 - (void)loadServiceObservers
@@ -95,8 +111,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReadability) name:@"readability" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadFacebook) name:@"facebook" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDesignernews) name:@"designernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHistory) name:@"history" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
@@ -151,6 +169,19 @@
     [subviews[1] setBackgroundColor:[UIColor clearColor]];
     [subviews[2] setBackgroundColor:[UIColor clearColor]];
 
+}
+
+- (void)createGestures
+{
+    self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeFromLeft:)];
+    self.swipeLeft.delegate = self;
+    self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+    [self.collectionView addGestureRecognizer:self.swipeLeft];
+}
+
+- (void)swipeFromLeft:(UISwipeGestureRecognizer *)sender
+{
+    [self unwind];
 }
 
 - (void)createActivityIndicator
@@ -377,6 +408,25 @@
     [self.activity stopAnimating];
 }
 
+- (void)loadDesignernews
+{
+    if (!self.designernews)
+    {
+        self.designernews = [Designernews new];
+    }
+    [self.designernews getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactDesignernews:) name:@"Designernews" object:nil];
+}
+
+- (void)reactDesignernews:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Designernews" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [Designernews class];
+    [self.collectionView reloadData];
+    [self.activity stopAnimating];
+}
+
 - (void)loadBookmarks
 {
     if (!self.bookmarks)
@@ -411,6 +461,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Glasses" object:nil];
     self.data = notification.object;
     self.selectedClass = [Glasses class];
+    [self.collectionView reloadData];
+    [self.activity stopAnimating];
+}
+
+- (void)loadHistory
+{
+    if (!self.history)
+    {
+        self.history = [History new];
+    }
+    [self.history getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactHistory:) name:@"History" object:nil];
+}
+
+- (void)reactHistory:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"History" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [History class];
     [self.collectionView reloadData];
     [self.activity stopAnimating];
 }
@@ -482,7 +551,7 @@
 - (void)unwind
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:nil];
-    [self dismissViewControllerAnimated:NO completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Landscape Layout Adjust
