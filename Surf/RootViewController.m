@@ -30,6 +30,7 @@
 @property UISwipeGestureRecognizer *swipeFromLeft;
 @property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
 @property UIScreenEdgePanGestureRecognizer *edgeswipeFromLeft;
+@property UILongPressGestureRecognizer *longPress;
 @property BOOL showingTools;
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
@@ -220,6 +221,10 @@
     [self.edgeswipeFromLeft setEdges:UIRectEdgeLeft];
     [self.edgeswipeFromLeft setDelegate:self];
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
+
+    self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveAllToCloud:)];
+    self.longPress.delegate = self;
+    [self.saveButton addGestureRecognizer:self.longPress];
 }
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
@@ -834,7 +839,7 @@
     [self.toolsView addSubview:self.shareButton];
 
     self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.saveButton addTarget:self action:@selector(save) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveButton addTarget:self action:@selector(saveToCloud) forControlEvents:UIControlEventTouchUpInside];
     [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
     self.saveButton.frame = CGRectMake(20, 20, 32, 32);
     self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
@@ -888,9 +893,17 @@
     [tab.webView stopLoading];
 }
 
-- (void)save
+- (void)saveToCloud
 {
     NSLog(@"save");
+}
+
+- (void)saveAllToCloud:(UILongPressGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        NSLog(@"save all");
+    }
 }
 
 - (void)share
