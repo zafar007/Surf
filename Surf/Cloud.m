@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
-#import "Glasses.h"
+#import "Cloud.h"
 
-@implementation Glasses
+@implementation Cloud
 
 - (void)getData
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Glasses" object:nil];
-    NSLog(@"Glasses");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Cloud" object:nil];
+    NSLog(@"Cloud");
 }
 
 @end

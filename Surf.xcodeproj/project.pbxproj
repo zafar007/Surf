@@ -48,7 +48,7 @@
 		8E97B4B81951D08400068AEB /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4B71951D08400068AEB /* Facebook.m */; };
 		8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4BD1951D0A100068AEB /* Dribbble.m */; };
 		8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C01951D0B400068AEB /* Bookmarks.m */; };
-		8E97B4C41951D0C000068AEB /* Glasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Glasses.m */; };
+		8E97B4C41951D0C000068AEB /* Cloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Cloud.m */; };
 		8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C61951D0CF00068AEB /* Hackernews.m */; };
 		8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C91951D0DA00068AEB /* Reddit.m */; };
 		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
@@ -144,8 +144,8 @@
 		8E97B4BD1951D0A100068AEB /* Dribbble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Dribbble.m; sourceTree = "<group>"; };
 		8E97B4BF1951D0B400068AEB /* Bookmarks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmarks.h; sourceTree = "<group>"; };
 		8E97B4C01951D0B400068AEB /* Bookmarks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmarks.m; sourceTree = "<group>"; };
-		8E97B4C21951D0C000068AEB /* Glasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Glasses.h; sourceTree = "<group>"; };
-		8E97B4C31951D0C000068AEB /* Glasses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Glasses.m; sourceTree = "<group>"; };
+		8E97B4C21951D0C000068AEB /* Cloud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cloud.h; sourceTree = "<group>"; };
+		8E97B4C31951D0C000068AEB /* Cloud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Cloud.m; sourceTree = "<group>"; };
 		8E97B4C51951D0CF00068AEB /* Hackernews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hackernews.h; sourceTree = "<group>"; };
 		8E97B4C61951D0CF00068AEB /* Hackernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hackernews.m; sourceTree = "<group>"; };
 		8E97B4C81951D0DA00068AEB /* Reddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reddit.h; sourceTree = "<group>"; };
@@ -215,8 +215,8 @@
 				8E97B4B41951D06000068AEB /* Readability.m */,
 				8E97B4BF1951D0B400068AEB /* Bookmarks.h */,
 				8E97B4C01951D0B400068AEB /* Bookmarks.m */,
-				8E97B4C21951D0C000068AEB /* Glasses.h */,
-				8E97B4C31951D0C000068AEB /* Glasses.m */,
+				8E97B4C21951D0C000068AEB /* Cloud.h */,
+				8E97B4C31951D0C000068AEB /* Cloud.m */,
 				8EA54256195668B9007733D3 /* History.h */,
 				8EA54257195668B9007733D3 /* History.m */,
 			);
@@ -466,7 +466,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E97B4C41951D0C000068AEB /* Glasses.m in Sources */,
+				8E97B4C41951D0C000068AEB /* Cloud.m in Sources */,
 				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
 				8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */,
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,

@@ -21,7 +21,7 @@
 #import "Dribbble.h"
 #import "Designernews.h"
 #import "Bookmarks.h"
-#import "Glasses.h"
+#import "Cloud.h"
 #import "History.h"
 #import "Hackernews.h"
 #import "Reddit.h"
@@ -51,7 +51,7 @@
 @property Dribbble *dribbble;
 @property Designernews *designernews;
 @property Bookmarks *bookmarks;
-@property Glasses *glasses;
+@property Cloud *cloud;
 @property History *history;
 @property Hackernews *hackernews;
 @property Reddit *reddit;
@@ -66,7 +66,7 @@
 
     self.buttonItems = @[
                          @"bookmarks",
-                         @"glasses",
+                         @"cloud",
                          @"history",
                          @"twitter",
                          @"global",
@@ -113,7 +113,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDesignernews) name:@"designernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGlasses) name:@"glasses" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadCloud) name:@"cloud" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHistory) name:@"history" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
@@ -208,7 +208,6 @@
 {
     UIImage *image = [UIImage imageNamed:self.buttonItems[row]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button addTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
     [button setImage:image forState:UIControlStateNormal];
     button.frame = CGRectMake(0, 0, 32, 32);
     button.center = view.center;
@@ -446,21 +445,21 @@
     [self.activity stopAnimating];
 }
 
-- (void)loadGlasses
+- (void)loadCloud
 {
-    if (!self.glasses)
+    if (!self.cloud)
     {
-        self.glasses = [Glasses new];
+        self.cloud = [Cloud new];
     }
-    [self.glasses getData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactGlasses:) name:@"Glasses" object:nil];
+    [self.cloud getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactCloud:) name:@"Cloud" object:nil];
 }
 
-- (void)reactGlasses:(NSNotification *)notification
+- (void)reactCloud:(NSNotification *)notification
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Glasses" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Cloud" object:nil];
     self.data = notification.object;
-    self.selectedClass = [Glasses class];
+    self.selectedClass = [Cloud class];
     [self.collectionView reloadData];
     [self.activity stopAnimating];
 }

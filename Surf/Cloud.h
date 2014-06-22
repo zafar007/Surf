@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Glasses : NSObject
+@interface Cloud : NSObject
 - (void)getData;
 //+ (NSDictionary *)layoutFrom:(NSDictionary *)post;
 //+ (NSString *)selected:(NSDictionary *)post;
