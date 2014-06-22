@@ -64,41 +64,47 @@
 {
     [super viewDidLoad];
 
-    self.buttonItems = @[
-                         @"bookmarks",
-                         @"cloud",
-                         @"history",
-                         @"twitter",
-                         @"global",
-                         @"hackernews",
-                         @"producthunt",
-                         @"dribbble",
-                         @"designernews",
-                         @"facebook",
-                         @"reddit",
-                         @"feedly",
-                         @"pocket",
-                         @"instapaper",
-                         @"readability"
-                         ];
-
+    [self loadButtonItems];
     [self loadServiceObservers];
     [self createButtons];
     [self createCells];
     [self createPicker];
     [self createGestures];
     [self createActivityIndicator];
-    [self.activity startAnimating];
 
-//    //TEMPORARY
-//    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
-//    [self.pickerView selectRow:0 inComponent:0 animated:YES];
+    [self.activity startAnimating];
+    [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+}
+
+- (void)loadButtonItems
+{
+    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonItems"];
+    if (!self.buttonItems)
+    {
+        self.buttonItems = @[
+                             @"bookmarks",
+                             @"cloud",
+                             @"history",
+                             @"twitter",
+                             @"global",
+                             @"hackernews",
+                             @"producthunt",
+                             @"dribbble",
+                             @"designernews",
+                             @"facebook",
+                             @"reddit",
+                             @"feedly",
+                             @"pocket",
+                             @"instapaper",
+                             @"readability"
+                             ];
+    }
 }
 
 - (void)loadServiceObservers

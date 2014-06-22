@@ -51,6 +51,7 @@
 		8E97B4C41951D0C000068AEB /* Cloud.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C31951D0C000068AEB /* Cloud.m */; };
 		8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C61951D0CF00068AEB /* Hackernews.m */; };
 		8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4C91951D0DA00068AEB /* Reddit.m */; };
+		8EA1378B1957428F0032A507 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA1378A1957428F0032A507 /* SWRevealViewController.m */; };
 		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
 		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
@@ -150,6 +151,8 @@
 		8E97B4C61951D0CF00068AEB /* Hackernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hackernews.m; sourceTree = "<group>"; };
 		8E97B4C81951D0DA00068AEB /* Reddit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reddit.h; sourceTree = "<group>"; };
 		8E97B4C91951D0DA00068AEB /* Reddit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reddit.m; sourceTree = "<group>"; };
+		8EA137891957428F0032A507 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		8EA1378A1957428F0032A507 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		8EA54256195668B9007733D3 /* History.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = History.h; sourceTree = "<group>"; };
 		8EA54257195668B9007733D3 /* History.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = History.m; sourceTree = "<group>"; };
 		8EA5425919566B42007733D3 /* Designernews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Designernews.h; sourceTree = "<group>"; };
@@ -306,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				8E68BA73194687540019658A /* SDWebImage */,
+				8EA137881957428F0032A507 /* SWRevealViewController */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,
@@ -369,6 +373,15 @@
 				8E6CA4FD19450DC200148137 /* RootViewController.m */,
 			);
 			name = RootVC;
+			sourceTree = "<group>";
+		};
+		8EA137881957428F0032A507 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8EA137891957428F0032A507 /* SWRevealViewController.h */,
+				8EA1378A1957428F0032A507 /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -493,6 +506,7 @@
 				8E97B4A91951CFE300068AEB /* Feedly.m in Sources */,
 				8EA54258195668B9007733D3 /* History.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
+				8EA1378B1957428F0032A507 /* SWRevealViewController.m in Sources */,
 				8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,

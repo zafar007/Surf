@@ -167,6 +167,10 @@
     int index0 = [indices[0] intValue];
     int index1 = [indices[1] intValue];
     NSString *host = url.host;
+    if ([host hasPrefix:@"www."])
+    {
+        host = [host substringFromIndex:[@"www." length]];
+    }
     NSString *newTweetText = [tweetText stringByReplacingCharactersInRange:NSMakeRange(index0, index1-index0) withString:host];
 
     return [self cleanup:newTweetText];

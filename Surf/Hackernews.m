@@ -68,7 +68,7 @@
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
     contentView.backgroundColor = [UIColor whiteColor];
 
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 300, contentView.frame.size.height)];
     UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
                                                                   contentView.frame.size.height-.5,
                                                                   contentView.frame.size.width-20,

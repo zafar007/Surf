@@ -19,10 +19,14 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)site;
 {
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-    textView.editable = NO;
-    textView.selectable = NO;
-    textView.userInteractionEnabled = NO;
+    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:site], [self height:site])];
+    contentView.backgroundColor = [UIColor whiteColor];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 300, 44)];
+    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+                                                                  contentView.frame.size.height-.5,
+                                                                  contentView.frame.size.width-20,
+                                                                  .5)];
+    borderView.backgroundColor = [UIColor lightGrayColor];
 
     NSURL *url = [NSURL URLWithString:site[@"url"]];
     NSString *host = url.host;
@@ -31,8 +35,15 @@
         host = [host substringFromIndex:4];
     }
     textView.text = [NSString stringWithFormat:@"%@\n%@",site[@"title"],host];
+    textView.font = [UIFont systemFontOfSize:13];
+    textView.editable = NO;
+    textView.selectable = NO;
+    textView.userInteractionEnabled = NO;
 
-    return @{@"contentView":textView};
+    [contentView addSubview:textView];
+    [contentView addSubview:borderView];
+
+    return @{@"contentView":contentView};
 }
 
 + (NSString *)selected:(NSDictionary *)site;
