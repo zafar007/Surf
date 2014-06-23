@@ -34,6 +34,7 @@
 @property BOOL showingTools;
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
+@property NSTimer *borderTimer;
 @property UIWebView *thisWebView;
 @property UIWebView *rightWebView;
 @property UIWebView *leftWebView;
@@ -81,7 +82,6 @@
     {
         [self.omnibar becomeFirstResponder];
     }
-
     [[UIApplication sharedApplication]setStatusBarHidden:!self.showingTools withAnimation:UIStatusBarAnimationFade];
 }
 
@@ -158,7 +158,7 @@
 {
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20)];
     self.pageControl.pageIndicatorTintColor = [UIColor grayColor];
-    self.pageControl.currentPageIndicatorTintColor = [UIColor whiteColor];//[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.pageControl.backgroundColor = [UIColor blackColor];
     self.pageControl.hidesForSinglePage = YES;
     self.pageControl.currentPage = 0;
@@ -252,8 +252,7 @@
         [self showReadingLinks];
     }
 
-    Tab *tab = self.tabs[self.currentTabIndex];
-    if (self.showingTools && tab.started &&
+    if (self.showingTools && [self.tabs[self.currentTabIndex] started] &&
         [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
         [self showWeb];
@@ -264,7 +263,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1))
+    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] started])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -313,7 +312,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && (self.currentTabIndex-1) >= 0)
+    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] started])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -394,13 +393,13 @@
 - (void)addTab:(NSString *)urlString
 {
     Tab *newTab = [[Tab alloc] init];
-    newTab.webView.userInteractionEnabled = NO; //fixes bug when doubletapping on blank tab.webview
     newTab.webView.delegate = self;
     newTab.webView.scalesPageToFit = YES;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
     self.refreshButton.enabled = NO;
     [self.tabsCollectionView reloadData];
+
     [self switchToTab:(int)self.tabs.count-1];
 
     if([urlString isKindOfClass:[NSString class]])
@@ -412,16 +411,24 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
-    if (newTabIndex != self.currentTabIndex)
+    for (UIView *view in self.view.subviews)
     {
-        Tab *oldTab = self.tabs[self.currentTabIndex];
-        [oldTab.webView removeFromSuperview];
+        if ([view isKindOfClass:[UIWebView class]] && ![view isEqual:[self.tabs[newTabIndex] webView]])
+        {
+            [view removeFromSuperview];
+        }
     }
 
     Tab *newTab = self.tabs[newTabIndex];
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
+
     self.currentTabIndex = newTabIndex;
-    [self pingBorderControl];
+
+    self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.1
+                                                        target:self
+                                                      selector:@selector(pingBorderControl)
+                                                      userInfo:nil
+                                                       repeats:NO];
     [self pingPageControlIndexPath:nil];
     [self checkBackForwardButtons];
 
@@ -479,12 +486,9 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-
-    Tab *tab = self.tabs[indexPath.item];
-    cell.backgroundView = tab.screenshot;
+    cell.backgroundView = [self.tabs[indexPath.item] screenshot];
     [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
-
     return cell;
 }
 
@@ -593,7 +597,6 @@
 
 -(NSString *)googleSearchString:(NSString *)userInput
 {
-//    NSString *noSpaces = [userInput stringByReplacingOccurrencesOfString:@" " withString:@"+"];
     NSString *noSpaces = [self urlEncode:userInput];
     NSString *searchUrl = [NSString stringWithFormat:@"https://www.google.com/search?q=%@&cad=h", noSpaces];
     return searchUrl;
@@ -673,10 +676,7 @@
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
     self.doneLoading = false;
-    Tab *tab = self.tabs[self.currentTabIndex];
-    tab.started = YES;
-    tab.webView.userInteractionEnabled = YES; //fixes bug when doubletapping on blank tab.webview
-
+    [self.tabs[self.currentTabIndex] setStarted:YES];
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025
                                                       target:self
                                                     selector:@selector(timerCallback)
@@ -724,14 +724,6 @@
     [self enableShare:YES Refresh:YES Stop:NO Save:YES];
 }
 
-#pragma mark - Low Memory Alert
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Landscape Layout Adjust
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -748,12 +740,10 @@
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
         self.pageControl.frame = CGRectMake(0, 188, 320, 20);
 
-        Tab *tab = self.tabs[self.currentTabIndex];
-        UIWebView *webView = tab.webView;
-        webView.frame = CGRectMake(self.view.frame.origin.x,
-                                   self.view.frame.origin.y,
-                                   self.view.frame.size.width,
-                                   self.view.frame.size.height);
+        [self.tabs[self.currentTabIndex] webView].frame = CGRectMake(self.view.frame.origin.x,
+                                                                     self.view.frame.origin.y,
+                                                                     self.view.frame.size.width,
+                                                                     self.view.frame.size.height);
     }
     else    //landscape
     {
@@ -777,12 +767,10 @@
                                             self.view.frame.size.width,
                                             20);
 
-        Tab *tab = self.tabs[self.currentTabIndex];
-        UIWebView *webView = tab.webView;
-        webView.frame = CGRectMake(self.view.frame.origin.x,
-                                   self.view.frame.origin.y,
-                                   self.view.frame.size.width,
-                                   self.view.frame.size.height);
+        [self.tabs[self.currentTabIndex] webView].frame = CGRectMake(self.view.frame.origin.x,
+                                                                     self.view.frame.origin.y,
+                                                                     self.view.frame.size.width,
+                                                                     self.view.frame.size.height);
     }
 }
 
@@ -849,7 +837,6 @@
 
     [self enableShare:NO Refresh:NO Stop:NO Save:NO];
     self.refreshButton.hidden = NO;
-//    self.refreshButton.enabled = NO;
 }
 
 - (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
@@ -872,26 +859,22 @@
 
 - (void)goBack
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [tab.webView goBack];
+    [[self.tabs[self.currentTabIndex] webView] goBack];
 }
 
 - (void)goForward
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [tab.webView goForward];
+    [[self.tabs[self.currentTabIndex] webView] goForward];
 }
 
 - (void)refreshPage
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [tab.webView reload];
+    [[self.tabs[self.currentTabIndex] webView] reload];
 }
 
 - (void)cancelPage
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    [tab.webView stopLoading];
+    [[self.tabs[self.currentTabIndex] webView] stopLoading];
 }
 
 - (void)saveToCloud
@@ -942,8 +925,11 @@
             NSString *url = tab.webView.request.URL.absoluteString;
             NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 
-            [cloudM addObject:@{@"url":url, @"title":title}];
-            [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
+            if (url)
+            {
+                [cloudM addObject:@{@"url":url, @"title":title}];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
+            }
         }
         [[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -983,8 +969,7 @@
 
 - (void)currentURL
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
-    NSString *url = tab.webView.request.URL.absoluteString;
+    NSString *url = [self.tabs[self.currentTabIndex] webView].request.URL.absoluteString;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"url" object:url];
 }
 
