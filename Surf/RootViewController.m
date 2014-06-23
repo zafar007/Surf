@@ -173,7 +173,7 @@
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
     if (!self.readingNavController)
     {
-        self.readingViewController = [[ReadingViewController alloc] init];  //move to view did load if want faster fetching
+        self.readingViewController = [[ReadingViewController alloc] init];
         self.readingNavController = [[UINavigationController alloc] initWithRootViewController:self.readingViewController];
     }
     [self presentViewController:self.readingNavController animated:YES completion:nil];
@@ -558,7 +558,7 @@
 
 -(NSString *)isURL:(NSString *)userInput
 {
-    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly"];
+    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly",@".gov",@".eu",@".cn"];
 
     NSString *workingInput = @"";
 
@@ -883,23 +883,26 @@
     NSString *url = tab.webView.request.URL.absoluteString;
     NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
 
-    NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
-    NSMutableArray *cloudM;
-    if (!cloud)
+    if (url)
     {
-        cloudM = [NSMutableArray new];
-    }
-    else
-    {
-        cloudM = [NSMutableArray arrayWithArray:cloud];
-    }
-    [cloudM addObject:@{@"url":url, @"title":title}];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+        NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
+        NSMutableArray *cloudM;
+        if (!cloud)
+        {
+            cloudM = [NSMutableArray new];
+        }
+        else
+        {
+            cloudM = [NSMutableArray arrayWithArray:cloud];
+        }
+        [cloudM addObject:@{@"url":url, @"title":title}];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
 
-    NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
-    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:cell];
+        NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
+        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:cell];
+    }
 }
 
 - (void)saveAllToCloud:(UILongPressGestureRecognizer *)sender
