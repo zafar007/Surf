@@ -84,26 +84,12 @@
 
 - (void)loadButtonItems
 {
-    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonItems"];
+    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
     if (!self.buttonItems)
     {
-        self.buttonItems = @[
-                             @"bookmarks",
-                             @"cloud",
-                             @"history",
-                             @"twitter",
-                             @"global",
-                             @"hackernews",
-                             @"producthunt",
-                             @"dribbble",
-                             @"designernews",
-                             @"facebook",
-                             @"reddit",
-                             @"feedly",
-                             @"pocket",
-                             @"instapaper",
-                             @"readability"
-                             ];
+        self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
+        [[NSUserDefaults standardUserDefaults] setObject:self.buttonItems forKey:@"buttonsSome"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 

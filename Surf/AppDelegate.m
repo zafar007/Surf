@@ -12,6 +12,26 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSArray *services = @[
+                         @"bookmarks",
+                         @"cloud",
+                         @"history",
+                         @"twitter",
+                         @"global",
+                         @"hackernews",
+                         @"producthunt",
+                         @"dribbble",
+                         @"designernews",
+                         @"facebook",
+                         @"reddit",
+                         @"feedly",
+                         @"pocket",
+                         @"instapaper",
+                         @"readability"
+                         ];
+    [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
     self.rootViewController = [[RootViewController alloc] init];

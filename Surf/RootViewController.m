@@ -493,6 +493,7 @@
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
     cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+
     [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
     return cell;
