@@ -6,8 +6,7 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
-#define kAPI @"http://hook-api.herokuapp.com/today"
-//#define kAPI @"http://producthuntios.herokuapp.com/today"     //NOT WOKRING :(
+#define kAPI @"http://salty-mountain-8993.herokuapp.com/today"
 
 #import "Producthunt.h"
 
