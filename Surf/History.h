@@ -10,8 +10,8 @@
 
 @interface History : NSObject
 - (void)getData;
-//+ (NSDictionary *)layoutFrom:(NSDictionary *)post;
-//+ (NSString *)selected:(NSDictionary *)post;
-//+ (CGFloat)width:(NSDictionary *)post;
-//+ (CGFloat)height:(NSDictionary *)post;
++ (NSDictionary *)layoutFrom:(NSDictionary *)site;
++ (NSString *)selected:(NSDictionary *)site;
++ (CGFloat)width:(NSDictionary *)site;
++ (CGFloat)height:(NSDictionary *)site;
 @end

@@ -30,7 +30,8 @@
 @property UISwipeGestureRecognizer *swipeFromLeft;
 @property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
 @property UIScreenEdgePanGestureRecognizer *edgeswipeFromLeft;
-@property UILongPressGestureRecognizer *longPress;
+@property UILongPressGestureRecognizer *longPressOnSave;
+@property UILongPressGestureRecognizer *longPressOnStar;
 @property BOOL showingTools;
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
@@ -47,6 +48,7 @@
 @property UIButton *forwardButton;
 @property UIButton *shareButton;
 @property UIButton *saveButton;
+@property UIButton *starButton;
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
@@ -222,9 +224,13 @@
     [self.edgeswipeFromLeft setDelegate:self];
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
 
-    self.longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveAllToCloud:)];
-    self.longPress.delegate = self;
-    [self.saveButton addGestureRecognizer:self.longPress];
+    self.longPressOnSave = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveAllToCloud:)];
+    self.longPressOnSave.delegate = self;
+    [self.saveButton addGestureRecognizer:self.longPressOnSave];
+
+    self.longPressOnStar = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(bookmarkAll:)];
+    self.longPressOnStar.delegate = self;
+    [self.starButton addGestureRecognizer:self.longPressOnStar];
 }
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
@@ -715,6 +721,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
     [self enableShare:YES Refresh:YES Stop:NO Save:YES];
+    [self pingHistory:webView];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -824,19 +831,28 @@
     [self.shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
     [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-30);
+//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-30);
+    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.shareButton];
 
     self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.saveButton addTarget:self action:@selector(saveToCloud) forControlEvents:UIControlEventTouchUpInside];
     [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
     self.saveButton.frame = CGRectMake(20, 20, 32, 32);
-    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
+//    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
+    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.saveButton];
 
+    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
+    [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
+    self.starButton.frame = CGRectMake(20, 20, 32, 32);
+    self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
+    [self.toolsView addSubview:self.starButton];
 
     [self enableShare:NO Refresh:NO Stop:NO Save:NO];
     self.refreshButton.hidden = NO;
+    self.starButton.enabled = NO;
 }
 
 - (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
@@ -875,6 +891,44 @@
 - (void)cancelPage
 {
     [[self.tabs[self.currentTabIndex] webView] stopLoading];
+}
+
+- (void)pingHistory:(UIWebView *)webView
+{
+    NSArray *history = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
+    NSMutableArray *historyM = [NSMutableArray arrayWithArray:history];
+    if (![history.lastObject[@"url"] isEqualToString:webView.request.URL.absoluteString])
+    {
+        [historyM addObject:@{@"url":webView.request.URL.absoluteString,
+                              @"title":[webView stringByEvaluatingJavaScriptFromString:@"document.title"]}];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:historyM] forKey:@"history"];
+}
+
+- (void)bookmark
+{
+    Tab *tab = self.tabs[self.currentTabIndex];
+    NSString *url = tab.webView.request.URL.absoluteString;
+    NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if (url)
+    {
+        NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
+        NSMutableArray *bookmarksM = [NSMutableArray arrayWithArray:bookmarks];
+        [bookmarksM addObject:@{@"url":url,
+                                @"title":title}];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:bookmarksM] forKey:@"bookmarks"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        [self.starButton setImage:[UIImage imageNamed:@"star-2"] forState:UIControlStateNormal];
+    }
+}
+
+- (void)bookmarkAll:(UILongPressGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+
+    }
 }
 
 - (void)saveToCloud
