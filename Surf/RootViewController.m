@@ -864,7 +864,7 @@
     [self.toolsView addSubview:self.saveButton];
 
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
+    [self.starButton addTarget:self action:@selector(bookmark:) forControlEvents:UIControlEventTouchUpInside];
     [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
     self.starButton.frame = CGRectMake(20, 20, 32, 32);
     self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
@@ -872,7 +872,7 @@
 
     [self enableShare:NO Refresh:NO Stop:NO Save:NO];
     self.refreshButton.hidden = NO;
-    self.starButton.enabled = NO;
+    self.starButton.enabled = YES;
 }
 
 - (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
@@ -925,9 +925,19 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:historyM] forKey:@"history"];
 }
 
-- (void)bookmark
+- (void)bookmark:(int)index
 {
-    Tab *tab = self.tabs[self.currentTabIndex];
+    Tab *tab;
+
+    if (index < self.tabs.count)
+    {
+        tab = self.tabs[index];
+    }
+    else
+    {
+        tab = self.tabs[self.currentTabIndex];
+    }
+
     NSString *url = tab.request.URL.absoluteString;
     NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
     if (url)
@@ -947,7 +957,10 @@
 {
     if (sender.state == UIGestureRecognizerStateBegan)
     {
-
+        for (int index = 0; index < self.tabs.count; index++)
+        {
+            [self bookmark:index];
+        }
     }
 }
 
@@ -983,9 +996,6 @@
 {
     if (sender.state == UIGestureRecognizerStateBegan)
     {
-        NSLog(@"save all");
-
-
         NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
         NSMutableArray *cloudM;
         if (!cloud)
