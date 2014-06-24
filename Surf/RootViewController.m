@@ -376,6 +376,7 @@
         {
             [self addTab:urlString];
         }
+        [self showTools];
     }
     else
     {
