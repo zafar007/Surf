@@ -370,7 +370,7 @@
     self.tabs = [[NSMutableArray alloc] init];
 
     NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabs"];
-    if (savedUrlStrings)
+    if (savedUrlStrings && savedUrlStrings.count>0)
     {
         for (NSString *urlString in savedUrlStrings)
         {
@@ -389,7 +389,10 @@
 
     for (Tab *tab in self.tabs)
     {
-        [tempArrayOfUrlStrings addObject:tab.webView.request.URL.absoluteString];
+        if (tab.started)
+        {
+            [tempArrayOfUrlStrings addObject:tab.webView.request.URL.absoluteString];
+        }
     }
 
     [[NSUserDefaults standardUserDefaults] setObject:tempArrayOfUrlStrings forKey:@"savedTabs"];
@@ -431,7 +434,7 @@
     self.currentTabIndex = newTabIndex;
     newTab.started ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
 
-    self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.1
+    self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.05
                                                         target:self
                                                       selector:@selector(pingBorderControl)
                                                       userInfo:nil
@@ -447,6 +450,8 @@
 
 - (void)removeTab:(NSNotification *)notification
 {
+    [self endLoadingUI];
+
     UICollectionViewCell *cell = notification.object;
     NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
     Tab *tab = self.tabs[path.item];
@@ -721,13 +726,16 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [self animateProgressBarHide];
-    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
+    [self endLoadingUI];
     [self pingHistory:webView];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    [self endLoadingUI];
+}
+
+- (void)endLoadingUI
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];

@@ -61,7 +61,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-//    [self.rootViewController saveTabs];
+    [self.rootViewController saveTabs];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {}
