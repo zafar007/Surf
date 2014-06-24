@@ -36,9 +36,9 @@
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
 @property NSTimer *borderTimer;
-@property UIWebView *thisWebView;
-@property UIWebView *rightWebView;
-@property UIWebView *leftWebView;
+@property Tab *thisWebView;
+@property Tab *rightWebView;
+@property Tab *leftWebView;
 @property NSTimer *delayTimer;
 @property UIButton *stopButton;
 @property UIButton *refreshButton;
@@ -186,7 +186,15 @@
     NSString *urlString = notification.object;
     if (urlString)
     {
-        [self addTab:urlString];
+        if ([self.tabs.lastObject request].URL)
+        {
+            [self addTab:urlString];
+        }
+        else
+        {
+            [self switchToTab:(int)self.tabs.count-1];
+            [self loadPage:self.tabs.lastObject];
+        }
     }
 }
 
@@ -273,10 +281,8 @@
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            Tab *thisTab = self.tabs[self.currentTabIndex];
-            self.thisWebView = thisTab.webView;
-            Tab *rightTab = self.tabs[self.currentTabIndex+1];
-            self.rightWebView = rightTab.webView;
+            self.thisWebView = self.tabs[self.currentTabIndex];
+            self.rightWebView = self.tabs[self.currentTabIndex+1];
 
             self.view.userInteractionEnabled = NO;
             [self.view addSubview:self.rightWebView];
@@ -322,10 +328,8 @@
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            Tab *thisTab = self.tabs[self.currentTabIndex];
-            self.thisWebView = thisTab.webView;
-            Tab *leftTab = self.tabs[self.currentTabIndex-1];
-            self.leftWebView = leftTab.webView;
+            self.thisWebView = self.tabs[self.currentTabIndex];
+            self.leftWebView = self.tabs[self.currentTabIndex-1];
 
             self.view.userInteractionEnabled = NO;
             [self.view addSubview:self.leftWebView];
@@ -392,7 +396,7 @@
     {
         if (tab.started)
         {
-            [tempArrayOfUrlStrings addObject:tab.webView.request.URL.absoluteString];
+            [tempArrayOfUrlStrings addObject:tab.request.URL.absoluteString];
         }
     }
 
@@ -403,8 +407,8 @@
 - (void)addTab:(NSString *)urlString
 {
     Tab *newTab = [[Tab alloc] init];
-    newTab.webView.delegate = self;
-    newTab.webView.scalesPageToFit = YES;
+    newTab.delegate = self;
+    newTab.scalesPageToFit = YES;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
     self.refreshButton.enabled = NO;
@@ -423,17 +427,16 @@
 {
     for (UIView *view in self.view.subviews)
     {
-        if ([view isKindOfClass:[UIWebView class]] && ![view isEqual:[self.tabs[newTabIndex] webView]])
+        if ([view isKindOfClass:[UIWebView class]] && ![view isEqual:self.tabs[newTabIndex]])
         {
             [view removeFromSuperview];
         }
     }
 
     Tab *newTab = self.tabs[newTabIndex];
-    [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
+    [self.view insertSubview:newTab belowSubview:self.toolsView];
 
     self.currentTabIndex = newTabIndex;
-    newTab.started ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
 
     self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.05
                                                         target:self
@@ -457,7 +460,7 @@
     NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
     Tab *tab = self.tabs[path.item];
 
-    [tab.webView removeFromSuperview];
+    [tab removeFromSuperview];
     [self.tabs removeObject:tab];
     [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
@@ -626,7 +629,7 @@
 
 - (void)loadPage:(Tab *)tab
 {
-    [tab.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:tab.urlString]]];
+    [tab loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:tab.urlString]]];
     [self showWeb];
 }
 
@@ -641,37 +644,42 @@
 
     Tab *tab = self.tabs[self.currentTabIndex];
 
-    tab.webView.frame = CGRectMake(self.view.frame.origin.x,
+    tab.frame = CGRectMake(self.view.frame.origin.x,
                                    self.view.frame.origin.y,
                                    self.view.frame.size.width,
                                    self.view.frame.size.height);
 
-    [self.view insertSubview:tab.webView aboveSubview:self.toolsView];
+    [self.view insertSubview:tab aboveSubview:self.toolsView];
 }
 
 - (void)showTools
 {
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-
     self.showingTools = true;
     self.toolsView.hidden = NO;
+    [self updateScreenShotsOfAllTabs];
 
-    NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
-    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-    Tab *tab = self.tabs[self.currentTabIndex];
-
-    if (tab.started)
-    {
-        tab.screenshot = [tab.webView snapshotViewAfterScreenUpdates:YES];
-        cell.backgroundView = tab.screenshot;
-    }
-    [self pingPageControlIndexPath:path];
+    [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
     [self pingBorderControl];
     [self checkBackForwardButtons];
+    [self.view insertSubview:self.tabs[self.currentTabIndex] belowSubview:self.toolsView];
+    [self.omnibar becomeFirstResponder];
+}
 
-    [self.view insertSubview:tab.webView belowSubview:self.toolsView];
-
-    tab.started ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
+- (void)updateScreenShotsOfAllTabs
+{
+    for (Tab *tab in self.tabs)
+    {
+        if (tab.request.URL.absoluteURL)
+        {
+            tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
+            int index = (int)[self.tabs indexOfObject:tab];
+            NSIndexPath *path = [NSIndexPath indexPathForItem:index inSection:0];
+            UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+            cell.backgroundView = tab.screenshot;
+        }
+    }
+    [self.tabsCollectionView reloadData];
 }
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
@@ -759,10 +767,10 @@
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
         self.pageControl.frame = CGRectMake(0, 188, 320, 20);
 
-        [self.tabs[self.currentTabIndex] webView].frame = CGRectMake(self.view.frame.origin.x,
-                                                                     self.view.frame.origin.y,
-                                                                     self.view.frame.size.width,
-                                                                     self.view.frame.size.height);
+        [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
+                                                             self.view.frame.origin.y,
+                                                             self.view.frame.size.width,
+                                                             self.view.frame.size.height)];
     }
     else    //landscape
     {
@@ -786,10 +794,10 @@
                                             self.view.frame.size.width,
                                             20);
 
-        [self.tabs[self.currentTabIndex] webView].frame = CGRectMake(self.view.frame.origin.x,
-                                                                     self.view.frame.origin.y,
-                                                                     self.view.frame.size.width,
-                                                                     self.view.frame.size.height);
+        [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
+                                                             self.view.frame.origin.y,
+                                                             self.view.frame.size.width,
+                                                             self.view.frame.size.height)];
     }
 }
 
@@ -881,28 +889,28 @@
 - (void)checkBackForwardButtons
 {
     Tab *tab = self.tabs[self.currentTabIndex];
-    self.backButton.enabled = [tab.webView canGoBack];
-    self.forwardButton.enabled = [tab.webView canGoForward];
+    self.backButton.enabled = [tab canGoBack];
+    self.forwardButton.enabled = [tab canGoForward];
 }
 
 - (void)goBack
 {
-    [[self.tabs[self.currentTabIndex] webView] goBack];
+    [self.tabs[self.currentTabIndex] goBack];
 }
 
 - (void)goForward
 {
-    [[self.tabs[self.currentTabIndex] webView] goForward];
+    [self.tabs[self.currentTabIndex] goForward];
 }
 
 - (void)refreshPage
 {
-    [[self.tabs[self.currentTabIndex] webView] reload];
+    [self.tabs[self.currentTabIndex] reload];
 }
 
 - (void)cancelPage
 {
-    [[self.tabs[self.currentTabIndex] webView] stopLoading];
+    [self.tabs[self.currentTabIndex] stopLoading];
 }
 
 - (void)pingHistory:(UIWebView *)webView
@@ -920,8 +928,8 @@
 - (void)bookmark
 {
     Tab *tab = self.tabs[self.currentTabIndex];
-    NSString *url = tab.webView.request.URL.absoluteString;
-    NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    NSString *url = tab.request.URL.absoluteString;
+    NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
     if (url)
     {
         NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
@@ -946,8 +954,8 @@
 - (void)saveToCloud
 {
     Tab *tab = self.tabs[self.currentTabIndex];
-    NSString *url = tab.webView.request.URL.absoluteString;
-    NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    NSString *url = tab.request.URL.absoluteString;
+    NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
 
     if (url)
     {
@@ -991,8 +999,8 @@
 
         for (Tab *tab in self.tabs)
         {
-            NSString *url = tab.webView.request.URL.absoluteString;
-            NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+            NSString *url = tab.request.URL.absoluteString;
+            NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
 
             if (url)
             {
@@ -1020,25 +1028,28 @@
 - (void)share
 {
     Tab *tab = self.tabs[self.currentTabIndex];
-    NSString *title = [tab.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
     NSString *text = [@"Check out: " stringByAppendingString:title];
-    NSURL *url = tab.webView.request.URL;
+    NSURL *url = tab.request.URL;
 
-    UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[text, url]
-                                                                             applicationActivities:nil];
+    if (url)
+    {
+        UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[text, url]
+                                                                                 applicationActivities:nil];
 
-    controller.excludedActivityTypes = @[UIActivityTypeAddToReadingList,
-                                         UIActivityTypeAssignToContact,
-                                         UIActivityTypeSaveToCameraRoll,
-                                         UIActivityTypePostToFlickr,
-                                         UIActivityTypePostToVimeo];
+        controller.excludedActivityTypes = @[UIActivityTypeAddToReadingList,
+                                             UIActivityTypeAssignToContact,
+                                             UIActivityTypeSaveToCameraRoll,
+                                             UIActivityTypePostToFlickr,
+                                             UIActivityTypePostToVimeo];
 
-    [self presentViewController:controller animated:YES completion:nil];
+        [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 - (void)currentURL
 {
-    NSString *url = [self.tabs[self.currentTabIndex] webView].request.URL.absoluteString;
+    NSString *url = [self.tabs[self.currentTabIndex] request].URL.absoluteString;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"url" object:url];
 }
 

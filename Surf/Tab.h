@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Tab : NSObject
+@interface Tab : UIWebView
 @property NSString *urlString;
-@property UIWebView *webView;
 @property UIView *screenshot;
 @property BOOL started;
 @end

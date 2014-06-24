@@ -12,11 +12,11 @@
 
 - (id)init
 {
-    self = [super init];
-    self.webView = [UIWebView new];
-    self.screenshot = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
-    self.started = NO;
-
+    if (self = [super init])
+    {
+        self.screenshot = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
+        self.started = NO;
+    }
     return self;
 }
 
