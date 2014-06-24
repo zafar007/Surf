@@ -429,6 +429,7 @@
     [self.view insertSubview:newTab.webView belowSubview:self.toolsView];
 
     self.currentTabIndex = newTabIndex;
+    newTab.started ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
 
     self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.1
                                                         target:self
@@ -663,7 +664,8 @@
     [self checkBackForwardButtons];
 
     [self.view insertSubview:tab.webView belowSubview:self.toolsView];
-    [self.omnibar becomeFirstResponder];
+
+    tab.started ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
 }
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event

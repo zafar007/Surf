@@ -7,11 +7,14 @@
 //
 
 #import "AppDelegate.h"
+#import "PocketAPI.h"
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [[PocketAPI sharedAPI] setConsumerKey:@"29159-d90fcf8425ecacb6bcdf588e"];
+
     NSArray *services = @[
                          @"bookmarks",
                          @"cloud",
@@ -40,6 +43,18 @@
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+{
+    if ([[PocketAPI sharedAPI] handleOpenURL:url])
+    {
+        return YES;
+    }
+    else
+    {
+        return NO;
+    }
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {}

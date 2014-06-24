@@ -55,6 +55,11 @@
 		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
 		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
+		8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF021958E25200C61C3F /* PocketAPI.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF041958E25200C61C3F /* PocketAPILogin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		8EC7CF0D1958E25200C61C3F /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF091958E25200C61C3F /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		8EC7CF0F1958E2E100C61C3F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC7CF0E1958E2E100C61C3F /* Security.framework */; };
 		8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
 /* End PBXBuildFile section */
@@ -159,6 +164,17 @@
 		8EA5425A19566B42007733D3 /* Designernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Designernews.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
+		8EC7CF001958E25200C61C3F /* PocketAPI+NSOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PocketAPI+NSOperation.h"; sourceTree = "<group>"; };
+		8EC7CF011958E25200C61C3F /* PocketAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPI.h; sourceTree = "<group>"; };
+		8EC7CF021958E25200C61C3F /* PocketAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketAPI.m; sourceTree = "<group>"; };
+		8EC7CF031958E25200C61C3F /* PocketAPILogin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPILogin.h; sourceTree = "<group>"; };
+		8EC7CF041958E25200C61C3F /* PocketAPILogin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketAPILogin.m; sourceTree = "<group>"; };
+		8EC7CF051958E25200C61C3F /* PocketAPIOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPIOperation.h; sourceTree = "<group>"; };
+		8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketAPIOperation.m; sourceTree = "<group>"; };
+		8EC7CF071958E25200C61C3F /* PocketAPITypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPITypes.h; sourceTree = "<group>"; };
+		8EC7CF081958E25200C61C3F /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
+		8EC7CF091958E25200C61C3F /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
+		8EC7CF0E1958E2E100C61C3F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBReadCollectionViewCell.h; sourceTree = "<group>"; };
 		8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBReadCollectionViewCell.m; sourceTree = "<group>"; };
 		8EFF092A194EA57500379F43 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -170,6 +186,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EC7CF0F1958E2E100C61C3F /* Security.framework in Frameworks */,
 				8E6CA4D019450D8800148137 /* CoreGraphics.framework in Frameworks */,
 				8E6CA4D219450D8800148137 /* UIKit.framework in Frameworks */,
 				8E6CA4CE19450D8800148137 /* Foundation.framework in Frameworks */,
@@ -297,6 +314,7 @@
 		8E6CA4CC19450D8800148137 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8EC7CF0E1958E2E100C61C3F /* Security.framework */,
 				8E6CA4CD19450D8800148137 /* Foundation.framework */,
 				8E6CA4CF19450D8800148137 /* CoreGraphics.framework */,
 				8E6CA4D119450D8800148137 /* UIKit.framework */,
@@ -310,6 +328,7 @@
 			children = (
 				8E68BA73194687540019658A /* SDWebImage */,
 				8EA137881957428F0032A507 /* SWRevealViewController */,
+				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,
@@ -382,6 +401,24 @@
 				8EA1378A1957428F0032A507 /* SWRevealViewController.m */,
 			);
 			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8EC7CEFF1958E25200C61C3F /* PocketSDK */ = {
+			isa = PBXGroup;
+			children = (
+				8EC7CF001958E25200C61C3F /* PocketAPI+NSOperation.h */,
+				8EC7CF011958E25200C61C3F /* PocketAPI.h */,
+				8EC7CF021958E25200C61C3F /* PocketAPI.m */,
+				8EC7CF031958E25200C61C3F /* PocketAPILogin.h */,
+				8EC7CF041958E25200C61C3F /* PocketAPILogin.m */,
+				8EC7CF051958E25200C61C3F /* PocketAPIOperation.h */,
+				8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */,
+				8EC7CF071958E25200C61C3F /* PocketAPITypes.h */,
+				8EC7CF081958E25200C61C3F /* SFHFKeychainUtils.h */,
+				8EC7CF091958E25200C61C3F /* SFHFKeychainUtils.m */,
+			);
+			name = PocketSDK;
+			path = SDK;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -481,6 +518,8 @@
 			files = (
 				8E97B4C41951D0C000068AEB /* Cloud.m in Sources */,
 				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
+				8EC7CF0D1958E25200C61C3F /* SFHFKeychainUtils.m in Sources */,
+				8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */,
 				8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */,
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,
 				8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */,
@@ -496,9 +535,11 @@
 				8E97B4B51951D06000068AEB /* Readability.m in Sources */,
 				8E68BA9B194687540019658A /* SDWebImagePrefetcher.m in Sources */,
 				8E68BA98194687540019658A /* SDWebImageDownloader.m in Sources */,
+				8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */,
 				8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */,
 				8E68BA9F194687540019658A /* UIImage+WebP.m in Sources */,
 				8E68BAA1194687540019658A /* UIImageView+WebCache.m in Sources */,
+				8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
 				8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */,
