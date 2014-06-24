@@ -49,6 +49,12 @@
 @property UIButton *shareButton;
 @property UIButton *saveButton;
 @property UIButton *starButton;
+//@property UIButton *twitterButton;
+//@property UIButton *facebookButton;
+//@property UIButton *mailButton;
+//@property UIButton *pocketButton;
+//@property UIButton *instapaperButton;
+//@property UIButton *readabilityButton;
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
@@ -266,7 +272,7 @@
         [self showReadingLinks];
     }
 
-    if (self.showingTools && [self.tabs[self.currentTabIndex] started] &&
+    if (self.showingTools && [self.tabs[self.currentTabIndex] request].URL &&
         [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
         [self showWeb];
@@ -277,7 +283,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] started])
+    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] request].URL)
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -324,7 +330,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] started])
+    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] request].URL)
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -394,7 +400,7 @@
 
     for (Tab *tab in self.tabs)
     {
-        if (tab.started)
+        if (tab.request.URL)
         {
             [tempArrayOfUrlStrings addObject:tab.request.URL.absoluteString];
         }
@@ -446,7 +452,7 @@
     [self pingPageControlIndexPath:nil];
     [self checkBackForwardButtons];
 
-    if (newTab.started)
+    if (newTab.request.URL)
     {
         [self showWeb];
     }
@@ -699,7 +705,6 @@
     self.progressBar.hidden = NO;
     self.progressBar.progress = 0;
     self.doneLoading = false;
-    [self.tabs[self.currentTabIndex] setStarted:YES];
     self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025
                                                       target:self
                                                     selector:@selector(timerCallback)
@@ -864,7 +869,7 @@
     [self.toolsView addSubview:self.saveButton];
 
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.starButton addTarget:self action:@selector(bookmark:) forControlEvents:UIControlEventTouchUpInside];
+    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
     [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
     self.starButton.frame = CGRectMake(20, 20, 32, 32);
     self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
@@ -925,19 +930,9 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:historyM] forKey:@"history"];
 }
 
-- (void)bookmark:(int)index
+- (void)bookmark
 {
-    Tab *tab;
-
-    if (index < self.tabs.count)
-    {
-        tab = self.tabs[index];
-    }
-    else
-    {
-        tab = self.tabs[self.currentTabIndex];
-    }
-
+    Tab *tab = self.tabs[self.currentTabIndex];
     NSString *url = tab.request.URL.absoluteString;
     NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
     if (url)
@@ -957,9 +952,21 @@
 {
     if (sender.state == UIGestureRecognizerStateBegan)
     {
-        for (int index = 0; index < self.tabs.count; index++)
+        for (Tab *tab in self.tabs)
         {
-            [self bookmark:index];
+            NSString *url = tab.request.URL.absoluteString;
+            NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
+            if (url)
+            {
+                NSArray *bookmarks = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
+                NSMutableArray *bookmarksM = [NSMutableArray arrayWithArray:bookmarks];
+                [bookmarksM addObject:@{@"url":url,
+                                        @"title":title}];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:bookmarksM] forKey:@"bookmarks"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+
+                [self.starButton setImage:[UIImage imageNamed:@"star-2"] forState:UIControlStateNormal];
+            }
         }
     }
 }

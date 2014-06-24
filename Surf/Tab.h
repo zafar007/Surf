@@ -11,5 +11,4 @@
 @interface Tab : UIWebView
 @property NSString *urlString;
 @property UIView *screenshot;
-@property BOOL started;
 @end

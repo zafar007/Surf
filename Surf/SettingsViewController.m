@@ -127,7 +127,14 @@
     switchAtRow.center = CGPointMake(cell.frame.size.width-switchAtRow.frame.size.width, cell.center.y);
     [switchAtRow addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventValueChanged];
     [cell.contentView addSubview:switchAtRow];
-    switchAtRow.on = ([self.someButtons containsObject:self.fullButtons[indexPath.row]]);
+    if ([self.someButtons containsObject:self.fullButtons[indexPath.row]])
+    {
+        switchAtRow.on = YES;
+    }
+    else
+    {
+        switchAtRow.on = NO;
+    }
 
     return cell;
 }
