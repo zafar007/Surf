@@ -10,13 +10,4 @@
 
 @implementation Tab
 
-- (id)init
-{
-    if (self = [super init])
-    {
-        self.screenshot = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back.png"]];
-    }
-    return self;
-}
-
 @end

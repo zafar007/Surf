@@ -153,7 +153,10 @@
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148)
+    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+                                                                                 40,
+                                                                                 self.view.frame.size.width,
+                                                                                 148)
                                                  collectionViewLayout:flowLayout];
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
@@ -164,7 +167,10 @@
 
 - (void)createPageControl
 {
-    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20)];
+    self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+                                                                       188,
+                                                                       self.view.frame.size.width,
+                                                                       20)];
     self.pageControl.pageIndicatorTintColor = [UIColor grayColor];
     self.pageControl.currentPageIndicatorTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.pageControl.backgroundColor = [UIColor blackColor];
@@ -192,7 +198,7 @@
     NSString *urlString = notification.object;
     if (urlString)
     {
-        if ([self.tabs.lastObject request].URL)
+        if ([self.tabs.lastObject request])
         {
             [self addTab:urlString];
         }
@@ -273,7 +279,7 @@
         [self showReadingLinks];
     }
 
-    if (self.showingTools && [self.tabs[self.currentTabIndex] request].URL &&
+    if (self.showingTools && [self.tabs[self.currentTabIndex] request] &&
         [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
     {
         [self showWeb];
@@ -284,7 +290,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] request].URL)
+    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] request])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -331,7 +337,7 @@
 {
     CGPoint point = [sender locationInView:self.view];
 
-    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] request].URL)
+    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] request])
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
@@ -493,7 +499,15 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
-    cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+
+    if ([self.tabs[indexPath.item] request])
+    {
+        cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+    }
+    else
+    {
+        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+    }
 
     [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
@@ -648,29 +662,19 @@
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     self.showingTools = true;
     self.toolsView.hidden = NO;
-    [self updateScreenShotsOfAllTabs];
+
+    Tab *tab = self.tabs[self.currentTabIndex];
+    NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
+    UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
+    tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
+    cell.backgroundView = tab.screenshot;
+    [self.tabsCollectionView reloadData];
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
     [self pingBorderControl];
     [self checkBackForwardButtons];
     [self.view insertSubview:self.tabs[self.currentTabIndex] belowSubview:self.toolsView];
     [self.omnibar becomeFirstResponder];
-}
-
-- (void)updateScreenShotsOfAllTabs
-{
-    for (Tab *tab in self.tabs)
-    {
-        if (tab.request.URL.absoluteURL)
-        {
-            tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
-            int index = (int)[self.tabs indexOfObject:tab];
-            NSIndexPath *path = [NSIndexPath indexPathForItem:index inSection:0];
-            UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-            cell.backgroundView = tab.screenshot;
-        }
-    }
-    [self.tabsCollectionView reloadData];
 }
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
@@ -776,14 +780,11 @@
                                           self.view.frame.size.height,
                                           self.view.frame.size.width);
 
-        self.tabsCollectionView.frame = CGRectMake(0,
-                                                   self.view.frame.size.width - 148,
-                                                   self.view.frame.size.height,
-                                                   148);
+        [self pingTabsCollectionFrameLandscape];
 
         self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
-                                            self.view.frame.size.height-168,
-                                            self.view.frame.size.width,
+                                            self.view.frame.size.width-168,
+                                            self.view.frame.size.height,
                                             20);
 
         [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
@@ -796,21 +797,37 @@
 
 - (void)pingTabsCollectionFrame
 {
-    if (self.tabs.count == 1)
+    if (self.tabs.count*80 < self.view.frame.size.width)
     {
-        self.tabsCollectionView.frame = CGRectMake(320/2-80/2, 40, self.view.frame.size.width, 148);
-    }
-    else if (self.tabs.count == 2)
-    {
-        self.tabsCollectionView.frame = CGRectMake(320/2-85, 40, self.view.frame.size.width, 148);
-    }
-    else if (self.tabs.count == 3)
-    {
-        self.tabsCollectionView.frame = CGRectMake(320/2-130, 40, self.view.frame.size.width, 148);
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.size.width/2-(45*self.tabs.count)+5,
+                                                   40,
+                                                   self.view.frame.size.width,
+                                                   148);
     }
     else
     {
-        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
+                                                   40,
+                                                   self.view.frame.size.width,
+                                                   148);
+    }
+}
+
+- (void)pingTabsCollectionFrameLandscape
+{
+    if (self.tabs.count*80 < self.view.frame.size.height)
+    {
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.size.height/2-(45*self.tabs.count)+5,
+                                                   self.view.frame.size.width - 148,
+                                                   self.view.frame.size.height,
+                                                   148);
+    }
+    else
+    {
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
+                                                   self.view.frame.size.width - 148,
+                                                   self.view.frame.size.height,
+                                                   148);
     }
 }
 
