@@ -77,7 +77,7 @@
     [self loadTabs];
     [self createPageControl];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromTwitter:) name:@"BackFromReadVC" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromReadVC:) name:@"BackFromReadVC" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentURL) name:@"CurrentURL" object:nil];
 }
@@ -187,7 +187,7 @@
     [self presentViewController:self.readingNavController animated:YES completion:nil];
 }
 
-- (void)backFromTwitter:(NSNotification *)notification
+- (void)backFromReadVC:(NSNotification *)notification
 {
     NSString *urlString = notification.object;
     if (urlString)
@@ -199,6 +199,7 @@
         else
         {
             [self switchToTab:(int)self.tabs.count-1];
+            [self.tabs.lastObject setUrlString:urlString];
             [self loadPage:self.tabs.lastObject];
         }
     }
@@ -485,23 +486,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    if (self.tabs.count == 1)
-    {
-        self.tabsCollectionView.frame = CGRectMake(320/2-80/2, 40, self.view.frame.size.width, 148);
-    }
-    else if (self.tabs.count == 2)
-    {
-        self.tabsCollectionView.frame = CGRectMake(320/2-85, 40, self.view.frame.size.width, 148);
-    }
-    else if (self.tabs.count == 3)
-    {
-        self.tabsCollectionView.frame = CGRectMake(320/2-130, 40, self.view.frame.size.width, 148);
-    }
-    else
-    {
-        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
-    }
-
+    [self pingTabsCollectionFrame];
     return self.tabs.count;
 }
 
@@ -631,7 +616,7 @@
     return encodedString;
 }
 
-#pragma mark - Loading Web Page & Hiding/Shwoing Views
+#pragma mark - Loading Web Page & Hiding/Showing Views
 
 - (void)loadPage:(Tab *)tab
 {
@@ -769,8 +754,10 @@
                                           self.view.frame.origin.y,
                                           self.view.frame.size.width,
                                           self.view.frame.size.height);
-        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
-        self.pageControl.frame = CGRectMake(0, 188, 320, 20);
+
+        [self pingTabsCollectionFrame];
+
+        self.pageControl.frame = CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20);
 
         [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
                                                              self.view.frame.origin.y,
@@ -786,12 +773,12 @@
 
         self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
                                           self.view.frame.origin.y,
-                                          self.view.frame.size.width,
-                                          self.view.frame.size.height);
+                                          self.view.frame.size.height,
+                                          self.view.frame.size.width);
 
-        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
-                                                   self.view.frame.size.height-148,
-                                                   self.view.frame.size.width,
+        self.tabsCollectionView.frame = CGRectMake(0,
+                                                   self.view.frame.size.width - 148,
+                                                   self.view.frame.size.height,
                                                    148);
 
         self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
@@ -801,8 +788,29 @@
 
         [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
                                                              self.view.frame.origin.y,
-                                                             self.view.frame.size.width,
-                                                             self.view.frame.size.height)];
+                                                             self.view.frame.size.height,
+                                                             self.view.frame.size.width)];
+    }
+}
+
+
+- (void)pingTabsCollectionFrame
+{
+    if (self.tabs.count == 1)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-80/2, 40, self.view.frame.size.width, 148);
+    }
+    else if (self.tabs.count == 2)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-85, 40, self.view.frame.size.width, 148);
+    }
+    else if (self.tabs.count == 3)
+    {
+        self.tabsCollectionView.frame = CGRectMake(320/2-130, 40, self.view.frame.size.width, 148);
+    }
+    else
+    {
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x, 40, self.view.frame.size.width, 148);
     }
 }
 
