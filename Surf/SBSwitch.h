@@ -9,5 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface SBSwitch : UISwitch
-@property int index;
+@property NSIndexPath *path;
 @end

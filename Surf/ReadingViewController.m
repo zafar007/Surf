@@ -80,6 +80,9 @@
 {
     [super viewWillAppear:animated];
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+
+    [self loadButtonItems];
+    [self.pickerView reloadAllComponents];
 }
 
 - (void)loadButtonItems

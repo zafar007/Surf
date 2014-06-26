@@ -71,36 +71,6 @@
     }
 }
 
-/*
--(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES; //change to YES to get delete swipe on cell
-}
-
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
-        [self.savedPosts removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self setData];
-    }
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-    UITableViewCell *cell = [self.savedPosts objectAtIndex:fromIndexPath.row];
-    [self.savedPosts removeObjectAtIndex:fromIndexPath.row];
-    [self.savedPosts insertObject:cell atIndex:toIndexPath.row];
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-*/
-
 #pragma mark - UITableView DataSource Methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -115,41 +85,72 @@
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-    cell.textLabel.text = self.fullButtons[indexPath.item];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.separatorInset =  UIEdgeInsetsMake(0, 0, 0, 0);
+    cell.imageView.image = [UIImage imageNamed:self.fullButtons[indexPath.row]];
 
-    for (UIView *view in cell.subviews)
+    SBSwitch *currentSwitch = nil;
+    for (UIView *view in cell.contentView.subviews)
     {
-        [view isKindOfClass:[SBSwitch class]] ? [view removeFromSuperview] : nil;
+        if ([view isKindOfClass:[SBSwitch class]])
+        {
+            currentSwitch = (SBSwitch *)view;
+        }
     }
+    if (!currentSwitch)
+    {
+        currentSwitch = [[SBSwitch alloc] init];
+        currentSwitch.center = CGPointMake(80 + currentSwitch.frame.size.width/2,
+                                           cell.contentView.center.y);
 
-    SBSwitch *switchAtRow = [[SBSwitch alloc] init];
-    switchAtRow.index = (int)indexPath.item;
-    switchAtRow.center = CGPointMake(cell.frame.size.width-switchAtRow.frame.size.width, cell.center.y);
-    [switchAtRow addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventValueChanged];
-    [cell.contentView addSubview:switchAtRow];
-    if ([self.someButtons containsObject:self.fullButtons[indexPath.row]])
-    {
-        switchAtRow.on = YES;
+        [currentSwitch addTarget:self action:@selector(toggle:) forControlEvents:UIControlEventValueChanged];
+        [cell.contentView addSubview:currentSwitch];
     }
-    else
-    {
-        switchAtRow.on = NO;
-    }
+    currentSwitch.on = [self.someButtons containsObject:self.fullButtons[indexPath.row]];
+    currentSwitch.path = indexPath;
 
     return cell;
 }
 
 - (void)toggle:(SBSwitch *)sender
 {
+    sender.on ? NSLog(@"on") : NSLog(@"off");
+
     if (sender.on)
     {
-        [self.someButtons insertObject:self.fullButtons[sender.index] atIndex:sender.index]; // wrong
+        [self.someButtons insertObject:self.fullButtons[sender.path.row] atIndex:0];
+        [self sort];
     }
     else
     {
-        [self.someButtons removeObject:self.fullButtons[sender.index]];
+        [self.someButtons removeObject:self.fullButtons[sender.path.row]];
     }
-    [self.tableView reloadData];
+}
+
+- (void)sort
+{
+    NSMutableArray *temp = [NSMutableArray new];
+    for (NSString *service in self.fullButtons)
+    {
+        if ([self.someButtons containsObject:service])
+        {
+            [temp addObject:service];
+        }
+    }
+    self.someButtons = temp;
+}
+
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
+{
+//    UITableViewCell *cell = [self.someButtons objectAtIndex:fromIndexPath.row];
+//    [self.someButtons removeObjectAtIndex:fromIndexPath.row];
+//    [self.someButtons insertObject:cell atIndex:toIndexPath.row];
+}
+
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
 }
 
 @end
