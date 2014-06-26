@@ -557,12 +557,16 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 
-//    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
-//    {
-//    }
-//    else
-//    {
-//    }
+    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    {
+        self.collectionView.center = CGPointMake(self.view.center.x, self.collectionView.center.y);
+        self.activity.center = self.collectionView.center;
+    }
+    else
+    {
+        self.collectionView.center = CGPointMake(self.view.center.x, self.collectionView.center.y);
+        self.activity.center = self.collectionView.center;
+    }
 }
 
 @end
