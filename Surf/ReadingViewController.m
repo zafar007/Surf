@@ -26,6 +26,7 @@
 #import "Hackernews.h"
 #import "Reddit.h"
 #import "Producthunt.h"
+#import "Gmail.h"
 
 @interface ReadingViewController () <UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
@@ -56,6 +57,7 @@
 @property Hackernews *hackernews;
 @property Reddit *reddit;
 @property Producthunt *producthunt;
+@property Gmail *gmail;
 @end
 
 @implementation ReadingViewController
@@ -113,6 +115,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGmail) name:@"gmail" object:nil];
 }
 
 - (void)createButtons
@@ -534,6 +537,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Producthunt" object:nil];
     self.data = notification.object;
     self.selectedClass = [Producthunt class];
+    [self.collectionView reloadData];
+    [self.activity stopAnimating];
+}
+
+- (void)loadGmail
+{
+    if (!self.gmail)
+    {
+        self.gmail = [Gmail new];
+    }
+    [self.gmail getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactGmail:) name:@"Gmail" object:nil];
+}
+
+- (void)reactGmail:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Gmail" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [Gmail class];
     [self.collectionView reloadData];
     [self.activity stopAnimating];
 }
