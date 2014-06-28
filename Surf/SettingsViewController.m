@@ -144,9 +144,14 @@
 
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
-//    UITableViewCell *cell = [self.someButtons objectAtIndex:fromIndexPath.row];
-//    [self.someButtons removeObjectAtIndex:fromIndexPath.row];
-//    [self.someButtons insertObject:cell atIndex:toIndexPath.row];
+    NSMutableArray *fullM = [self.fullButtons mutableCopy];
+
+    NSString *service = [self.fullButtons objectAtIndex:fromIndexPath.row];
+    [fullM removeObjectAtIndex:fromIndexPath.row];
+    [fullM insertObject:service atIndex:toIndexPath.row];
+    self.fullButtons = [NSArray arrayWithArray:fullM];
+    [[NSUserDefaults standardUserDefaults] setObject:self.fullButtons forKey:@"buttonsFull"];
+    [self sort];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath

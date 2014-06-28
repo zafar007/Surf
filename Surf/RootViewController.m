@@ -112,6 +112,7 @@
     self.circleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.circleButton addTarget:self action:@selector(showTools) forControlEvents:UIControlEventTouchUpInside];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-outline"] forState:UIControlStateNormal];
+    [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateHighlighted];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
     self.circleButton.center = CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50);
     [self.view addSubview:self.circleButton];

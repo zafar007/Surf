@@ -32,8 +32,11 @@
                          @"instapaper",
                          @"readability"
                          ];
-    [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"])
+    {
+        [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
