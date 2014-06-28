@@ -11,6 +11,7 @@
 #import "ReadingViewController.h"
 #import "SBReadCollectionViewCell.h"
 #import "SettingsViewController.h"
+#import "SWRevealViewController.h"
 #import "Twitter.h"
 #import "Global.h"
 #import "Feedly.h"
@@ -40,6 +41,7 @@
 @property NSArray *buttonItems;
 @property NSArray *data;
 @property UISwipeGestureRecognizer *swipeLeft;
+@property SWRevealViewController *revealController;
 
 @property Class selectedClass;
 @property Twitter *twitter;
@@ -65,6 +67,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.revealController = [self revealViewController];
+    [self.revealController panGestureRecognizer];
+    [self.revealController tapGestureRecognizer];
 
     [self loadButtonItems];
     [self loadServiceObservers];
@@ -123,12 +129,12 @@
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                                                                                  target:self
                                                                                  action:@selector(unwind)];
-    self.navigationItem.rightBarButtonItems = [NSArray arrayWithObjects:cancelButton, nil];
+    self.navigationItem.rightBarButtonItem = cancelButton;
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                                                target:self
-                                                                                action:@selector(settings)];
-    self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
+                                                                                target:self.revealController
+                                                                                action:@selector(revealToggle:)];
+    self.navigationItem.leftBarButtonItem = addButton;
 }
 
 - (void)createCells

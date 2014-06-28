@@ -22,15 +22,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    self.view.backgroundColor = [UIColor whiteColor];
     self.fullButtons = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
     self.someButtons = [[[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"] mutableCopy];
 
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
                                                                    self.view.frame.origin.y,
-                                                                   self.view.frame.size.width,
+                                                                   self.view.frame.size.width * .82,
                                                                    self.view.frame.size.height)
                                                   style:UITableViewStylePlain];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
@@ -46,12 +47,20 @@
     self.navigationItem.rightBarButtonItem = self.cancelButton;
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self save];
+}
 
 - (void)unwind
 {
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
+- (void)save
+{
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:self.someButtons] forKey:@"buttonsSome"];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 #pragma mark - Table Editing

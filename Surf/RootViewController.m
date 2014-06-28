@@ -8,15 +8,18 @@
 
 #import "RootViewController.h"
 #import "Tab.h"
-#import "ReadingViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SBCollectionViewCell.h"
+#import "ReadingViewController.h"
+#import "SettingsViewController.h"
+#import "SWRevealViewController.h"
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
                                     UIGestureRecognizerDelegate,
                                     UICollectionViewDataSource,
-                                    UICollectionViewDelegateFlowLayout>
+                                    UICollectionViewDelegateFlowLayout,
+                                    SWRevealViewControllerDelegate>
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property UITextField *omnibar;
@@ -55,8 +58,7 @@
 //@property UIButton *pocketButton;
 //@property UIButton *instapaperButton;
 //@property UIButton *readabilityButton;
-@property ReadingViewController *readingViewController;
-@property UINavigationController *readingNavController;
+@property SWRevealViewController *revealController;
 @property UIPageControl *pageControl;
 @end
 
@@ -185,12 +187,19 @@
 - (void)showReadingLinks
 {
     [self.omnibar resignFirstResponder]; //makes keyboard pop backup faster for some reason when returning from twitterVC
-    if (!self.readingNavController)
+
+    if (!self.revealController)
     {
-        self.readingViewController = [[ReadingViewController alloc] init];
-        self.readingNavController = [[UINavigationController alloc] initWithRootViewController:self.readingViewController];
+        ReadingViewController *readingVC = [ReadingViewController new];
+        SettingsViewController *settingsVC = [SettingsViewController new];
+        UINavigationController *readingNC = [[UINavigationController alloc] initWithRootViewController:readingVC];
+        UINavigationController *settingsNC = [[UINavigationController alloc] initWithRootViewController:settingsVC];
+        SWRevealViewController *revealController = [[SWRevealViewController alloc] initWithRearViewController:settingsNC
+                                                                                          frontViewController:readingNC];
+        revealController.delegate = self;
+        self.revealController = revealController;
     }
-    [self presentViewController:self.readingNavController animated:YES completion:nil];
+    [self presentViewController:self.revealController animated:YES completion:nil];
 }
 
 - (void)backFromReadVC:(NSNotification *)notification
