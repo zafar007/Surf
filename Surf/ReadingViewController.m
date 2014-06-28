@@ -211,13 +211,13 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-//    for (NSString *item in self.buttonItems)
-//    {
-//        if (![item isEqualToString:self.buttonItems[row]])
-//        {
-//            [[NSNotificationCenter defaultCenter] removeObserver:self name:item object:nil];
-//        }
-//    }
+    for (NSString *item in self.buttonItems)
+    {
+        if (![item isEqualToString:self.buttonItems[row]])
+        {
+            [[NSNotificationCenter defaultCenter] removeObserver:self name:[item capitalizedString] object:nil];
+        }
+    }
 
     [self.activity startAnimating];
     self.data = nil;
