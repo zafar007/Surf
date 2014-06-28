@@ -19,6 +19,11 @@
                                     UIGestureRecognizerDelegate,
                                     UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout>
+@property UIButton *circleButton;
+@property UIPanGestureRecognizer *panCircle;
+@property UIDynamicAnimator *dynamicAnimator;
+@property UICollisionBehavior *collisionBehavior;
+@property UIDynamicItemBehavior *circleButtonDynamicBehavior;
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property UITextField *omnibar;
@@ -71,6 +76,7 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
+    [self createCircleButton];
     [self createCollectionView];
     [self createButtons];
     [self createOmnibar];
@@ -101,6 +107,38 @@
     [self.view addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]]];
 }
 
+- (void)createCircleButton
+{
+    self.circleButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.circleButton addTarget:self action:@selector(showTools) forControlEvents:UIControlEventTouchUpInside];
+    [self.circleButton setImage:[UIImage imageNamed:@"circle-outline"] forState:UIControlStateNormal];
+    self.circleButton.frame = CGRectMake(20, 20, 32, 32);
+    self.circleButton.center = CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50);
+    [self.view addSubview:self.circleButton];
+
+    self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+    self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.circleButton]];
+    self.collisionBehavior.collisionMode = UICollisionBehaviorModeEverything;
+    self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
+    [self.dynamicAnimator addBehavior:self.collisionBehavior];
+    self.circleButtonDynamicBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.circleButton]];
+    self.circleButtonDynamicBehavior.allowsRotation = NO;
+    self.circleButtonDynamicBehavior.elasticity = 1;
+    self.circleButtonDynamicBehavior.friction = 0;
+    self.circleButtonDynamicBehavior.resistance = 0;
+    [self.dynamicAnimator addBehavior:self.circleButtonDynamicBehavior];
+
+    self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.circleButton addGestureRecognizer:self.panCircle];
+    self.panCircle.delegate = self;
+}
+
+- (void)handlePan:(UIPanGestureRecognizer *)sender
+{
+    self.circleButton.center = [sender locationInView:self.view];
+//    self.circleButtonDynamicBehavior.velovity = [sender velocityInView:self.view];
+    [self.dynamicAnimator updateItemUsingCurrentState:self.circleButton];
+}
 
 - (void)createToolsView
 {
@@ -657,6 +695,7 @@
                                    self.view.frame.size.height);
 
     [self.view insertSubview:tab aboveSubview:self.toolsView];
+    [self.view bringSubviewToFront:self.circleButton];
 }
 
 - (void)showTools
