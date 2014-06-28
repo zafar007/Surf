@@ -21,7 +21,6 @@
 #import "Dribbble.h"
 #import "Designernews.h"
 #import "Bookmarks.h"
-#import "Cloud.h"
 #import "History.h"
 #import "Hackernews.h"
 #import "Reddit.h"
@@ -52,7 +51,6 @@
 @property Dribbble *dribbble;
 @property Designernews *designernews;
 @property Bookmarks *bookmarks;
-@property Cloud *cloud;
 @property History *history;
 @property Hackernews *hackernews;
 @property Reddit *reddit;
@@ -110,7 +108,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDribbble) name:@"dribbble" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadDesignernews) name:@"designernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadBookmarks) name:@"bookmarks" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadCloud) name:@"cloud" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHistory) name:@"history" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadHackernews) name:@"hackernews" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
@@ -442,25 +439,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
     self.data = notification.object;
     self.selectedClass = [Bookmarks class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
-}
-
-- (void)loadCloud
-{
-    if (!self.cloud)
-    {
-        self.cloud = [Cloud new];
-    }
-    [self.cloud getData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactCloud:) name:@"Cloud" object:nil];
-}
-
-- (void)reactCloud:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Cloud" object:nil];
-    self.data = notification.object;
-    self.selectedClass = [Cloud class];
     [self.collectionView reloadData];
     [self.activity stopAnimating];
 }

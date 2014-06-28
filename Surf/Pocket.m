@@ -19,7 +19,8 @@
 
 - (void)getData
 {
-    NSLog(@"Pocket, %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"]);
+    NSLog(@"Pocket, user: %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"]);
+
 
     if (![[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"])
     {
@@ -42,107 +43,41 @@
 {
     self.data = [NSMutableArray new];
 
-//    NSMutableURLRequest *request = [NSMutableURLRequest requ];
-
-//    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kAPI]]
-//                                       queue:[NSOperationQueue mainQueue]
-//                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-//    {
-//
-//    }];
-
-    NSString *apiMethod = @"https://getpocket.com/v3/get";
-    PocketAPIHTTPMethod httpMethod = PocketAPIHTTPMethodPOST;
-    NSDictionary *arguments = @{@"consumer_key":[[PocketAPI sharedAPI] consumerKey], @"access_token":@""};
-
-    [[PocketAPI sharedAPI] callAPIMethod:apiMethod
-                          withHTTPMethod:httpMethod
-                               arguments:arguments
-                                 handler: ^(PocketAPI *api, NSString *apiMethod,
-                                            NSDictionary *response, NSError *error)
+    [[PocketAPI sharedAPI] callAPIMethod:@"https://getpocket.com/v3/get"
+                          withHTTPMethod:PocketAPIHTTPMethodPOST
+                               arguments:@{@"consumer_key":[[PocketAPI sharedAPI] consumerKey]}
+                                 handler:^(PocketAPI *api, NSString *apiMethod, NSDictionary *response, NSError *error)
     {
         NSLog(@"RESPONSE: %@",response);
-//        if (!error)
-//        {
-//            for (NSDictionary *hunt in response[@"data"])
-//            {
-//                NSString *productLink = hunt[@"url"];
-//                NSString *title = hunt[@"title"];
-//                NSString *subtitle = hunt[@"tagline"];
-//                NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com%@", hunt[@"permalink"]];
-//
-//                NSDictionary *site = @{@"productLink":productLink,
-//                                       @"title":title,
-//                                       @"subtitle":subtitle,
-//                                       @"commentLink":commentLink};
-//
-//                [self.data addObject:site];
-//            }
-//
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"Pocket" object:self.data];
-//        }
-//        else
-//        {
-//            UIAlertView *alert = [[UIAlertView alloc] init];
-//            alert.title = @"Error Retrieving Data";
-//            alert.message = @"Please check your internet connection & for an app update (API might be broken)";
-//            [alert addButtonWithTitle:@"Dismiss"];
-//            [alert show];
-//        }
+
+        if (!error && !response)
+        {
+            for (NSDictionary *hunt in response[@"data"])
+            {
+                NSString *productLink = hunt[@"url"];
+                NSString *title = hunt[@"title"];
+                NSString *subtitle = hunt[@"tagline"];
+                NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com%@", hunt[@"permalink"]];
+
+                NSDictionary *site = @{@"productLink":productLink,
+                                       @"title":title,
+                                       @"subtitle":subtitle,
+                                       @"commentLink":commentLink};
+
+                [self.data addObject:site];
+            }
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"Pocket" object:self.data];
+        }
+        else
+        {
+            UIAlertView *alert = [[UIAlertView alloc] init];
+            alert.title = @"Error Retrieving Data";
+            alert.message = @"Please check your internet connection & for an app update (API might be broken)";
+            [alert addButtonWithTitle:@"Dismiss"];
+            [alert show];
+        }
     }];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kAPI]]
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
-     {
-         if (!connectionError)
-         {
-             NSDictionary *output = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&connectionError];
-
-
-             NSArray *hunts = output[@"hunts"];
-
-             for (NSDictionary *hunt in hunts)
-             {
-                 NSString *productLink = hunt[@"url"];
-                 NSString *title = hunt[@"title"];
-                 NSString *subtitle = hunt[@"tagline"];
-                 NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com%@", hunt[@"permalink"]];
-
-                 NSDictionary *post = @{@"productLink":productLink,
-                                        @"title":title,
-                                        @"subtitle":subtitle,
-                                        @"commentLink":commentLink};
-
-                 [self.data addObject:post];
-             }
-
-             [[NSNotificationCenter defaultCenter] postNotificationName:@"Pocket" object:self.data];
-         }
-         else
-         {
-             UIAlertView *alert = [[UIAlertView alloc] init];
-             alert.title = @"Error Retrieving Data";
-             alert.message = @"Please check your internet connection & for an app update (API might be broken)";
-             [alert addButtonWithTitle:@"Dismiss"];
-             [alert show];
-         }
-     }];
 }
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
@@ -185,6 +120,5 @@
 {
     return 68;
 }
-
 
 @end

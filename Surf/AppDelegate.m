@@ -17,7 +17,6 @@
 
     NSArray *services = @[
                          @"bookmarks",
-                         @"cloud",
                          @"history",
                          @"twitter",
                          @"global",

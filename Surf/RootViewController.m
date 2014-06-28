@@ -11,6 +11,8 @@
 #import "ReadingViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "SBCollectionViewCell.h"
+#import "PocketAPI.h"
+@import Twitter;
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
@@ -30,7 +32,7 @@
 @property UISwipeGestureRecognizer *swipeFromLeft;
 @property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
 @property UIScreenEdgePanGestureRecognizer *edgeswipeFromLeft;
-@property UILongPressGestureRecognizer *longPressOnSave;
+@property UILongPressGestureRecognizer *longPressOnPocket;
 @property UILongPressGestureRecognizer *longPressOnStar;
 @property BOOL showingTools;
 @property BOOL doneLoading;
@@ -49,12 +51,12 @@
 @property UIButton *shareButton;
 @property UIButton *saveButton;
 @property UIButton *starButton;
-//@property UIButton *twitterButton;
-//@property UIButton *facebookButton;
-//@property UIButton *mailButton;
-//@property UIButton *pocketButton;
-//@property UIButton *instapaperButton;
-//@property UIButton *readabilityButton;
+@property UIButton *twitterButton;
+@property UIButton *facebookButton;
+@property UIButton *mailButton;
+@property UIButton *pocketButton;
+@property UIButton *instapaperButton;
+@property UIButton *readabilityButton;
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
@@ -245,9 +247,9 @@
     [self.edgeswipeFromLeft setDelegate:self];
     [self.view addGestureRecognizer:self.edgeswipeFromLeft];
 
-    self.longPressOnSave = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(saveAllToCloud:)];
-    self.longPressOnSave.delegate = self;
-    [self.saveButton addGestureRecognizer:self.longPressOnSave];
+    self.longPressOnPocket = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pocketAll:)];
+    self.longPressOnPocket.delegate = self;
+    [self.pocketButton addGestureRecognizer:self.longPressOnPocket];
 
     self.longPressOnStar = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(bookmarkAll:)];
     self.longPressOnStar.delegate = self;
@@ -885,13 +887,13 @@
     self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.shareButton];
 
-    self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.saveButton addTarget:self action:@selector(saveToCloud) forControlEvents:UIControlEventTouchUpInside];
-    [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
-    self.saveButton.frame = CGRectMake(20, 20, 32, 32);
-//    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
-    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
-    [self.toolsView addSubview:self.saveButton];
+//    self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.saveButton addTarget:self action:@selector(saveToCloud) forControlEvents:UIControlEventTouchUpInside];
+//    [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
+//    self.saveButton.frame = CGRectMake(20, 20, 32, 32);
+////    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
+//    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
+//    [self.toolsView addSubview:self.saveButton];
 
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
@@ -899,6 +901,34 @@
     self.starButton.frame = CGRectMake(20, 20, 32, 32);
     self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.starButton];
+
+    self.pocketButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.pocketButton addTarget:self action:@selector(pocket) forControlEvents:UIControlEventTouchUpInside];
+    [self.pocketButton setImage:[UIImage imageNamed:@"pocket"] forState:UIControlStateNormal];
+    self.pocketButton.frame = CGRectMake(20, 20, 32, 32);
+    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
+    [self.toolsView addSubview:self.pocketButton];
+
+    self.facebookButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.facebookButton addTarget:self action:@selector(facebook) forControlEvents:UIControlEventTouchUpInside];
+    [self.facebookButton setImage:[UIImage imageNamed:@"facebook"] forState:UIControlStateNormal];
+    self.facebookButton.frame = CGRectMake(20, 20, 32, 32);
+    self.facebookButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+150);
+    [self.toolsView addSubview:self.facebookButton];
+
+    self.twitterButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.twitterButton addTarget:self action:@selector(tweet) forControlEvents:UIControlEventTouchUpInside];
+    [self.twitterButton setImage:[UIImage imageNamed:@"twitter"] forState:UIControlStateNormal];
+    self.twitterButton.frame = CGRectMake(20, 20, 32, 32);
+    self.twitterButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+150);
+    [self.toolsView addSubview:self.twitterButton];
+
+    self.mailButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    [self.mailButton addTarget:self action:@selector(mail) forControlEvents:UIControlEventTouchUpInside];
+    [self.mailButton setImage:[UIImage imageNamed:@"mail"] forState:UIControlStateNormal];
+    self.mailButton.frame = CGRectMake(20, 20, 32, 32);
+    self.mailButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+150);
+    [self.toolsView addSubview:self.mailButton];
 
     [self enableShare:NO Refresh:NO Stop:NO Save:NO];
     self.refreshButton.hidden = NO;
@@ -955,6 +985,140 @@
     [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:historyM] forKey:@"history"];
 }
 
+#pragma mark - Tab Saving
+
+- (void)pocket
+{
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"])
+    {
+        [[PocketAPI sharedAPI] loginWithHandler:^(PocketAPI *api, NSError *error)
+         {
+             if (!error)
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
+                 [self pocket2:[self.tabs[self.currentTabIndex] request].URL];
+             }
+         }];
+    }
+    else
+    {
+        [self pocket2:[self.tabs[self.currentTabIndex] request].URL];
+    }
+}
+
+- (void)pocket2:(NSURL *)url
+{
+    [[PocketAPI sharedAPI] saveURL:url
+                           handler:^(PocketAPI *API, NSURL *URL, NSError *error)
+    {
+        if(!error)
+        {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Saved to Pocket!"
+                                                              message:nil
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"Dismiss"
+                                                    otherButtonTitles:nil];
+            [message show];
+        }
+        else
+        {
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Error connecting to Pocket"
+                                                              message:nil
+                                                             delegate:nil
+                                                    cancelButtonTitle:@"Dismiss"
+                                                    otherButtonTitles:nil];
+            [message show];
+        }
+    }];
+}
+
+- (void)pocketAll:(UILongPressGestureRecognizer *)sender
+{
+    if (sender.state == UIGestureRecognizerStateBegan)
+    {
+        for (Tab *tab in self.tabs)
+        {
+            [self pocket2:tab.request.URL];
+        }
+
+        self.tabs = [NSMutableArray new];
+        [self.tabsCollectionView reloadData];
+
+        for (UIView *view in self.view.subviews)
+        {
+            if ([view isKindOfClass:[UIWebView class]])
+            {
+                [view removeFromSuperview];
+            }
+        }
+        self.currentTabIndex = 0;
+        [self addTab:nil];
+    }
+}
+
+- (void)facebook
+{
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeFacebook])
+    {
+        Tab *tab = self.tabs[self.currentTabIndex];
+        NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
+        NSString *text = [@"Check out: " stringByAppendingString:title];
+        NSURL *url = tab.request.URL;
+
+        if (url)
+        {
+            SLComposeViewController *fbSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeFacebook];
+            [fbSheet setInitialText:text];
+            [fbSheet addURL:url];
+            [self presentViewController:fbSheet animated:YES completion:nil];
+        }
+    }
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Sorry"
+                                  message:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup"
+                                  delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)tweet
+{
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
+    {
+        Tab *tab = self.tabs[self.currentTabIndex];
+        NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
+        NSString *text = [@"Check out: " stringByAppendingString:title];
+        NSURL *url = tab.request.URL;
+
+        if (url)
+        {
+            SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+            [tweetSheet setInitialText:text];
+            [tweetSheet addURL:url];
+            [self presentViewController:tweetSheet animated:YES completion:nil];
+        }
+    }
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Sorry"
+                                  message:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup"
+                                  delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+- (void)mail
+{
+
+}
+
 - (void)bookmark
 {
     Tab *tab = self.tabs[self.currentTabIndex];
@@ -993,77 +1157,6 @@
                 [self.starButton setImage:[UIImage imageNamed:@"star-2"] forState:UIControlStateNormal];
             }
         }
-    }
-}
-
-- (void)saveToCloud
-{
-    Tab *tab = self.tabs[self.currentTabIndex];
-    NSString *url = tab.request.URL.absoluteString;
-    NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
-
-    if (url)
-    {
-        NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
-        NSMutableArray *cloudM;
-        if (!cloud)
-        {
-            cloudM = [NSMutableArray new];
-        }
-        else
-        {
-            cloudM = [NSMutableArray arrayWithArray:cloud];
-        }
-        [cloudM addObject:@{@"url":url, @"title":title}];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
-        UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:cell];
-    }
-}
-
-- (void)saveAllToCloud:(UILongPressGestureRecognizer *)sender
-{
-    if (sender.state == UIGestureRecognizerStateBegan)
-    {
-        NSArray *cloud = [[NSUserDefaults standardUserDefaults] objectForKey:@"cloud"];
-        NSMutableArray *cloudM;
-        if (!cloud)
-        {
-            cloudM = [NSMutableArray new];
-        }
-        else
-        {
-            cloudM = [NSMutableArray arrayWithArray:cloud];
-        }
-
-        for (Tab *tab in self.tabs)
-        {
-            NSString *url = tab.request.URL.absoluteString;
-            NSString *title = [tab stringByEvaluatingJavaScriptFromString:@"document.title"];
-
-            if (url)
-            {
-                [cloudM addObject:@{@"url":url, @"title":title}];
-                [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:cloudM] forKey:@"cloud"];
-            }
-        }
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        self.tabs = [NSMutableArray new];
-        [self.tabsCollectionView reloadData];
-
-        for (UIView *view in self.view.subviews)
-        {
-            if ([view isKindOfClass:[UIWebView class]])
-            {
-                [view removeFromSuperview];
-            }
-        }
-        self.currentTabIndex = 0;
-        [self addTab:nil];
     }
 }
 
