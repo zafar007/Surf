@@ -31,6 +31,7 @@
                                                                    self.view.frame.size.width,
                                                                    self.view.frame.size.height)
                                                   style:UITableViewStylePlain];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
