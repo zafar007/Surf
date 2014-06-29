@@ -40,8 +40,8 @@
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-    self.rootViewController = [[RootViewController alloc] init];
-    [self.window setRootViewController:self.rootViewController];
+    RootViewController *rootViewController = [[RootViewController alloc] init];
+    [self.window setRootViewController:rootViewController];
 
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
@@ -59,18 +59,5 @@
         return NO;
     }
 }
-
-- (void)applicationWillResignActive:(UIApplication *)application {}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    [self.rootViewController saveTabs];
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {}
-
-- (void)applicationWillTerminate:(UIApplication *)application {}
 
 @end

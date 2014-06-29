@@ -77,7 +77,7 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
-    [self createCircleButton];
+//    [self createCircleButton];
     [self createCollectionView];
     [self createButtons];
     [self createOmnibar];
@@ -102,6 +102,12 @@
     [[UIApplication sharedApplication]setStatusBarHidden:!self.showingTools withAnimation:UIStatusBarAnimationFade];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self saveTabs];
+}
+
 #pragma mark - Setup Scene
 - (void)editView
 {
@@ -111,7 +117,7 @@
 - (void)createCircleButton
 {
     self.circleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.circleButton addTarget:self action:@selector(showTools) forControlEvents:UIControlEventTouchUpInside];
+    [self.circleButton addTarget:self action:@selector(toggleCircle) forControlEvents:UIControlEventTouchUpInside];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-outline"] forState:UIControlStateNormal];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateHighlighted];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
@@ -133,6 +139,18 @@
     self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self.circleButton addGestureRecognizer:self.panCircle];
     self.panCircle.delegate = self;
+}
+
+- (void)toggleCircle
+{
+    if (!self.showingTools)
+    {
+        [self showTools];
+    }
+    else if ([self.tabs[self.currentTabIndex] request])
+    {
+        [self showWeb];
+    }
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
