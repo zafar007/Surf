@@ -22,6 +22,7 @@
 @property UIButton *circleButton;
 @property UIPanGestureRecognizer *panCircle;
 @property UIDynamicAnimator *dynamicAnimator;
+@property UIPushBehavior *pushBehavior;
 @property UICollisionBehavior *collisionBehavior;
 @property UIDynamicItemBehavior *circleButtonDynamicBehavior;
 @property UIView *toolsView;
@@ -124,9 +125,9 @@
     [self.dynamicAnimator addBehavior:self.collisionBehavior];
     self.circleButtonDynamicBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.circleButton]];
     self.circleButtonDynamicBehavior.allowsRotation = NO;
-    self.circleButtonDynamicBehavior.elasticity = 1;
-    self.circleButtonDynamicBehavior.friction = 0;
-    self.circleButtonDynamicBehavior.resistance = 0;
+    self.circleButtonDynamicBehavior.elasticity = .1;
+    self.circleButtonDynamicBehavior.friction = 0.9;
+    self.circleButtonDynamicBehavior.resistance = 0.9;
     [self.dynamicAnimator addBehavior:self.circleButtonDynamicBehavior];
 
     self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
@@ -136,9 +137,31 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
+
+//    if (sender.state == UIGestureRecognizerStateBegan)
+//    {
+//        [self.circleButtonDynamicBehavior addLinearVelocity:[self.circleButtonDynamicBehavior linearVelocityForItem:sender.view] forItem:sender.view];
+//    }
+
     self.circleButton.center = [sender locationInView:self.view];
-//    self.circleButtonDynamicBehavior.velovity = [sender velocityInView:self.view];
-    [self.dynamicAnimator updateItemUsingCurrentState:self.circleButton];
+
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        CGRect bottom50 = CGRectMake(self.view.frame.size.width - 50, self.view.frame.size.height -50, 50, 50);
+        if (CGRectContainsPoint(bottom50, self.circleButton.center))
+        {
+            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(self.view.frame.size.width - 50,
+                                                                                                            self.view.frame.size.height -50)];
+            [self.dynamicAnimator addBehavior:snap];
+            return;
+        }
+    }
+
+//    if (sender.state == UIGestureRecognizerStateEnded)
+//    {
+//        [self.circleButtonDynamicBehavior addLinearVelocity:[sender velocityInView:self.view] forItem:sender.view];
+//        [self.dynamicAnimator updateItemUsingCurrentState:self.circleButton];
+//    }
 }
 
 - (void)createToolsView
