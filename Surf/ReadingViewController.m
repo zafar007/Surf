@@ -26,11 +26,16 @@
 #import "Producthunt.h"
 #import "Gmail.h"
 
-@interface ReadingViewController () <UICollectionViewDataSource,
+@interface ReadingViewController () <
+                                    UITableViewDataSource,
+                                    UITableViewDelegate,
+                                    UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
                                     UIPickerViewDelegate,
                                     UIPickerViewDataSource,
-                                    UIGestureRecognizerDelegate>
+                                    UIGestureRecognizerDelegate
+                                    >
+@property UITableView *tableView;
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
 @property UIPickerView *pickerView;
@@ -66,7 +71,8 @@
     [self loadButtonItems];
     [self loadServiceObservers];
     [self createButtons];
-    [self createCells];
+//    [self createTableView];
+    [self createCollectionView];
     [self createPicker];
     [self createGestures];
     [self createActivityIndicator];
@@ -127,7 +133,18 @@
     self.navigationItem.leftBarButtonItems = [NSArray arrayWithObjects:addButton, nil];
 }
 
-- (void)createCells
+- (void)createTableView
+{
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
+                                                                   self.view.frame.origin.y,
+                                                                   self.view.frame.size.width,
+                                                                   self.view.frame.size.height)
+                                                  style:UITableViewStylePlain];
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+}
+
+- (void)createCollectionView
 {
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.scrollDirection = UICollectionViewScrollDirectionVertical;
@@ -219,6 +236,43 @@
     self.data = nil;
     [self.collectionView reloadData];
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[row] object:nil];
+}
+
+#pragma mark - UITableView DataSource Methods
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [self.selectedClass height:self.data[indexPath.item]];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.data.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell" forIndexPath:indexPath];
+    if (!cell)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
+    }
+
+    for (UIView *view in cell.contentView.subviews)
+    {
+        [view removeFromSuperview];
+    }
+    NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
+    [cell.contentView addSubview:layoutViews[@"contentView"]];
+
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"BackFromReadVC" object:urlString];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UICollectionView DataSource Methods
