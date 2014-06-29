@@ -270,36 +270,42 @@
         cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
     }
 
-    // Configuring the views and colors.
-    UIView *checkView = [self viewWithImageName:@"check"];
-    UIColor *greenColor = [UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0];
-
-    UIView *crossView = [self viewWithImageName:@"cross"];
-    UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
-
-    UIView *clockView = [self viewWithImageName:@"clock"];
-    UIColor *yellowColor = [UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0];
-
-    UIView *listView = [self viewWithImageName:@"list"];
-    UIColor *brownColor = [UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0];
-
-    // Adding gestures per state basis.
-    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+    [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
+                            color:[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0] //green
+                             mode:MCSwipeTableViewCellModeExit
+                            state:MCSwipeTableViewCellState1
+                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+    {
         NSLog(@"Did swipe \"Checkmark\" cell");
         [self deleteCell:cell];
     }];
 
-    [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+    [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
+                            color:[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0] //red
+                             mode:MCSwipeTableViewCellModeExit
+                            state:MCSwipeTableViewCellState2
+                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+    {
         NSLog(@"Did swipe \"Cross\" cell");
         [self deleteCell:cell];
     }];
 
-    [cell setSwipeGestureWithView:clockView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+    [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
+                            color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
+                             mode:MCSwipeTableViewCellModeExit
+                            state:MCSwipeTableViewCellState3
+                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+    {
         NSLog(@"Did swipe \"Clock\" cell");
         [self deleteCell:cell];
     }];
 
-    [cell setSwipeGestureWithView:listView color:brownColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+    [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
+                            color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
+                             mode:MCSwipeTableViewCellModeExit
+                            state:MCSwipeTableViewCellState4
+                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+    {
         NSLog(@"Did swipe \"List\" cell");
         [self deleteCell:cell];
     }];
