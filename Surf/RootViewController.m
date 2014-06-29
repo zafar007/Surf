@@ -12,13 +12,17 @@
 #import <QuartzCore/QuartzCore.h>
 #import "SBCollectionViewCell.h"
 #import "PocketAPI.h"
+#import "MLPAutoCompleteTextField.h"
+#import "MLPAutoCompleteTextFieldDelegate.h"
+#import "OmnibarDataSource.h"
 @import Twitter;
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
                                     UIGestureRecognizerDelegate,
                                     UICollectionViewDataSource,
-                                    UICollectionViewDelegateFlowLayout>
+                                    UICollectionViewDelegateFlowLayout,
+                                    MLPAutoCompleteFetchOperationDelegate>
 @property UIButton *circleButton;
 @property UIPanGestureRecognizer *panCircle;
 @property UIDynamicAnimator *dynamicAnimator;
@@ -28,6 +32,8 @@
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property UITextField *omnibar;
+@property OmnibarDataSource *omnibarDataSource;
+@property MLPAutoCompleteTextField *MLPOmnibar;
 @property UIProgressView *progressBar;
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
@@ -80,7 +86,8 @@
 //    [self createCircleButton];
     [self createCollectionView];
     [self createButtons];
-    [self createOmnibar];
+//    [self createOmnibar];
+    [self createMLPOmnibar];
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
@@ -214,6 +221,36 @@
     self.omnibar.font = [UIFont systemFontOfSize:32];
     [self.toolsView addSubview:self.omnibar];
     [self.omnibar becomeFirstResponder];
+}
+
+- (void)createMLPOmnibar
+{
+    self.omnibarDataSource = [OmnibarDataSource new];
+    self.MLPOmnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
+                                                                                self.toolsView.frame.size.height/2,        //284
+                                                                                self.toolsView.frame.size.width-(2*20),    //280
+                                                                                2*20)];
+    self.MLPOmnibar.delegate = self;
+    self.MLPOmnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
+    self.MLPOmnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.MLPOmnibar.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.MLPOmnibar.keyboardType = UIKeyboardTypeEmailAddress;
+    self.MLPOmnibar.returnKeyType = UIReturnKeyGo;
+    self.MLPOmnibar.placeholder = @"search";
+    self.MLPOmnibar.textColor = [UIColor lightGrayColor];
+    self.MLPOmnibar.adjustsFontSizeToFitWidth = YES;
+    self.MLPOmnibar.textAlignment = NSTextAlignmentCenter;
+    self.MLPOmnibar.font = [UIFont systemFontOfSize:32];
+    [self.toolsView addSubview:self.MLPOmnibar];
+    [self.MLPOmnibar becomeFirstResponder];
+
+    self.MLPOmnibar.autoCompleteDataSource = self.omnibarDataSource;
+    self.MLPOmnibar.autoCompleteTableAppearsAsKeyboardAccessory = YES;
+}
+
+- (void)autoCompleteTermsDidFetch:(NSDictionary *)fetchInfo
+{
+
 }
 
 - (void)createProgressBar

@@ -55,6 +55,9 @@
 		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8EBF3162195FA0CF00286544 /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */; };
+		8EBF3173195FDE1800286544 /* MLPAutoCompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF316E195FDE1800286544 /* MLPAutoCompleteTextField.m */; };
+		8EBF3174195FDE1800286544 /* NSString+Levenshtein.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF3172195FDE1800286544 /* NSString+Levenshtein.m */; };
+		8EBF31781960AE3400286544 /* OmnibarDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF31771960AE3400286544 /* OmnibarDataSource.m */; };
 		8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF021958E25200C61C3F /* PocketAPI.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF041958E25200C61C3F /* PocketAPILogin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -164,6 +167,15 @@
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8EBF3160195FA0CF00286544 /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
 		8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
+		8EBF316D195FDE1800286544 /* MLPAutoCompleteTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextField.h; sourceTree = "<group>"; };
+		8EBF316E195FDE1800286544 /* MLPAutoCompleteTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MLPAutoCompleteTextField.m; sourceTree = "<group>"; };
+		8EBF316F195FDE1800286544 /* MLPAutoCompleteTextFieldDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextFieldDataSource.h; sourceTree = "<group>"; };
+		8EBF3170195FDE1800286544 /* MLPAutoCompleteTextFieldDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompleteTextFieldDelegate.h; sourceTree = "<group>"; };
+		8EBF3171195FDE1800286544 /* NSString+Levenshtein.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Levenshtein.h"; sourceTree = "<group>"; };
+		8EBF3172195FDE1800286544 /* NSString+Levenshtein.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Levenshtein.m"; sourceTree = "<group>"; };
+		8EBF31761960AE3400286544 /* OmnibarDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OmnibarDataSource.h; sourceTree = "<group>"; };
+		8EBF31771960AE3400286544 /* OmnibarDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OmnibarDataSource.m; sourceTree = "<group>"; };
+		8EBF31791960AFF400286544 /* MLPAutoCompletionObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MLPAutoCompletionObject.h; sourceTree = "<group>"; };
 		8EC7CF001958E25200C61C3F /* PocketAPI+NSOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PocketAPI+NSOperation.h"; sourceTree = "<group>"; };
 		8EC7CF011958E25200C61C3F /* PocketAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPI.h; sourceTree = "<group>"; };
 		8EC7CF021958E25200C61C3F /* PocketAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketAPI.m; sourceTree = "<group>"; };
@@ -329,6 +341,7 @@
 				8E68BA73194687540019658A /* SDWebImage */,
 				8EA137881957428F0032A507 /* SWRevealViewController */,
 				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
+				8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
@@ -383,6 +396,8 @@
 		8E97B4A61951CB2600068AEB /* RootVC */ = {
 			isa = PBXGroup;
 			children = (
+				8EBF31761960AE3400286544 /* OmnibarDataSource.h */,
+				8EBF31771960AE3400286544 /* OmnibarDataSource.m */,
 				8E6CA4FF19450DCD00148137 /* Tab.h */,
 				8E6CA50019450DCD00148137 /* Tab.m */,
 				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
@@ -409,6 +424,20 @@
 				8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */,
 			);
 			path = MCSwipeTableViewCell;
+			sourceTree = "<group>";
+		};
+		8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */ = {
+			isa = PBXGroup;
+			children = (
+				8EBF316D195FDE1800286544 /* MLPAutoCompleteTextField.h */,
+				8EBF316E195FDE1800286544 /* MLPAutoCompleteTextField.m */,
+				8EBF316F195FDE1800286544 /* MLPAutoCompleteTextFieldDataSource.h */,
+				8EBF3170195FDE1800286544 /* MLPAutoCompleteTextFieldDelegate.h */,
+				8EBF31791960AFF400286544 /* MLPAutoCompletionObject.h */,
+				8EBF3171195FDE1800286544 /* NSString+Levenshtein.h */,
+				8EBF3172195FDE1800286544 /* NSString+Levenshtein.m */,
+			);
+			name = MLPAutoCompleteTextField;
 			sourceTree = "<group>";
 		};
 		8EC7CEFF1958E25200C61C3F /* PocketSDK */ = {
@@ -533,6 +562,8 @@
 				8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */,
 				8E68BA9A194687540019658A /* SDWebImageManager.m in Sources */,
 				8E911ECE194E5B11005FC87F /* Twitter.m in Sources */,
+				8EBF3173195FDE1800286544 /* MLPAutoCompleteTextField.m in Sources */,
+				8EBF31781960AE3400286544 /* OmnibarDataSource.m in Sources */,
 				8E68BA95194687540019658A /* SDImageCache.m in Sources */,
 				8E68BA99194687540019658A /* SDWebImageDownloaderOperation.m in Sources */,
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,
@@ -556,6 +587,7 @@
 				8EA54258195668B9007733D3 /* History.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
 				8EA1378B1957428F0032A507 /* SWRevealViewController.m in Sources */,
+				8EBF3174195FDE1800286544 /* NSString+Levenshtein.m in Sources */,
 				8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */,
 				8EF62FAF195BE5D00084754F /* Gmail.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
