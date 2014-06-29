@@ -59,7 +59,6 @@
 		8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0D1958E25200C61C3F /* SFHFKeychainUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF091958E25200C61C3F /* SFHFKeychainUtils.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0F1958E2E100C61C3F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EC7CF0E1958E2E100C61C3F /* Security.framework */; };
-		8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */; };
 		8EF62FAF195BE5D00084754F /* Gmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EF62FAE195BE5D00084754F /* Gmail.m */; };
 		8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EFF092B194EA57500379F43 /* SettingsViewController.m */; };
 /* End PBXBuildFile section */
@@ -173,8 +172,6 @@
 		8EC7CF081958E25200C61C3F /* SFHFKeychainUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHFKeychainUtils.h; sourceTree = "<group>"; };
 		8EC7CF091958E25200C61C3F /* SFHFKeychainUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHFKeychainUtils.m; sourceTree = "<group>"; };
 		8EC7CF0E1958E2E100C61C3F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBReadCollectionViewCell.h; sourceTree = "<group>"; };
-		8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBReadCollectionViewCell.m; sourceTree = "<group>"; };
 		8EF62FAD195BE5D00084754F /* Gmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gmail.h; sourceTree = "<group>"; };
 		8EF62FAE195BE5D00084754F /* Gmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Gmail.m; sourceTree = "<group>"; };
 		8EFF092A194EA57500379F43 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
@@ -373,8 +370,6 @@
 		8E97B4A51951CB1600068AEB /* ReadVC */ = {
 			isa = PBXGroup;
 			children = (
-				8ED828E619466F9F004D779F /* SBReadCollectionViewCell.h */,
-				8ED828E719466F9F004D779F /* SBReadCollectionViewCell.m */,
 				8E6CA50119450DCD00148137 /* ReadingViewController.h */,
 				8E6CA50219450DCD00148137 /* ReadingViewController.m */,
 			);
@@ -551,7 +546,6 @@
 				8EF62FAF195BE5D00084754F /* Gmail.m in Sources */,
 				8E97B4A41951CA6400068AEB /* Global.m in Sources */,
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
-				8ED828E819466F9F004D779F /* SBReadCollectionViewCell.m in Sources */,
 				8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */,
 				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,

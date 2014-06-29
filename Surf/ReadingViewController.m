@@ -9,7 +9,6 @@
 #define CellIdentifier @"Cell"
 
 #import "ReadingViewController.h"
-#import "SBReadCollectionViewCell.h"
 #import "SettingsViewController.h"
 #import "Twitter.h"
 #import "Global.h"
@@ -139,7 +138,7 @@
                                                                              self.view.frame.size.width,
                                                                              self.view.frame.size.height)
                                              collectionViewLayout:flow];
-    [self.collectionView registerClass:[SBReadCollectionViewCell class] forCellWithReuseIdentifier:@"CellPost"];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"CellPost"];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
@@ -239,8 +238,15 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    SBReadCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
-    [cell modifyCellLayoutWith:[self.selectedClass layoutFrom:self.data[indexPath.item]]];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CellPost" forIndexPath:indexPath];
+
+    for (UIView *view in cell.contentView.subviews)
+    {
+        [view removeFromSuperview];
+    }
+    NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.item]];
+    [cell.contentView addSubview:layoutViews[@"contentView"]];
+
     return cell;
 }
 
