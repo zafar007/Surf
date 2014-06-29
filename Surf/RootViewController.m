@@ -22,7 +22,7 @@
                                     UIGestureRecognizerDelegate,
                                     UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
-                                    MLPAutoCompleteFetchOperationDelegate>
+                                    MLPAutoCompleteTextFieldDelegate>
 @property UIButton *circleButton;
 @property UIPanGestureRecognizer *panCircle;
 @property UIDynamicAnimator *dynamicAnimator;
@@ -31,9 +31,8 @@
 @property UIDynamicItemBehavior *circleButtonDynamicBehavior;
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
-@property UITextField *omnibar;
 @property OmnibarDataSource *omnibarDataSource;
-@property MLPAutoCompleteTextField *MLPOmnibar;
+@property MLPAutoCompleteTextField *omnibar;
 @property UIProgressView *progressBar;
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
@@ -201,13 +200,12 @@
     [self.view addSubview:self.toolsView];
 }
 
-- (void)createOmnibar
+- (void)createMLPOmnibar
 {
-    self.omnibar = [[UITextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
-                                                                 self.toolsView.frame.size.height/2,        //284
-                                                                 self.toolsView.frame.size.width-(2*20),    //280
-                                                                 2*20)];                                    //40
-    self.omnnibarFrame = self.omnibar.frame;
+    self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
+                                                                              self.toolsView.frame.size.height/2,        //284
+                                                                              self.toolsView.frame.size.width-(2*20),    //280
+                                                                              2*20)];
     self.omnibar.delegate = self;
     self.omnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.omnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -221,36 +219,22 @@
     self.omnibar.font = [UIFont systemFontOfSize:32];
     [self.toolsView addSubview:self.omnibar];
     [self.omnibar becomeFirstResponder];
-}
 
-- (void)createMLPOmnibar
-{
     self.omnibarDataSource = [OmnibarDataSource new];
-    self.MLPOmnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
-                                                                                self.toolsView.frame.size.height/2,        //284
-                                                                                self.toolsView.frame.size.width-(2*20),    //280
-                                                                                2*20)];
-    self.MLPOmnibar.delegate = self;
-    self.MLPOmnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
-    self.MLPOmnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-    self.MLPOmnibar.autocorrectionType = UITextAutocorrectionTypeNo;
-    self.MLPOmnibar.keyboardType = UIKeyboardTypeEmailAddress;
-    self.MLPOmnibar.returnKeyType = UIReturnKeyGo;
-    self.MLPOmnibar.placeholder = @"search";
-    self.MLPOmnibar.textColor = [UIColor lightGrayColor];
-    self.MLPOmnibar.adjustsFontSizeToFitWidth = YES;
-    self.MLPOmnibar.textAlignment = NSTextAlignmentCenter;
-    self.MLPOmnibar.font = [UIFont systemFontOfSize:32];
-    [self.toolsView addSubview:self.MLPOmnibar];
-    [self.MLPOmnibar becomeFirstResponder];
-
-    self.MLPOmnibar.autoCompleteDataSource = self.omnibarDataSource;
-    self.MLPOmnibar.autoCompleteTableAppearsAsKeyboardAccessory = YES;
+    self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
+    self.omnibar.autoCompleteDelegate = self;
+    self.omnibar.autoCompleteTableViewHidden = NO;
 }
 
-- (void)autoCompleteTermsDidFetch:(NSDictionary *)fetchInfo
+- (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
+  didSelectAutoCompleteString:(NSString *)selectedString
+       withAutoCompleteObject:(id<MLPAutoCompletionObject>)selectedObject
+            forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    Tab *tab = self.tabs[self.currentTabIndex];
+    tab.urlString = [self searchOrLoad:selectedString];
+    self.omnibar.text = @"";
+    [self loadPage:tab];
 }
 
 - (void)createProgressBar
