@@ -223,7 +223,7 @@
     self.omnibarDataSource = [OmnibarDataSource new];
     self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
     self.omnibar.autoCompleteDelegate = self;
-    self.omnibar.autoCompleteTableViewHidden = NO;
+    self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
 }
 
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
@@ -490,7 +490,9 @@
     self.tabs = [[NSMutableArray alloc] init];
 
     NSArray *savedUrlStrings = [[NSUserDefaults standardUserDefaults] objectForKey:@"savedTabs"];
-    if (savedUrlStrings && savedUrlStrings.count>0)
+    BOOL reloadOldTabsOnStart = [[[NSUserDefaults standardUserDefaults] objectForKey:@"reloadOldTabsOnStart"] boolValue];
+
+    if (reloadOldTabsOnStart && savedUrlStrings && savedUrlStrings.count>0)
     {
         for (NSString *urlString in savedUrlStrings)
         {

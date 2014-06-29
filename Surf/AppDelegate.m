@@ -13,6 +13,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self tempSettings];
+
     [[PocketAPI sharedAPI] setConsumerKey:@"29159-d90fcf8425ecacb6bcdf588e"];
 
     NSArray *services = @[
@@ -58,6 +60,17 @@
     {
         return NO;
     }
+}
+
+- (void)tempSettings
+{
+    //[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"]
+    //[[[NSUserDefaults standardUserDefaults] objectForKey:@"reloadOldTabsOnStart"]
+    //[[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"]
+
+    [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"reloadOldTabsOnStart"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"MLPAutoComplete"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
 }
 
 @end
