@@ -54,6 +54,7 @@
 		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
 		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
+		8EBF3162195FA0CF00286544 /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */; };
 		8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF021958E25200C61C3F /* PocketAPI.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF041958E25200C61C3F /* PocketAPILogin.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7CF061958E25200C61C3F /* PocketAPIOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -161,6 +162,8 @@
 		8EA5425A19566B42007733D3 /* Designernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Designernews.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
+		8EBF3160195FA0CF00286544 /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
+		8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCSwipeTableViewCell.m; sourceTree = "<group>"; };
 		8EC7CF001958E25200C61C3F /* PocketAPI+NSOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PocketAPI+NSOperation.h"; sourceTree = "<group>"; };
 		8EC7CF011958E25200C61C3F /* PocketAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketAPI.h; sourceTree = "<group>"; };
 		8EC7CF021958E25200C61C3F /* PocketAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketAPI.m; sourceTree = "<group>"; };
@@ -325,6 +328,7 @@
 			children = (
 				8E68BA73194687540019658A /* SDWebImage */,
 				8EA137881957428F0032A507 /* SWRevealViewController */,
+				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
@@ -396,6 +400,15 @@
 				8EA1378A1957428F0032A507 /* SWRevealViewController.m */,
 			);
 			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				8EBF3160195FA0CF00286544 /* MCSwipeTableViewCell.h */,
+				8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */,
+			);
+			path = MCSwipeTableViewCell;
 			sourceTree = "<group>";
 		};
 		8EC7CEFF1958E25200C61C3F /* PocketSDK */ = {
@@ -511,6 +524,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBF3162195FA0CF00286544 /* MCSwipeTableViewCell.m in Sources */,
 				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
 				8EC7CF0D1958E25200C61C3F /* SFHFKeychainUtils.m in Sources */,
 				8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */,

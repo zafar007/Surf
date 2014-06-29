@@ -10,6 +10,7 @@
 
 #import "ReadingViewController.h"
 #import "SettingsViewController.h"
+#import "MCSwipeTableViewCell.h"
 #import "Twitter.h"
 #import "Global.h"
 #import "Feedly.h"
