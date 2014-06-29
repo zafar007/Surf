@@ -143,6 +143,9 @@
                                                   style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor lightGrayColor];
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    [self.view addSubview:self.tableView];
 }
 
 - (void)createCollectionView
@@ -253,11 +256,54 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell" forIndexPath:indexPath];
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
+//    if (!cell)
+//    {
+//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
+//    }
+//
+
+    //start MCSwipeTableViewCell
+    MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
     if (!cell)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
+        cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
     }
+
+    // Configuring the views and colors.
+    UIView *checkView = [self viewWithImageName:@"check"];
+    UIColor *greenColor = [UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0];
+
+    UIView *crossView = [self viewWithImageName:@"cross"];
+    UIColor *redColor = [UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0];
+
+    UIView *clockView = [self viewWithImageName:@"clock"];
+    UIColor *yellowColor = [UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0];
+
+    UIView *listView = [self viewWithImageName:@"list"];
+    UIColor *brownColor = [UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0];
+
+    // Adding gestures per state basis.
+    [cell setSwipeGestureWithView:checkView color:greenColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState1 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe \"Checkmark\" cell");
+        [self deleteCell:cell];
+    }];
+
+    [cell setSwipeGestureWithView:crossView color:redColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState2 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe \"Cross\" cell");
+        [self deleteCell:cell];
+    }];
+
+    [cell setSwipeGestureWithView:clockView color:yellowColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState3 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe \"Clock\" cell");
+        [self deleteCell:cell];
+    }];
+
+    [cell setSwipeGestureWithView:listView color:brownColor mode:MCSwipeTableViewCellModeExit state:MCSwipeTableViewCellState4 completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode) {
+        NSLog(@"Did swipe \"List\" cell");
+        [self deleteCell:cell];
+    }];
+    //end MCSwipeTableViewCell
 
     for (UIView *view in cell.contentView.subviews)
     {
@@ -265,8 +311,30 @@
     }
     NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
     [cell.contentView addSubview:layoutViews[@"contentView"]];
-
+    
     return cell;
+}
+
+- (UIView *)viewWithImageName:(NSString *)imageName
+{
+    UIImage *image = [UIImage imageNamed:imageName];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
+    imageView.contentMode = UIViewContentModeCenter;
+    return imageView;
+}
+
+- (void)deleteCell:(MCSwipeTableViewCell *)cell
+{
+    if (cell)
+    {
+//        _nbItems--;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        NSMutableArray *temp = [self.data mutableCopy];
+        [temp removeObjectAtIndex:indexPath.row];
+        self.data = [NSArray arrayWithArray:temp];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+
+    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -387,6 +455,7 @@
     self.data = notification.object;
     self.selectedClass = [Pocket class];
     [self.collectionView reloadData];
+//    [self.tableView reloadData];
     [self.activity stopAnimating];
 }
 
