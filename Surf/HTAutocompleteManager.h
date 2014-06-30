@@ -11,7 +11,7 @@
 
 typedef enum {
     HTAutocompleteTypeEmail, // Default
-    HTAutocompleteTypeColor,
+    HTAutocompleteTypeWebSearch,
 } HTAutocompleteType;
 
 @interface HTAutocompleteManager : NSObject <HTAutocompleteDataSource>
