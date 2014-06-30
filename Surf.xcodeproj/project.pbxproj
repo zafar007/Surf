@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4E0FCF195300E400477A54 /* Producthunt.m */; };
 		8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5972D6195400F800B849D3 /* SBSwitch.m */; };
+		8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */; };
+		8E5CB9B11960F5A0002B3567 /* HTAutocompleteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */; };
 		8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA75194687540019658A /* MKAnnotationView+WebCache.m */; };
 		8E68BA94194687540019658A /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA77194687540019658A /* NSData+ImageContentType.m */; };
 		8E68BA95194687540019658A /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA79194687540019658A /* SDImageCache.m */; };
@@ -82,6 +84,10 @@
 		8E4E0FCF195300E400477A54 /* Producthunt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Producthunt.m; sourceTree = "<group>"; };
 		8E5972D5195400F800B849D3 /* SBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBSwitch.h; sourceTree = "<group>"; };
 		8E5972D6195400F800B849D3 /* SBSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBSwitch.m; sourceTree = "<group>"; };
+		8E5CB9AB1960F581002B3567 /* HTAutocompleteTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTAutocompleteTextField.h; sourceTree = "<group>"; };
+		8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTAutocompleteTextField.m; sourceTree = "<group>"; };
+		8E5CB9AF1960F5A0002B3567 /* HTAutocompleteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTAutocompleteManager.h; sourceTree = "<group>"; };
+		8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTAutocompleteManager.m; sourceTree = "<group>"; };
 		8E68BA74194687540019658A /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		8E68BA75194687540019658A /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		8E68BA76194687540019658A /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -266,6 +272,17 @@
 			name = SettingsVC;
 			sourceTree = "<group>";
 		};
+		8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */ = {
+			isa = PBXGroup;
+			children = (
+				8E5CB9AB1960F581002B3567 /* HTAutocompleteTextField.h */,
+				8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */,
+				8E5CB9AF1960F5A0002B3567 /* HTAutocompleteManager.h */,
+				8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */,
+			);
+			name = HTAutocompleteTextField;
+			sourceTree = "<group>";
+		};
 		8E68BA73194687540019658A /* SDWebImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -342,6 +359,7 @@
 				8EA137881957428F0032A507 /* SWRevealViewController */,
 				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
 				8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */,
+				8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
@@ -396,8 +414,6 @@
 		8E97B4A61951CB2600068AEB /* RootVC */ = {
 			isa = PBXGroup;
 			children = (
-				8EBF31761960AE3400286544 /* OmnibarDataSource.h */,
-				8EBF31771960AE3400286544 /* OmnibarDataSource.m */,
 				8E6CA4FF19450DCD00148137 /* Tab.h */,
 				8E6CA50019450DCD00148137 /* Tab.m */,
 				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
@@ -436,6 +452,8 @@
 				8EBF31791960AFF400286544 /* MLPAutoCompletionObject.h */,
 				8EBF3171195FDE1800286544 /* NSString+Levenshtein.h */,
 				8EBF3172195FDE1800286544 /* NSString+Levenshtein.m */,
+				8EBF31761960AE3400286544 /* OmnibarDataSource.h */,
+				8EBF31771960AE3400286544 /* OmnibarDataSource.m */,
 			);
 			name = MLPAutoCompleteTextField;
 			sourceTree = "<group>";
@@ -583,6 +601,7 @@
 				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
 				8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
+				8E5CB9B11960F5A0002B3567 /* HTAutocompleteManager.m in Sources */,
 				8E97B4A91951CFE300068AEB /* Feedly.m in Sources */,
 				8EA54258195668B9007733D3 /* History.m in Sources */,
 				8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */,
@@ -596,6 +615,7 @@
 				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
 				8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */,
+				8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */,
 				8E97B4AC1951CFE900068AEB /* Pocket.m in Sources */,
 				8E68BA9E194687540019658A /* UIImage+MultiFormat.m in Sources */,
 				8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */,

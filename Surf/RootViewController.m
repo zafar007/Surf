@@ -15,6 +15,8 @@
 #import "MLPAutoCompleteTextField.h"
 #import "MLPAutoCompleteTextFieldDelegate.h"
 #import "OmnibarDataSource.h"
+#import "HTAutocompleteTextField.h"
+#import "HTAutocompleteManager.h"
 @import Twitter;
 
 @interface RootViewController () <UITextFieldDelegate,
@@ -32,7 +34,8 @@
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property OmnibarDataSource *omnibarDataSource;
-@property MLPAutoCompleteTextField *omnibar;
+//@property MLPAutoCompleteTextField *omnibar;
+@property HTAutocompleteTextField *omnibar;
 @property UIProgressView *progressBar;
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
@@ -85,8 +88,7 @@
 //    [self createCircleButton];
     [self createCollectionView];
     [self createButtons];
-//    [self createOmnibar];
-    [self createMLPOmnibar];
+    [self createOmnibar];
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
@@ -174,8 +176,7 @@
         CGRect bottom50 = CGRectMake(self.view.frame.size.width - 50, self.view.frame.size.height -50, 50, 50);
         if (CGRectContainsPoint(bottom50, self.circleButton.center))
         {
-            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(self.view.frame.size.width - 50,
-                                                                                                            self.view.frame.size.height -50)];
+            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50)];
             [self.dynamicAnimator addBehavior:snap];
             return;
         }
@@ -200,9 +201,9 @@
     [self.view addSubview:self.toolsView];
 }
 
-- (void)createMLPOmnibar
+- (void)createOmnibar
 {
-    self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
+    self.omnibar = [[HTAutocompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,           //20
                                                                               self.toolsView.frame.size.height/2,        //284
                                                                               self.toolsView.frame.size.width-(2*20),    //280
                                                                               2*20)];
@@ -215,15 +216,37 @@
     self.omnibar.placeholder = @"search";
     self.omnibar.textColor = [UIColor lightGrayColor];
     self.omnibar.adjustsFontSizeToFitWidth = YES;
-    self.omnibar.textAlignment = NSTextAlignmentCenter;
+    self.omnibar.textAlignment = NSTextAlignmentLeft;
     self.omnibar.font = [UIFont systemFontOfSize:32];
     [self.toolsView addSubview:self.omnibar];
     [self.omnibar becomeFirstResponder];
 
     self.omnibarDataSource = [OmnibarDataSource new];
-    self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
-    self.omnibar.autoCompleteDelegate = self;
-    self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
+    self.omnibar.autocompleteDataSource = [HTAutocompleteManager sharedManager];
+    self.omnibar.autocompleteType = HTAutocompleteTypeWebSearch;
+
+//    self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
+//                                                                              self.toolsView.frame.size.height/2,        //284
+//                                                                              self.toolsView.frame.size.width-(2*20),    //280
+//                                                                              2*20)];
+//    self.omnibar.delegate = self;
+//    self.omnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
+//    self.omnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+//    self.omnibar.autocorrectionType = UITextAutocorrectionTypeNo;
+//    self.omnibar.keyboardType = UIKeyboardTypeEmailAddress;
+//    self.omnibar.returnKeyType = UIReturnKeyGo;
+//    self.omnibar.placeholder = @"search";
+//    self.omnibar.textColor = [UIColor lightGrayColor];
+//    self.omnibar.adjustsFontSizeToFitWidth = YES;
+//    self.omnibar.textAlignment = NSTextAlignmentCenter;
+//    self.omnibar.font = [UIFont systemFontOfSize:32];
+//    [self.toolsView addSubview:self.omnibar];
+//    [self.omnibar becomeFirstResponder];
+//
+//    self.omnibarDataSource = [OmnibarDataSource new];
+//    self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
+//    self.omnibar.autoCompleteDelegate = self;
+//    self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
 }
 
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
