@@ -85,7 +85,7 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
-//    [self createCircleButton];
+    [self createCircleButton];
     [self createCollectionView];
     [self createButtons];
     [self createOmnibar];
@@ -126,8 +126,7 @@
 {
     self.circleButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.circleButton addTarget:self action:@selector(toggleCircle) forControlEvents:UIControlEventTouchUpInside];
-    [self.circleButton setImage:[UIImage imageNamed:@"circle-outline"] forState:UIControlStateNormal];
-    [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateHighlighted];
+    [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateNormal];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
     self.circleButton.center = CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50);
     [self.view addSubview:self.circleButton];
