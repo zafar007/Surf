@@ -264,14 +264,6 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
-//    if (!cell)
-//    {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
-//    }
-//
-
-    //start MCSwipeTableViewCell
     MCSwipeTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TableCell"];
     if (!cell)
     {
@@ -284,11 +276,7 @@
                             state:MCSwipeTableViewCellState1
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
-        NSLog(@"Did swipe \"Checkmark\" cell");
         [self deleteCell:cell];
-
-//        NSIndexPath *path = [self.tableView indexPathForCell:cell];
-//        NSLog(@"%@",self.data[path.row]);
         NSLog(@"%@",@(indexPath.row));
     }];
 
@@ -298,37 +286,34 @@
                             state:MCSwipeTableViewCellState2
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
-        NSLog(@"Did swipe \"Cross\" cell");
         [self deleteCell:cell];
     }];
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
                             color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
-                             mode:MCSwipeTableViewCellModeSwitch
+                             mode:MCSwipeTableViewCellModeExit
                             state:MCSwipeTableViewCellState3
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
-        NSLog(@"Did swipe \"Clock\" cell");
-//        [self deleteCell:cell];
+        [self deleteCell:cell];
     }];
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
                             color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
-                             mode:MCSwipeTableViewCellModeSwitch
+                             mode:MCSwipeTableViewCellModeExit
                             state:MCSwipeTableViewCellState4
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
-        NSLog(@"Did swipe \"List\" cell");
-//        [self deleteCell:cell];
+        [self deleteCell:cell];
     }];
-    //end MCSwipeTableViewCell
+
+    //set back of cell gray
 
     for (UIView *view in cell.contentView.subviews)
     {
         [view removeFromSuperview];
     }
     NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
-//    [cell.contentView addSubview:layoutViews[@"contentView"]];
     cell.textLabel.text = layoutViews[@"text"];
     cell.detailTextLabel.text = layoutViews[@"subtext"];
     cell.imageView.image = layoutViews[@"image"];
@@ -347,13 +332,11 @@
 {
     if (cell)
     {
-//        _nbItems--;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         NSMutableArray *temp = [self.data mutableCopy];
         [temp removeObjectAtIndex:indexPath.row];
         self.data = [NSArray arrayWithArray:temp];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-
     }
 }
 
@@ -406,14 +389,12 @@
 {
     if (num == PickTableView)
     {
-//        [self.collectionView reloadData];
         [self.tableView reloadData];
         [self.view addSubview:self.tableView];
     }
     else
     {
         [self.collectionView reloadData];
-//        [self.tableView reloadData];
         [self.view addSubview:self.collectionView];
     }
     [self.activity stopAnimating];
@@ -581,28 +562,6 @@
     [self loadServiceUsing:PickTableView];
 }
 
-- (void)loadBookmarks
-{
-    if (!self.bookmarks)
-    {
-        self.bookmarks = [Bookmarks new];
-    }
-    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
-    self.selectedClass = [Bookmarks class];
-    [self loadServiceUsing:PickTableView];
-}
-
-- (void)loadHistory
-{
-    if (!self.history)
-    {
-        self.history = [History new];
-    }
-    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
-    self.selectedClass = [History class];
-    [self loadServiceUsing:PickTableView];
-}
-
 - (void)loadHackernews
 {
     if (!self.hackernews)
@@ -674,6 +633,28 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Gmail" object:nil];
     self.data = notification.object;
     self.selectedClass = [Gmail class];
+    [self loadServiceUsing:PickTableView];
+}
+
+- (void)loadBookmarks
+{
+    if (!self.bookmarks)
+    {
+        self.bookmarks = [Bookmarks new];
+    }
+    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
+    self.selectedClass = [Bookmarks class];
+    [self loadServiceUsing:PickTableView];
+}
+
+- (void)loadHistory
+{
+    if (!self.history)
+    {
+        self.history = [History new];
+    }
+    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
+    self.selectedClass = [History class];
     [self loadServiceUsing:PickTableView];
 }
 
