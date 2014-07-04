@@ -23,6 +23,11 @@
 {
     [super viewDidLoad];
 
+//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.translucent = NO;
+
+
     self.fullButtons = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
     self.someButtons = [[[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"] mutableCopy];
 
@@ -89,7 +94,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.separatorInset =  UIEdgeInsetsMake(0, 0, 0, 0);
     cell.imageView.image = [UIImage imageNamed:self.fullButtons[indexPath.row]];
-
+//    cell.contentView.backgroundColor = [UIColor blackColor];
     SBSwitch *currentSwitch = nil;
     for (UIView *view in cell.contentView.subviews)
     {

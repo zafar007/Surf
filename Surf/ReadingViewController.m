@@ -7,6 +7,8 @@
 //
 
 #define CellIdentifier @"Cell"
+#define PickTableView 0
+#define PickCollectionView 1
 
 #import "ReadingViewController.h"
 #import "SettingsViewController.h"
@@ -69,10 +71,15 @@
 {
     [super viewDidLoad];
 
+    self.view.backgroundColor = [UIColor lightGrayColor];
+//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.translucent = NO;
+
     [self loadButtonItems];
     [self loadServiceObservers];
     [self createButtons];
-//    [self createTableView];
+    [self createTableView];
     [self createCollectionView];
     [self createPicker];
     [self createGestures];
@@ -145,7 +152,6 @@
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor lightGrayColor];
     self.tableView.separatorInset = UIEdgeInsetsZero;
-    [self.view addSubview:self.tableView];
 }
 
 - (void)createCollectionView
@@ -163,7 +169,6 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
-    [self.view addSubview:self.collectionView];
 }
 
 - (void)createPicker
@@ -228,6 +233,9 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
+    [self.tableView removeFromSuperview];
+    [self.collectionView removeFromSuperview];
+
     for (NSString *item in self.buttonItems)
     {
         if (![item isEqualToString:self.buttonItems[row]])
@@ -278,6 +286,9 @@
     {
         NSLog(@"Did swipe \"Checkmark\" cell");
         [self deleteCell:cell];
+
+        NSIndexPath *path = [self.tableView indexPathForCell:cell];
+        NSLog(@"%@",self.data[path.row]);
     }];
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
@@ -292,22 +303,22 @@
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
                             color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
-                             mode:MCSwipeTableViewCellModeExit
+                             mode:MCSwipeTableViewCellModeSwitch
                             state:MCSwipeTableViewCellState3
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
         NSLog(@"Did swipe \"Clock\" cell");
-        [self deleteCell:cell];
+//        [self deleteCell:cell];
     }];
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
                             color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
-                             mode:MCSwipeTableViewCellModeExit
+                             mode:MCSwipeTableViewCellModeSwitch
                             state:MCSwipeTableViewCellState4
                   completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
     {
         NSLog(@"Did swipe \"List\" cell");
-        [self deleteCell:cell];
+//        [self deleteCell:cell];
     }];
     //end MCSwipeTableViewCell
 
@@ -388,6 +399,23 @@
 
 #pragma mark - Services
 
+- (void)loadServiceUsing:(int)num
+{
+    if (num == PickTableView)
+    {
+//        [self.collectionView reloadData];
+        [self.tableView reloadData];
+        [self.view addSubview:self.tableView];
+    }
+    else
+    {
+        [self.collectionView reloadData];
+//        [self.tableView reloadData];
+        [self.view addSubview:self.collectionView];
+    }
+    [self.activity stopAnimating];
+}
+
 - (void)loadTwitter
 {
     if (!self.twitter)
@@ -403,8 +431,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Twitter" object:nil];
     self.data = notification.object;
     self.selectedClass = [Twitter class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadGlobal
@@ -422,8 +449,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Global" object:nil];
     self.data = notification.object;
     self.selectedClass = [Global class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadFeedly
@@ -441,8 +467,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Feedly" object:nil];
     self.data = notification.object;
     self.selectedClass = [Feedly class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadPocket
@@ -460,9 +485,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Pocket" object:nil];
     self.data = notification.object;
     self.selectedClass = [Pocket class];
-    [self.collectionView reloadData];
-//    [self.tableView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadInstapaper
@@ -480,8 +503,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Instapaper" object:nil];
     self.data = notification.object;
     self.selectedClass = [Instapaper class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadReadability
@@ -499,8 +521,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Readability" object:nil];
     self.data = notification.object;
     self.selectedClass = [Readability class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadFacebook
@@ -518,8 +539,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
     self.data = notification.object;
     self.selectedClass = [Facebook class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickCollectionView];
 }
 
 - (void)loadDribbble
@@ -537,8 +557,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Dribbble" object:nil];
     self.data = notification.object;
     self.selectedClass = [Dribbble class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickCollectionView];
 }
 
 - (void)loadDesignernews
@@ -556,8 +575,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Designernews" object:nil];
     self.data = notification.object;
     self.selectedClass = [Designernews class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadBookmarks
@@ -575,8 +593,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
     self.data = notification.object;
     self.selectedClass = [Bookmarks class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadHistory
@@ -594,8 +611,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"History" object:nil];
     self.data = notification.object;
     self.selectedClass = [History class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadHackernews
@@ -613,8 +629,8 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Hackernews" object:nil];
     self.data = notification.object;
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    self.selectedClass = [Hackernews class];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadReddit
@@ -632,8 +648,8 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Reddit" object:nil];
     self.data = notification.object;
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    self.selectedClass = [Reddit class];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadProducthunt
@@ -651,8 +667,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Producthunt" object:nil];
     self.data = notification.object;
     self.selectedClass = [Producthunt class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadGmail
@@ -670,9 +685,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Gmail" object:nil];
     self.data = notification.object;
     self.selectedClass = [Gmail class];
-    [self.collectionView reloadData];
-    [self.activity stopAnimating];
+    [self loadServiceUsing:PickTableView];
 }
+
+#pragma mark - Buttons
 
 - (void)settings
 {

@@ -128,7 +128,7 @@
     [self.circleButton addTarget:self action:@selector(toggleCircle) forControlEvents:UIControlEventTouchUpInside];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateNormal];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
-    self.circleButton.center = CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50);
+    self.circleButton.center = CGPointMake(50, self.view.frame.size.height -50);
     [self.view addSubview:self.circleButton];
 
     self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
@@ -172,10 +172,10 @@
 
     if (sender.state == UIGestureRecognizerStateEnded)
     {
-        CGRect bottom50 = CGRectMake(self.view.frame.size.width - 50, self.view.frame.size.height -50, 50, 50);
+        CGRect bottom50 = CGRectMake(self.view.frame.origin.x, self.view.frame.size.height - 200, self.view.frame.size.width, 200);
         if (CGRectContainsPoint(bottom50, self.circleButton.center))
         {
-            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(self.view.frame.size.width - 50, self.view.frame.size.height -50)];
+            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(50, self.view.frame.size.height -50)];
             [self.dynamicAnimator addBehavior:snap];
             return;
         }
@@ -1139,12 +1139,13 @@
     {
         if(!error)
         {
-            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Saved to Pocket!"
-                                                              message:nil
-                                                             delegate:nil
-                                                    cancelButtonTitle:@"Dismiss"
-                                                    otherButtonTitles:nil];
-            [message show];
+            [self showStatusBarMessage:@"Saved to Pocket" hideAfter:1];
+//            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Saved to Pocket!"
+//                                                              message:nil
+//                                                             delegate:nil
+//                                                    cancelButtonTitle:@"Dismiss"
+//                                                    otherButtonTitles:nil];
+//            [message show];
         }
         else
         {
@@ -1312,6 +1313,35 @@
 {
     NSString *url = [self.tabs[self.currentTabIndex] request].URL.absoluteString;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"url" object:url];
+}
+
+-(void)showStatusBarMessage:(NSString *)message hideAfter:(NSTimeInterval)delay
+{
+    __block UIWindow *statusWindow = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].statusBarFrame];
+    statusWindow.windowLevel = UIWindowLevelStatusBar + 1;
+    UILabel *label = [[UILabel alloc] initWithFrame:statusWindow.bounds];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = [UIColor clearColor];
+    label.textColor = [UIColor whiteColor];
+    label.font = [UIFont boldSystemFontOfSize:13];
+    label.text = message;
+    [statusWindow addSubview:label];
+    [statusWindow makeKeyAndVisible];
+    label.layer.transform = CATransform3DMakeRotation(M_PI * 0.5, 1, 0, 0);
+    [UIView animateWithDuration:0.7 animations:^{
+        label.layer.transform = CATransform3DIdentity;
+    }completion:^(BOOL finished){
+        double delayInSeconds = delay;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [UIView animateWithDuration:0.5 animations:^{
+                label.layer.transform = CATransform3DMakeRotation(M_PI * 0.5, -1, 0, 0);
+            }completion:^(BOOL finished){
+                statusWindow = nil;
+                [[[UIApplication sharedApplication].delegate window] makeKeyAndVisible];
+            }];
+        });
+    }];
 }
 
 @end
