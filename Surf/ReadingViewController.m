@@ -204,7 +204,7 @@
     self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.activity.center = self.collectionView.center;
     self.activity.hidesWhenStopped = YES;
-    [self.collectionView addSubview:self.activity];
+    [self.view addSubview:self.activity];
 }
 
 #pragma mark - UIPickerView Delegate Methods
@@ -287,8 +287,9 @@
         NSLog(@"Did swipe \"Checkmark\" cell");
         [self deleteCell:cell];
 
-        NSIndexPath *path = [self.tableView indexPathForCell:cell];
-        NSLog(@"%@",self.data[path.row]);
+//        NSIndexPath *path = [self.tableView indexPathForCell:cell];
+//        NSLog(@"%@",self.data[path.row]);
+        NSLog(@"%@",@(indexPath.row));
     }];
 
     [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
@@ -327,8 +328,10 @@
         [view removeFromSuperview];
     }
     NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
-    [cell.contentView addSubview:layoutViews[@"contentView"]];
-    
+//    [cell.contentView addSubview:layoutViews[@"contentView"]];
+    cell.textLabel.text = layoutViews[@"text"];
+    cell.detailTextLabel.text = layoutViews[@"subtext"];
+    cell.imageView.image = layoutViews[@"image"];
     return cell;
 }
 
@@ -584,14 +587,7 @@
     {
         self.bookmarks = [Bookmarks new];
     }
-    [self.bookmarks getData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactBookmarks:) name:@"Bookmarks" object:nil];
-}
-
-- (void)reactBookmarks:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Bookmarks" object:nil];
-    self.data = notification.object;
+    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"bookmarks"];
     self.selectedClass = [Bookmarks class];
     [self loadServiceUsing:PickTableView];
 }
@@ -602,14 +598,7 @@
     {
         self.history = [History new];
     }
-    [self.history getData];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactHistory:) name:@"History" object:nil];
-}
-
-- (void)reactHistory:(NSNotification *)notification
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"History" object:nil];
-    self.data = notification.object;
+    self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
     self.selectedClass = [History class];
     [self loadServiceUsing:PickTableView];
 }

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface Bookmarks : NSObject
-- (void)getData;
 + (NSDictionary *)layoutFrom:(NSDictionary *)site;
 + (NSString *)selected:(NSDictionary *)site;
 + (CGFloat)width:(NSDictionary *)site;
