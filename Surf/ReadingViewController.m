@@ -99,6 +99,12 @@
     [self.pickerView reloadAllComponents];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+}
+
 - (void)loadButtonItems
 {
     self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
@@ -195,7 +201,7 @@
     self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeFromLeft:)];
     self.swipeLeft.delegate = self;
     self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.collectionView addGestureRecognizer:self.swipeLeft];
+    [self.view addGestureRecognizer:self.swipeLeft];
 }
 
 - (void)swipeFromLeft:(UISwipeGestureRecognizer *)sender
@@ -304,51 +310,51 @@
         [cell.contentView addSubview:layoutViews[@"contentView"]];
     }
 
-    if (YES)//([layoutViews[@"cell1"] boolValue])
-    {
-        [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
-                                color:[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0] //green
-                                 mode:MCSwipeTableViewCellModeExit
-                                state:MCSwipeTableViewCellState1
-                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-         {
-             [self deleteCell:cell];
-             NSLog(@"%@",@(indexPath.row));
-         }];
-    }
-    if (YES)//([layoutViews[@"cell2"] boolValue])
-    {
-        [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
-                                color:[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0] //red
-                                 mode:MCSwipeTableViewCellModeExit
-                                state:MCSwipeTableViewCellState2
-                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-         {
-             [self deleteCell:cell];
-         }];
-    }
-    if (YES)//([layoutViews[@"cell3"] boolValue])
-    {
-        [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
-                                color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
-                                 mode:MCSwipeTableViewCellModeExit
-                                state:MCSwipeTableViewCellState3
-                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-         {
-             [self deleteCell:cell];
-         }];
-    }
-    if (YES)//([layoutViews[@"cell4"] boolValue])
-    {
-        [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
-                                color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
-                                 mode:MCSwipeTableViewCellModeExit
-                                state:MCSwipeTableViewCellState4
-                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-         {
-             [self deleteCell:cell];
-         }];
-    }
+//    if ([layoutViews[@"Cell1Exist"] boolValue])
+//    {
+//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell1Image"]]
+//                                color:layoutViews[@"Cell1Color"]
+//                                 mode:[layoutViews[@"Cell1Mode"] intValue]
+//                                state:MCSwipeTableViewCellState1
+//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+//         {
+//             [self deleteCell:cell];
+//             NSLog(@"%@",@(indexPath.row));
+//         }];
+//    }
+//    if ([layoutViews[@"Cell2Exist"] boolValue])
+//    {
+//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell2Image"]]
+//                                color:layoutViews[@"Cell2Color"]
+//                                 mode:[layoutViews[@"Cell2Mode"] intValue]
+//                                state:MCSwipeTableViewCellState2
+//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+//         {
+//             [self deleteCell:cell];
+//         }];
+//    }
+//    if ([layoutViews[@"Cell3Exist"] boolValue])
+//    {
+//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell3Image"]]
+//                                color:layoutViews[@"Cell3Color"]
+//                                 mode:[layoutViews[@"Cell3Mode"] intValue]
+//                                state:MCSwipeTableViewCellState3
+//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+//         {
+//             [self deleteCell:cell];
+//         }];
+//    }
+//    if ([layoutViews[@"Cell4Exist"] boolValue])
+//    {
+//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell4Image"]]
+//                                color:layoutViews[@"Cell4Color"]
+//                                 mode:[layoutViews[@"Cell4Mode"] intValue]
+//                                state:MCSwipeTableViewCellState4
+//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+//         {
+//             [self deleteCell:cell];
+//         }];
+//    }
 
     return cell;
 }

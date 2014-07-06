@@ -21,7 +21,12 @@
 
     return @{@"simple":@YES,
              @"text":site[@"title"],
-             @"subtext":host};
+             @"subtext":host,
+             @"Cell1Exist":@YES,
+             @"Cell1Image":@"cross",
+             @"Cell1Color":[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0],
+             @"Cell1Mode":@1,
+             };
 }
 
 + (NSString *)selected:(NSDictionary *)site;

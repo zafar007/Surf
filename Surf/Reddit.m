@@ -108,7 +108,16 @@
     [contentView addSubview:borderView];
     [contentView addSubview:imageView];
 
-    return @{@"contentView":contentView};
+    return @{@"contentView":contentView,
+             @"Cell1Exist":@YES,
+             @"Cell1Image":@"pocket",
+             @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
+             @"Cell1Mode":@2,
+             @"Cell2Exist":@YES,
+             @"Cell2Image":@"share",
+             @"Cell2Color":[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0],
+             @"Cell2Mode":@2
+             };
 
 }
 

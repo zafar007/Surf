@@ -108,12 +108,39 @@
     [contentView addSubview:textView];
     [contentView addSubview:borderView];
 
-//    UIColor *pocketColor = [UIColor colorWithRed:0.996 green:0.118 blue:0.192 alpha:1]; /*#fe1e31*/
-
     return @{@"simple":@NO,
              @"text":site[@"title"],
              @"subtext":host,
-             @"contentView":contentView};
+             @"contentView":contentView,
+             @"Cell1Exist":@YES,
+             @"Cell1Image":@"check",
+             @"Cell1Color":[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0],
+             @"Cell1Mode":@1,
+             @"Cell2Exist":@YES,
+             @"Cell2Image":@"cross",
+             @"Cell2Color":[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0],
+             @"Cell2Mode":@1,
+             };
+}
+
++ (void)cell1Action
+{
+
+}
+
++ (void)cell2Action
+{
+
+}
+
++ (void)cell3Action
+{
+
+}
+
++ (void)cell4Action
+{
+
 }
 
 + (NSString *)selected:(NSDictionary *)site
