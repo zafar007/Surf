@@ -108,7 +108,10 @@
     [contentView addSubview:textView];
     [contentView addSubview:borderView];
 
-    return @{@"contentView":contentView};
+    return @{@"simple":@NO,
+             @"text":site[@"title"],
+             @"subtext":host,
+             @"contentView":contentView};
 }
 
 + (NSString *)selected:(NSDictionary *)site

@@ -171,6 +171,8 @@
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     self.collectionView.backgroundColor = [UIColor lightGrayColor];
+    [self.view addSubview:self.collectionView];
+    self.collectionView.hidden = YES;
 }
 
 - (void)createPicker
@@ -235,8 +237,8 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-//    [self.tableView removeFromSuperview];
-//    [self.collectionView removeFromSuperview];
+    self.tableView.hidden = YES;
+    self.collectionView.hidden = YES;
 
     for (NSString *item in self.buttonItems)
     {
@@ -287,7 +289,7 @@
         cell.textLabel.text = layoutViews[@"text"];
 //        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.detailTextLabel.text = layoutViews[@"subtext"];
-//        cell.detailTextLabel.textColor = [UIColor lightTextColor];
+        cell.detailTextLabel.textColor = [UIColor grayColor];
 
         if (self.selectedClass == [Twitter class] ||
             self.selectedClass == [Reddit class])
@@ -423,12 +425,12 @@
     if (num == PickTableView)
     {
         [self.tableView reloadData];
-//        [self.view addSubview:self.tableView];
+        self.tableView.hidden = NO;
     }
     else
     {
         [self.collectionView reloadData];
-//        [self.view addSubview:self.collectionView];
+        self.collectionView.hidden = NO;
     }
     [self.activity stopAnimating];
 }
