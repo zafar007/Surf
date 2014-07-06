@@ -108,6 +108,8 @@
     [contentView addSubview:textView];
     [contentView addSubview:borderView];
 
+//    UIColor *pocketColor = [UIColor colorWithRed:0.996 green:0.118 blue:0.192 alpha:1]; /*#fe1e31*/
+
     return @{@"simple":@NO,
              @"text":site[@"title"],
              @"subtext":host,
