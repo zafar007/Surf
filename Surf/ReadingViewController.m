@@ -153,6 +153,7 @@
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor lightGrayColor];
     self.tableView.separatorInset = UIEdgeInsetsZero;
+    [self.view addSubview:self.tableView];
 }
 
 - (void)createCollectionView
@@ -234,8 +235,8 @@
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self.tableView removeFromSuperview];
-    [self.collectionView removeFromSuperview];
+//    [self.tableView removeFromSuperview];
+//    [self.collectionView removeFromSuperview];
 
     for (NSString *item in self.buttonItems)
     {
@@ -303,61 +304,51 @@
 
 
 
-    /*
-    if (layoutViews[@"1"])
+    if (YES)//([layoutViews[@"cell1"] boolValue])
     {
-
+        [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
+                                color:[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0] //green
+                                 mode:MCSwipeTableViewCellModeExit
+                                state:MCSwipeTableViewCellState1
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             [self deleteCell:cell];
+             NSLog(@"%@",@(indexPath.row));
+         }];
     }
-    if (layoutViews[@"2"])
+    if (YES)//([layoutViews[@"cell2"] boolValue])
     {
-
+        [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
+                                color:[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0] //red
+                                 mode:MCSwipeTableViewCellModeExit
+                                state:MCSwipeTableViewCellState2
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             [self deleteCell:cell];
+         }];
     }
-    if (layoutViews[@"3"])
+    if (YES)//([layoutViews[@"cell3"] boolValue])
     {
-
+        [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
+                                color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
+                                 mode:MCSwipeTableViewCellModeExit
+                                state:MCSwipeTableViewCellState3
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             [self deleteCell:cell];
+         }];
     }
-    if (layoutViews[@"4"])
+    if (YES)//([layoutViews[@"cell4"] boolValue])
     {
-
+        [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
+                                color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
+                                 mode:MCSwipeTableViewCellModeExit
+                                state:MCSwipeTableViewCellState4
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             [self deleteCell:cell];
+         }];
     }
-    */
-
-    [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
-                            color:[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0] //green
-                             mode:MCSwipeTableViewCellModeExit
-                            state:MCSwipeTableViewCellState1
-                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-    {
-        [self deleteCell:cell];
-        NSLog(@"%@",@(indexPath.row));
-    }];
-
-    [cell setSwipeGestureWithView:[self viewWithImageName:@"cross"]
-                            color:[UIColor colorWithRed:232.0 / 255.0 green:61.0 / 255.0 blue:14.0 / 255.0 alpha:1.0] //red
-                             mode:MCSwipeTableViewCellModeExit
-                            state:MCSwipeTableViewCellState2
-                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-    {
-        [self deleteCell:cell];
-    }];
-
-    [cell setSwipeGestureWithView:[self viewWithImageName:@"clock"]
-                            color:[UIColor colorWithRed:254.0 / 255.0 green:217.0 / 255.0 blue:56.0 / 255.0 alpha:1.0] //yellow
-                             mode:MCSwipeTableViewCellModeExit
-                            state:MCSwipeTableViewCellState3
-                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-    {
-        [self deleteCell:cell];
-    }];
-
-    [cell setSwipeGestureWithView:[self viewWithImageName:@"list"]
-                            color:[UIColor colorWithRed:206.0 / 255.0 green:149.0 / 255.0 blue:98.0 / 255.0 alpha:1.0] //brown
-                             mode:MCSwipeTableViewCellModeExit
-                            state:MCSwipeTableViewCellState4
-                  completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-    {
-        [self deleteCell:cell];
-    }];
 
     return cell;
 }
@@ -432,12 +423,12 @@
     if (num == PickTableView)
     {
         [self.tableView reloadData];
-        [self.view addSubview:self.tableView];
+//        [self.view addSubview:self.tableView];
     }
     else
     {
         [self.collectionView reloadData];
-        [self.view addSubview:self.collectionView];
+//        [self.view addSubview:self.collectionView];
     }
     [self.activity stopAnimating];
 }
@@ -565,7 +556,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Facebook" object:nil];
     self.data = notification.object;
     self.selectedClass = [Facebook class];
-    [self loadServiceUsing:PickCollectionView];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadDribbble
@@ -583,7 +574,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Dribbble" object:nil];
     self.data = notification.object;
     self.selectedClass = [Dribbble class];
-    [self loadServiceUsing:PickCollectionView];
+    [self loadServiceUsing:PickTableView];
 }
 
 - (void)loadDesignernews

@@ -28,10 +28,10 @@ static HTAutocompleteManager *sharedManager;
     if (textField.autocompleteType == HTAutocompleteTypeWebSearch)
     {
         static dispatch_once_t colorOnceToken;
-        static NSArray *colorAutocompleteArray;
+        static NSArray *top500;
         dispatch_once(&colorOnceToken, ^
         {
-            colorAutocompleteArray =
+            top500 =
 
             @[
               @"facebook.com",
@@ -549,7 +549,7 @@ static HTAutocompleteManager *sharedManager;
             stringToLookFor = prefixLastComponent;
         }
         
-        for (NSString *stringFromReference in colorAutocompleteArray)
+        for (NSString *stringFromReference in top500)
         {
             NSString *stringToCompare;
             if (ignoreCase)
@@ -573,3 +573,8 @@ static HTAutocompleteManager *sharedManager;
 }
 
 @end
+
+
+
+//self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
+

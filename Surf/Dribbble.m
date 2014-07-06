@@ -7,6 +7,7 @@
 //
 
 #define kAPI @"http://api.dribbble.com/shots/popular"
+#define shotsPerRow 1
 
 #import "Dribbble.h"
 #import "SDWebImage/UIImageView+WebCache.h"
@@ -78,13 +79,12 @@
 
 + (CGFloat)width:(NSDictionary *)post
 {
-    return (320/2);
+    return (320/shotsPerRow);
 }
 
 + (CGFloat)height:(NSDictionary *)post
 {
-    return (320/2)*152/202;
+    return (320/shotsPerRow)*152/202;
 }
-
 
 @end

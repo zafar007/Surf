@@ -6,6 +6,8 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
+#define postsPerRow 1
+
 #import "Facebook.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
@@ -135,7 +137,6 @@
 //    textView.selectable = NO;
 //    textView.userInteractionEnabled = NO;
 
-
     return @{@"contentView":contentView};
 }
 
@@ -146,11 +147,11 @@
 
 + (CGFloat)width:(NSDictionary *)post
 {
-    return 320/4;
+    return 320/postsPerRow;
 }
 
 + (CGFloat)height:(NSDictionary *)post
 {
-    return 320/4;
+    return 320/postsPerRow;
 }
 @end

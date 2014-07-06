@@ -161,7 +161,11 @@
              @"text":textLabel,
              @"subtext":detailTextLabel,
              @"image":imgUrlString,
-             @"contentView":contentView};
+             @"contentView":contentView,
+             @"cell1":@NO,
+             @"cell2":@NO,
+             @"cell3":@YES,
+             @"cell4":@NO};
 }
 
 + (NSString *)modifyTweetText:(NSDictionary *)tweet
