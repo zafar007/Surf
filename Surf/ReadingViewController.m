@@ -304,8 +304,6 @@
         [cell.contentView addSubview:layoutViews[@"contentView"]];
     }
 
-
-
     if (YES)//([layoutViews[@"cell1"] boolValue])
     {
         [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
