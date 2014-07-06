@@ -19,7 +19,8 @@
         host = [host substringFromIndex:4];
     }
 
-    return @{@"text":site[@"title"],
+    return @{@"simple":@YES,
+             @"text":site[@"title"],
              @"subtext":host};
 }
 

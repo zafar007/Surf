@@ -127,8 +127,9 @@
     textLabel = [self modifyTweetText:tweet];
     imgUrlString = tweet[@"user"][@"profile_image_url"];
 
-    //data now convert to view
+//    data now convert to view
 
+//collection view
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:tweet], [self height:tweet])];
     contentView.backgroundColor = [UIColor whiteColor];
 
@@ -156,7 +157,11 @@
     [contentView addSubview:imageView];
     [contentView addSubview:borderView];
 
-    return @{@"contentView":contentView};
+    return @{@"simple":@NO,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
+             @"image":imgUrlString,
+             @"contentView":contentView};
 }
 
 + (NSString *)modifyTweetText:(NSDictionary *)tweet

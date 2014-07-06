@@ -13,6 +13,7 @@
 #import "ReadingViewController.h"
 #import "SettingsViewController.h"
 #import "MCSwipeTableViewCell.h"
+#import "SDWebImage/UIImageView+WebCache.h"
 #import "Twitter.h"
 #import "Global.h"
 #import "Feedly.h"
@@ -74,7 +75,7 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
 //    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationController.navigationBar.translucent = NO;
+//    self.navigationController.navigationBar.translucent = NO;
 
     [self loadButtonItems];
     [self loadServiceObservers];
@@ -270,6 +271,57 @@
         cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
     }
 
+    for (UIView *view in cell.contentView.subviews)
+    {
+        [view removeFromSuperview];
+    }
+    cell.textLabel.text = nil;
+    cell.detailTextLabel.text = nil;
+    cell.imageView.image = nil;
+
+    NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
+
+    if ([layoutViews[@"simple"] boolValue])
+    {
+        cell.textLabel.text = layoutViews[@"text"];
+//        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        cell.detailTextLabel.text = layoutViews[@"subtext"];
+//        cell.detailTextLabel.textColor = [UIColor lightTextColor];
+
+        if (self.selectedClass == [Twitter class] ||
+            self.selectedClass == [Reddit class])
+        {
+            [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+            cell.imageView.layer.masksToBounds = YES;
+            cell.imageView.layer.cornerRadius = 48/2;
+        }
+    }
+    else
+    {
+        [cell.contentView addSubview:layoutViews[@"contentView"]];
+    }
+
+
+
+    /*
+    if (layoutViews[@"1"])
+    {
+
+    }
+    if (layoutViews[@"2"])
+    {
+
+    }
+    if (layoutViews[@"3"])
+    {
+
+    }
+    if (layoutViews[@"4"])
+    {
+
+    }
+    */
+
     [cell setSwipeGestureWithView:[self viewWithImageName:@"check"]
                             color:[UIColor colorWithRed:85.0 / 255.0 green:213.0 / 255.0 blue:80.0 / 255.0 alpha:1.0] //green
                              mode:MCSwipeTableViewCellModeExit
@@ -307,16 +359,6 @@
         [self deleteCell:cell];
     }];
 
-    //set back of cell gray
-
-    for (UIView *view in cell.contentView.subviews)
-    {
-        [view removeFromSuperview];
-    }
-    NSDictionary *layoutViews = [self.selectedClass layoutFrom:self.data[indexPath.row]];
-    cell.textLabel.text = layoutViews[@"text"];
-    cell.detailTextLabel.text = layoutViews[@"subtext"];
-    cell.imageView.image = layoutViews[@"image"];
     return cell;
 }
 
