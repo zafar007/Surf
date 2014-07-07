@@ -14,4 +14,6 @@
 + (NSString *)selected:(NSDictionary *)site;
 + (CGFloat)width:(NSDictionary *)site;
 + (CGFloat)height:(NSDictionary *)site;
++ (void)deletePocket:(NSString *)item_id;
++ (void)archivePocket:(NSString *)item_id;
 @end

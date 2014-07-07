@@ -158,10 +158,10 @@
     return 68;
 }
 
-- (void)deletePocket
++ (void)deletePocket:(NSString *)item_id
 {
     NSError *error;
-    NSArray *actions = @[@{ @"action": @"delete", @"item_id": @"456853615" }];
+    NSArray *actions = @[@{ @"action": @"delete", @"item_id":item_id}]; //@"456853615"
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject: actions
                                                        options: kNilOptions
                                                          error: &error];
@@ -178,5 +178,27 @@
         NSLog(@"error %@", [error localizedDescription]);
     }];
 }
+
++ (void)archivePocket:(NSString *)item_id
+{
+    NSError *error;
+    NSArray *actions = @[@{ @"action": @"archive", @"item_id":item_id}]; //@"456853615"
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject: actions
+                                                       options: kNilOptions
+                                                         error: &error];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding: NSUTF8StringEncoding];
+
+    NSDictionary* argumentDictionary = @{@"actions":jsonString};
+
+    [[PocketAPI sharedAPI] callAPIMethod:@"send"
+                          withHTTPMethod:PocketAPIHTTPMethodPOST
+                               arguments:argumentDictionary
+                                 handler:^(PocketAPI *api, NSString *apiMethod, NSDictionary *response, NSError *error)
+     {
+         NSLog(@"response %@", [response description]);
+         NSLog(@"error %@", [error localizedDescription]);
+     }];
+}
+
 
 @end

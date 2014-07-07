@@ -14,7 +14,7 @@
 #import "SDWebImage/UIImageView+WebCache.h"
 
 @interface Twitter ()
-@property NSArray *dataSource;
+@property id dataSource;
 @property NSMutableArray *tweets;
 @end
 
@@ -52,11 +52,24 @@
                                                                               error:&error];
                           if (!error)
                           {
-                              [self filterTweetsForLinkedPosts];
+                              if ([self.dataSource isKindOfClass:[NSDictionary class]])
+                              {
+                                  NSLog(@"%@",self.dataSource);
+//                                  UIAlertView *alert = [[UIAlertView alloc] init];
+//                                  alert.title = @"Pulling from Twitter too often";
+//                                  alert.message = @"Please retry after 2 minutes";
+//                                  [alert addButtonWithTitle:@"Dismiss"];
+//                                  [alert show];
+                              }
+                              else
+                              {
+                                  [self filterTweetsForLinkedPosts];
 
-                              dispatch_async(dispatch_get_main_queue(), ^{
-                                  [[NSNotificationCenter defaultCenter] postNotificationName:@"Twitter" object:self.tweets];
-                              });
+                                  dispatch_async(dispatch_get_main_queue(), ^{
+                                      [[NSNotificationCenter defaultCenter] postNotificationName:@"Twitter" object:self.tweets];
+                                  });
+
+                              }
                           }
                           else
                           {
