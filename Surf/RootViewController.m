@@ -74,6 +74,7 @@
 @property ReadingViewController *readingViewController;
 @property UINavigationController *readingNavController;
 @property UIPageControl *pageControl;
+@property NSTimer *buttonCheckTimer;
 @end
 
 @implementation RootViewController
@@ -97,6 +98,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromReadVC:) name:@"BackFromReadVC" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(currentURL) name:@"CurrentURL" object:nil];
+
+    self.buttonCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1/10 target:self selector:@selector(buttonCheck) userInfo:nil repeats:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -265,6 +268,7 @@
                                                                        self.view.frame.origin.y,
                                                                        320,
                                                                        2)];
+    self.progressBar.progressViewStyle = UIProgressViewStyleBar;
     self.progressBar.progress = 0;
     self.progressBar.progressTintColor = [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
     self.progressBar.tintColor = [UIColor grayColor];
@@ -551,7 +555,7 @@
     newTab.scalesPageToFit = YES;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
-    self.refreshButton.enabled = NO;
+//    self.refreshButton.enabled = NO;
     [self.tabsCollectionView reloadData];
 
     [self switchToTab:(int)self.tabs.count-1];
@@ -584,7 +588,6 @@
                                                       userInfo:nil
                                                        repeats:NO];
     [self pingPageControlIndexPath:nil];
-    [self checkBackForwardButtons];
 
     if (newTab.request.URL)
     {
@@ -800,7 +803,6 @@
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
     [self pingBorderControl];
-    [self checkBackForwardButtons];
     [self.view insertSubview:self.tabs[self.currentTabIndex] belowSubview:self.toolsView];
     [self.omnibar becomeFirstResponder];
 }
@@ -827,8 +829,7 @@
                                                     selector:@selector(timerCallback)
                                                     userInfo:nil
                                                      repeats:YES];
-    [self enableShare:YES Refresh:NO Stop:YES  Save:YES];
-    [self checkBackForwardButtons];
+//    [self enableShare:YES Refresh:NO Stop:YES  Save:YES];
 }
 
 - (void)timerCallback
@@ -870,7 +871,7 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
-    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
+//    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
 }
 
 #pragma mark - Landscape Layout Adjust
@@ -1013,14 +1014,6 @@
     self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.shareButton];
 
-//    self.saveButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [self.saveButton addTarget:self action:@selector(saveToCloud) forControlEvents:UIControlEventTouchUpInside];
-//    [self.saveButton setImage:[UIImage imageNamed:@"save"] forState:UIControlStateNormal];
-//    self.saveButton.frame = CGRectMake(20, 20, 32, 32);
-////    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-30);
-//    self.saveButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
-//    [self.toolsView addSubview:self.saveButton];
-
     self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
     [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
@@ -1055,22 +1048,53 @@
     self.mailButton.frame = CGRectMake(20, 20, 32, 32);
     self.mailButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+150);
     [self.toolsView addSubview:self.mailButton];
-
-    [self enableShare:NO Refresh:NO Stop:NO Save:NO];
-    self.refreshButton.hidden = NO;
-    self.starButton.enabled = YES;
 }
 
-- (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
+- (void)buttonCheck
 {
-    self.shareButton.enabled = B1;
-    self.saveButton.enabled = B4;
+    if (![self.tabs[self.currentTabIndex] request])
+    {
+        self.refreshButton.enabled = NO;
 
-    self.refreshButton.enabled = B2;
-    self.refreshButton.hidden = !B2;
-    self.stopButton.enabled = B3;
-    self.stopButton.hidden = !B3;
+        self.shareButton.enabled = NO;
+        self.starButton.enabled = NO;
+        self.pocketButton.enabled = NO;
+        self.twitterButton.enabled = NO;
+        self.facebookButton.enabled = NO;
+        self.mailButton.enabled = NO;
+    }
+    else
+    {
+        self.refreshButton.enabled = YES;
+
+        self.shareButton.enabled = YES;
+        self.starButton.enabled = YES;
+        self.pocketButton.enabled = YES;
+        self.twitterButton.enabled = YES;
+        self.facebookButton.enabled = YES;
+        self.mailButton.enabled = YES;
+    }
+    [self checkBackForwardButtons];
+
+    if ([self.tabs[self.currentTabIndex] isLoading])
+    {
+        self.refreshButton.hidden = YES;
+        self.stopButton.hidden = NO;
+    }
+    else
+    {
+        self.refreshButton.hidden = NO;
+        self.stopButton.hidden = YES;
+    }
 }
+
+//- (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
+//{
+//    self.refreshButton.enabled = B2;
+//    self.refreshButton.hidden = !B2;
+//    self.stopButton.enabled = B3;
+//    self.stopButton.hidden = !B3;
+//}
 
 - (void)checkBackForwardButtons
 {

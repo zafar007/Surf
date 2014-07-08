@@ -324,13 +324,28 @@
                  [self deleteCell:cell];
              }
 
-//             NSLog(@"%@",@(indexPath.row));
+             NSLog(@"%@",@(indexPath.row));
+             NSLog(@"%@",self.data[indexPath.row]);
 
              if (self.selectedClass == [Pocket class])
              {
                  NSLog(@"%@",self.data);
                  NSLog(@"%@",self.data[indexPath.row][@"item_id"]);
                  [Pocket archivePocket:self.data[indexPath.row][@"item_id"]];
+             }
+
+             if (self.selectedClass == [History class])
+             {
+                 NSMutableArray *temp = [self.data mutableCopy];
+                 [temp removeObject:self.data[indexPath.row]];
+                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"history"];
+             }
+
+             if (self.selectedClass == [Bookmarks class])
+             {
+                 NSMutableArray *temp = [self.data mutableCopy];
+                 [temp removeObject:self.data[indexPath.row]];
+                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"bookmarks"];
              }
          }];
     }

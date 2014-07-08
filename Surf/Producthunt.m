@@ -82,7 +82,7 @@
 
     return @{@"contentView":contentView,
              @"Cell1Exist":@YES,
-             @"Cell1Image":@"pocket",
+             @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
              @"Cell1Mode":@2
              };

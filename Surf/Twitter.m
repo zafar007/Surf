@@ -176,11 +176,11 @@
              @"image":imgUrlString,
              @"contentView":contentView,
              @"Cell1Exist":@YES,
-             @"Cell1Image":@"pocket",
+             @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
              @"Cell1Mode":@2,
              @"Cell2Exist":@YES,
-             @"Cell2Image":@"twitter",
+             @"Cell2Image":@"twitter-cell",
              @"Cell2Color":[UIColor colorWithRed:0 green:0.69 blue:0.929 alpha:1],
              @"Cell2Mode":@2,
              };
