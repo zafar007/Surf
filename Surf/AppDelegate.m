@@ -24,7 +24,7 @@
                          @"global",
                          @"gmail",
                          @"hackernews",
-                         @"producthunt",
+//                         @"producthunt",
                          @"dribbble",
                          @"designernews",
                          @"facebook",

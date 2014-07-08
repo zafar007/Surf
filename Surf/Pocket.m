@@ -108,7 +108,7 @@
     [contentView addSubview:textView];
     [contentView addSubview:borderView];
 
-    return @{@"simple":@NO,
+    return @{@"simple":@YES,
              @"text":site[@"title"],
              @"subtext":host,
              @"contentView":contentView,

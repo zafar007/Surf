@@ -32,6 +32,7 @@
 @import Twitter;
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
+#import "PocketAPI.h"
 
 @interface ReadingViewController () <
                                     UITableViewDataSource,
@@ -297,16 +298,31 @@
     if ([layoutViews[@"simple"] boolValue])
     {
         cell.textLabel.text = layoutViews[@"text"];
-//        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
+        cell.textLabel.numberOfLines = 0;
+        cell.textLabel.font = [UIFont systemFontOfSize:13];
         cell.detailTextLabel.text = layoutViews[@"subtext"];
         cell.detailTextLabel.textColor = [UIColor grayColor];
+        cell.detailTextLabel.numberOfLines = 0;
 
-        if (self.selectedClass == [Twitter class] ||
-            self.selectedClass == [Reddit class])
+        if (self.selectedClass == [Twitter class])
         {
             [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
             cell.imageView.layer.masksToBounds = YES;
             cell.imageView.layer.cornerRadius = 48/2;
+        }
+        else if (self.selectedClass == [Reddit class] || self.selectedClass == [Facebook class])
+        {
+            [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+//            cell.imageView.layer.masksToBounds = YES;
+
+            CGFloat size = 70;
+            CGSize itemSize = CGSizeMake(size, size);
+            UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
+            CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
+            [cell.imageView.image drawInRect:imageRect];
+            cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
         }
     }
     else
@@ -345,6 +361,16 @@
                  NSMutableArray *temp = [self.data mutableCopy];
                  [temp removeObject:self.data[indexPath.row]];
                  [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"bookmarks"];
+             }
+             else if (self.selectedClass == [Twitter class] ||
+                      self.selectedClass == [Facebook class] ||
+                      self.selectedClass == [Hackernews class] ||
+                      self.selectedClass == [Producthunt class] ||
+                      self.selectedClass == [Dribbble class] ||
+                      self.selectedClass == [Reddit class])
+             {
+                 NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
+                 [self pocket:urlString];
              }
          }];
     }
@@ -738,6 +764,45 @@
     self.data = [[NSUserDefaults standardUserDefaults] objectForKey:@"history"];
     self.selectedClass = [History class];
     [self loadServiceUsing:PickTableView];
+}
+
+#pragma mark - Add to Pocket
+
+- (void)pocket:(NSString *)urlString
+{
+    NSLog(@"%@",urlString);
+
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"])
+    {
+        [[PocketAPI sharedAPI] loginWithHandler:^(PocketAPI *api, NSError *error)
+         {
+             if (!error)
+             {
+                 [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
+                 [self pocket2:[NSURL URLWithString:urlString]];
+             }
+         }];
+    }
+    else
+    {
+        [self pocket2:[NSURL URLWithString:urlString]];
+    }
+}
+
+- (void)pocket2:(NSURL *)url
+{
+    [[PocketAPI sharedAPI] saveURL:url
+                           handler:^(PocketAPI *API, NSURL *URL, NSError *error)
+     {
+         if(!error)
+         {
+             NSLog(@"saved to pocket");
+         }
+         else
+         {
+             NSLog(@"failed");
+         }
+     }];
 }
 
 #pragma mark - Buttons

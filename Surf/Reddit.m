@@ -76,15 +76,15 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-    contentView.backgroundColor = [UIColor whiteColor];
-
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(65, 0, 320-60, contentView.frame.size.height)];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,50,50)];
-    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+10,
-                                                                  contentView.frame.size.height-.5,
-                                                                  contentView.frame.size.width-10,
-                                                                  .5)];
+//    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+//    contentView.backgroundColor = [UIColor whiteColor];
+//
+//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(65, 0, 320-60, contentView.frame.size.height)];
+//    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,50,50)];
+//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+10,
+//                                                                  contentView.frame.size.height-.5,
+//                                                                  contentView.frame.size.width-10,
+//                                                                  .5)];
 
     NSURL *url = [NSURL URLWithString:post[@"url"]];
     NSString *host = url.host;
@@ -92,23 +92,32 @@
     {
         host = [host substringFromIndex:[@"www." length]];
     }
-    textView.text = [NSString stringWithFormat:@"%@\n%@\n%@\n%@",post[@"title"], post[@"author"], host, post[@"score"]];
-    textView.font = [UIFont systemFontOfSize:13];
-    textView.editable = NO;
-    textView.selectable = NO;
-    textView.userInteractionEnabled = NO;
+//    textView.text = [NSString stringWithFormat:@"%@\n%@\n%@\n%@",post[@"title"], post[@"author"], host, post[@"score"]];
+//    textView.font = [UIFont systemFontOfSize:13];
+//    textView.editable = NO;
+//    textView.selectable = NO;
+//    textView.userInteractionEnabled = NO;
+//
+//    borderView.backgroundColor = [UIColor lightGrayColor];
+//
+//    [imageView setImageWithURL:[NSURL URLWithString:post[@"thumbnail"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+//    imageView.center = CGPointMake(35, CGRectGetMidY(contentView.frame));
+//    imageView.layer.masksToBounds = YES;
+//
+//    [contentView addSubview:textView];
+//    [contentView addSubview:borderView];
+//    [contentView addSubview:imageView];
 
-    borderView.backgroundColor = [UIColor lightGrayColor];
+    NSString *textLabel = post[@"title"];
+    NSString *detailTextLabel = [NSString stringWithFormat:@"%@\n%@\n%@", post[@"author"], host, post[@"score"]];
+    NSString *image = post[@"thumbnail"];
 
-    [imageView setImageWithURL:[NSURL URLWithString:post[@"thumbnail"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-    imageView.center = CGPointMake(35, CGRectGetMidY(contentView.frame));
-    imageView.layer.masksToBounds = YES;
-
-    [contentView addSubview:textView];
-    [contentView addSubview:borderView];
-    [contentView addSubview:imageView];
-
-    return @{@"contentView":contentView,
+    return @{
+             @"simple":@YES,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
+             @"image":image,
+//             @"contentView":contentView,
              @"Cell1Exist":@YES,
              @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],

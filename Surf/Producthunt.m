@@ -60,27 +60,34 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-    contentView.backgroundColor = [UIColor whiteColor];
+//    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+//    contentView.backgroundColor = [UIColor whiteColor];
+//
+//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
+//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+//                                                                  contentView.frame.size.height-.5,
+//                                                                  contentView.frame.size.width-20,
+//                                                                  .5)];
+//
+//    textView.text = [NSString stringWithFormat:@"%@\n%@",post[@"title"],post[@"subtitle"]];
+//    textView.font = [UIFont systemFontOfSize:13];
+//    textView.editable = NO;
+//    textView.selectable = NO;
+//    textView.userInteractionEnabled = NO;
+//
+//    borderView.backgroundColor = [UIColor lightGrayColor];
+//
+//    [contentView addSubview:textView];
+//    [contentView addSubview:borderView];
 
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
-    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
-                                                                  contentView.frame.size.height-.5,
-                                                                  contentView.frame.size.width-20,
-                                                                  .5)];
+    NSString *textLabel = post[@"title"];
+    NSString *detailTextLabel = post[@"subtitle"];
 
-    textView.text = [NSString stringWithFormat:@"%@\n%@",post[@"title"],post[@"subtitle"]];
-    textView.font = [UIFont systemFontOfSize:13];
-    textView.editable = NO;
-    textView.selectable = NO;
-    textView.userInteractionEnabled = NO;
-
-    borderView.backgroundColor = [UIColor lightGrayColor];
-
-    [contentView addSubview:textView];
-    [contentView addSubview:borderView];
-
-    return @{@"contentView":contentView,
+    return @{
+//             @"contentView":contentView,
+             @"simple":@YES,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
              @"Cell1Exist":@YES,
              @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],

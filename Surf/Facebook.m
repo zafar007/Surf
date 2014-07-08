@@ -6,8 +6,6 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
-#define postsPerRow 1
-
 #import "Facebook.h"
 #import <Social/Social.h>
 #import <Accounts/Accounts.h>
@@ -99,45 +97,17 @@
     UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
     contentView.backgroundColor = [UIColor whiteColor];
 
-    NSString *textLabel;
-    NSString *detailTextLabel;
-    NSString *imgUrlString;
+    NSString *textLabel = post[@"name"];
+    NSString *detailTextLabel = post[@"from"][@"name"];
+//    NSString *detailTextLabel = [NSString stringWithFormat:@"%@\n%@", post[@"description"], post[@"from"][@"name"]];
+    NSString *image = post[@"picture"];
 
-    if (post[@"story"])
-    {
-        textLabel = post[@"story"];
-    }
-    else if (post[@"message"])
-    {
-        textLabel = post[@"message"];
-    }
-
-    if (post[@"from"][@"name"])
-    {
-        detailTextLabel = post[@"from"][@"name"];
-    }
-
-    if (post[@"picture"])
-    {
-        imgUrlString = post[@"picture"];
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,contentView.frame.size.width,contentView.frame.size.height)];
-        [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-        [contentView addSubview:imageView];
-    }
-
-//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10+48+10, 0, 320-68-5, contentView.frame.size.height)];
-//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
-//                                                                  contentView.frame.size.height-.5,
-//                                                                  contentView.frame.size.width-20,
-//                                                                  .5)];
-
-//    textView.text = [NSString stringWithFormat:@"%@\n\n%@",textLabel,detailTextLabel];
-//    textView.font = [UIFont systemFontOfSize:13];
-//    textView.editable = NO;
-//    textView.selectable = NO;
-//    textView.userInteractionEnabled = NO;
-
-    return @{@"contentView":contentView,
+    return @{
+             @"simple":@YES,
+//             @"contentView":contentView,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
+             @"image":image,
              @"Cell1Exist":@YES,
              @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
@@ -147,16 +117,16 @@
 
 + (NSString *)selected:(NSDictionary *)post
 {
-    return post[@"action"][0][@"link"];
+    return post[@"actions"][0][@"link"];
 }
 
 + (CGFloat)width:(NSDictionary *)post
 {
-    return 320/postsPerRow;
+    return 320;
 }
 
 + (CGFloat)height:(NSDictionary *)post
 {
-    return 320/postsPerRow;
+    return 100;
 }
 @end

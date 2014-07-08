@@ -65,34 +65,41 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-    contentView.backgroundColor = [UIColor whiteColor];
-
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 300, contentView.frame.size.height)];
-    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
-                                                                  contentView.frame.size.height-.5,
-                                                                  contentView.frame.size.width-20,
-                                                                  .5)];
-
+//    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
+//    contentView.backgroundColor = [UIColor whiteColor];
+//
+//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 300, contentView.frame.size.height)];
+//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+//                                                                  contentView.frame.size.height-.5,
+//                                                                  contentView.frame.size.width-20,
+//                                                                  .5)];
+//
     NSURL *url = [NSURL URLWithString:post[@"url"]];
     NSString *host = url.host;
     if ([host hasPrefix:@"www."])
     {
         host = [host substringFromIndex:[@"www." length]];
     }
+//
+//    textView.text = [NSString stringWithFormat:@"%@\n%@\n\n%@ points by %@\n%@ | %@ comments",post[@"title"], host, post[@"points"], post[@"postedBy"], post[@"postedAgo"], post[@"commentsCount"]];
+//    textView.font = [UIFont systemFontOfSize:13];
+//    textView.editable = NO;
+//    textView.selectable = NO;
+//    textView.userInteractionEnabled = NO;
+//
+//    borderView.backgroundColor = [UIColor lightGrayColor];
+//
+//    [contentView addSubview:textView];
+//    [contentView addSubview:borderView];
 
-    textView.text = [NSString stringWithFormat:@"%@\n%@\n\n%@ points by %@\n%@ | %@ comments",post[@"title"], host, post[@"points"], post[@"postedBy"], post[@"postedAgo"], post[@"commentsCount"]];
-    textView.font = [UIFont systemFontOfSize:13];
-    textView.editable = NO;
-    textView.selectable = NO;
-    textView.userInteractionEnabled = NO;
+    NSString *textLabel = post[@"title"];
+    NSString *detailTextLabel = [NSString stringWithFormat:@"%@\n\n%@ points by %@ | %@ comments", host, post[@"points"], post[@"postedBy"], post[@"commentsCount"]];
 
-    borderView.backgroundColor = [UIColor lightGrayColor];
 
-    [contentView addSubview:textView];
-    [contentView addSubview:borderView];
-
-    return @{@"contentView":contentView,
+    return @{@"simple":@YES,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
+//             @"contentView":contentView,
              @"Cell1Exist":@YES,
              @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
