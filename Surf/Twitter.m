@@ -179,7 +179,7 @@
              @"Cell1Image":@"pocket-cell",
              @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
              @"Cell1Mode":@2,
-             @"Cell2Exist":@YES,
+             @"Cell2Exist":@NO,
              @"Cell2Image":@"twitter-cell",
              @"Cell2Color":[UIColor colorWithRed:0 green:0.69 blue:0.929 alpha:1],
              @"Cell2Mode":@2,
@@ -226,6 +226,74 @@
 + (CGFloat)height:(NSDictionary *)tweet
 {
     return 120;
+}
+
++ (void)retweet:(NSDictionary *)tweet
+{
+
+    if ([SLComposeViewController isAvailableForServiceType:SLServiceTypeTwitter])
+    {
+        NSString *text;
+        NSURL *url;
+        if (tweet[@"retweeted_status"])
+        {
+            text = [NSString stringWithFormat:@"%@",tweet[@"text"]];
+            url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
+        }
+        else
+        {
+            text = [NSString stringWithFormat:@"RT @%@ %@",tweet[@"user"][@"screen_name"],tweet[@"text"]];
+            url = [NSURL URLWithString:tweet[@"entities"][@"urls"][0][@"expanded_url"]];
+        }
+        NSLog(@"%@",url);
+        SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
+        [tweetSheet setInitialText:text];
+        [tweetSheet addURL:url];
+//        [self presentViewController:tweetSheet animated:YES completion:nil];
+    }
+    else
+    {
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Sorry"
+                                  message:@"You can't send a tweet right now, make sure your device has an internet connection and you have at least one Twitter account setup"
+                                  delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
++ (void)retweetAdvanced:(NSDictionary *)tweet
+{
+    NSString *id_str = tweet[@"retweeted_status"] ? tweet[@"retweeted_status"][@"id_str"] : tweet[@"id_str"];
+    NSString *api = [NSString stringWithFormat:@"https://api.twitter.com/1.1/statuses/retweet/%@.json",id_str];
+
+    ACAccountStore *account = [[ACAccountStore alloc] init];
+    ACAccountType *accountType = [account accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
+
+    [account requestAccessToAccountsWithType:accountType options:nil completion:^(BOOL granted, NSError *error)
+     {
+         if (granted == YES)
+         {
+             NSArray *arrayOfAccounts = [account accountsWithAccountType:accountType];
+
+             if ([arrayOfAccounts count] > 0)
+             {
+                 ACAccount *twitterAccount = arrayOfAccounts.lastObject;
+                 NSURL *requestURL = [NSURL URLWithString:api];
+                 NSDictionary *parameters = @{@"id" : id_str};
+                 SLRequest *postRequest = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                                             requestMethod:SLRequestMethodPOST
+                                                                       URL:requestURL
+                                                                parameters:parameters];
+                 postRequest.account = twitterAccount;
+                 [postRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error)
+                  {
+                      //tell that you retweeted
+                  }];
+             }
+         }
+     }];
 }
 
 @end

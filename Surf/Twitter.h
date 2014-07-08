@@ -14,4 +14,6 @@
 + (NSString *)selected:(NSDictionary *)tweet;
 + (CGFloat)width:(NSDictionary *)tweet;
 + (CGFloat)height:(NSDictionary *)tweet;
++ (void)retweet:(NSDictionary *)tweet;
++ (void)retweetAdvanced:(NSDictionary *)tweet;
 @end

@@ -29,6 +29,9 @@
 #import "Reddit.h"
 #import "Producthunt.h"
 #import "Gmail.h"
+@import Twitter;
+#import <Accounts/Accounts.h>
+#import <Social/Social.h>
 
 @interface ReadingViewController () <
                                     UITableViewDataSource,
@@ -319,29 +322,25 @@
                                 state:MCSwipeTableViewCellState1
                       completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
          {
+//             NSLog(@"%@",@(indexPath.row));
+//             NSLog(@"%@",self.data[indexPath.row]);
              if (mode == MCSwipeTableViewCellModeExit)
              {
                  [self deleteCell:cell];
              }
-
-             NSLog(@"%@",@(indexPath.row));
-             NSLog(@"%@",self.data[indexPath.row]);
-
              if (self.selectedClass == [Pocket class])
              {
                  NSLog(@"%@",self.data);
                  NSLog(@"%@",self.data[indexPath.row][@"item_id"]);
                  [Pocket archivePocket:self.data[indexPath.row][@"item_id"]];
              }
-
-             if (self.selectedClass == [History class])
+             else if (self.selectedClass == [History class])
              {
                  NSMutableArray *temp = [self.data mutableCopy];
                  [temp removeObject:self.data[indexPath.row]];
                  [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"history"];
              }
-
-             if (self.selectedClass == [Bookmarks class])
+             else if (self.selectedClass == [Bookmarks class])
              {
                  NSMutableArray *temp = [self.data mutableCopy];
                  [temp removeObject:self.data[indexPath.row]];
@@ -360,6 +359,14 @@
              if (mode == MCSwipeTableViewCellModeExit)
              {
                  [self deleteCell:cell];
+             }
+             if (self.selectedClass == [Pocket class])
+             {
+                 [Pocket deletePocket:self.data[indexPath.row][@"item_id"]];
+             }
+             else if (self.selectedClass == [Twitter class])
+             {
+                 [Twitter retweetAdvanced:self.data[indexPath.row]];
              }
          }];
     }
