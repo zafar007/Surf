@@ -134,21 +134,21 @@
     self.circleButton.center = CGPointMake(50, self.view.frame.size.height -50);
     [self.view addSubview:self.circleButton];
 
-    self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
-    self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.circleButton]];
-    self.collisionBehavior.collisionMode = UICollisionBehaviorModeEverything;
-    self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
-    [self.dynamicAnimator addBehavior:self.collisionBehavior];
-    self.circleButtonDynamicBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.circleButton]];
-    self.circleButtonDynamicBehavior.allowsRotation = NO;
-    self.circleButtonDynamicBehavior.elasticity = .1;
-    self.circleButtonDynamicBehavior.friction = 0.9;
-    self.circleButtonDynamicBehavior.resistance = 0.9;
-    [self.dynamicAnimator addBehavior:self.circleButtonDynamicBehavior];
-
-    self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-    [self.circleButton addGestureRecognizer:self.panCircle];
-    self.panCircle.delegate = self;
+//    self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
+//    self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.circleButton]];
+//    self.collisionBehavior.collisionMode = UICollisionBehaviorModeEverything;
+//    self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
+//    [self.dynamicAnimator addBehavior:self.collisionBehavior];
+//    self.circleButtonDynamicBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.circleButton]];
+//    self.circleButtonDynamicBehavior.allowsRotation = NO;
+//    self.circleButtonDynamicBehavior.elasticity = .1;
+//    self.circleButtonDynamicBehavior.friction = 0.9;
+//    self.circleButtonDynamicBehavior.resistance = 0.9;
+//    [self.dynamicAnimator addBehavior:self.circleButtonDynamicBehavior];
+//
+//    self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+//    [self.circleButton addGestureRecognizer:self.panCircle];
+//    self.panCircle.delegate = self;
 }
 
 - (void)toggleCircle
@@ -1052,6 +1052,8 @@
 
 - (void)buttonCheck
 {
+    [self.view bringSubviewToFront:self.circleButton];
+
     if (![self.tabs[self.currentTabIndex] request])
     {
         self.refreshButton.enabled = NO;

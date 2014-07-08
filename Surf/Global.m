@@ -167,36 +167,48 @@
     textLabel = [self modifyTweetText:tweet];
     imgUrlString = tweet[@"user"][@"profile_image_url"];
 
-    //data now convert to view
+    //    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:tweet], [self height:tweet])];
+    //    contentView.backgroundColor = [UIColor whiteColor];
+    //
+    //    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10+48+10, 0, 320-68-5, contentView.frame.size.height)];
+    //    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,48,48)];
+    //    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
+    //                                                                  contentView.frame.size.height-.5,
+    //                                                                  contentView.frame.size.width-20,
+    //                                                                  .5)];
+    //
+    //    textView.text = [NSString stringWithFormat:@"%@\n\n%@",textLabel,detailTextLabel];
+    //    textView.font = [UIFont systemFontOfSize:13];
+    //    textView.editable = NO;
+    //    textView.selectable = NO;
+    //    textView.userInteractionEnabled = NO;
+    //
+    //    [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
+    //    imageView.center = CGPointMake(10+24, CGRectGetMidY(contentView.frame));
+    //    imageView.layer.masksToBounds = YES;
+    //    imageView.layer.cornerRadius = 48/2;
+    //
+    //    borderView.backgroundColor = [UIColor lightGrayColor];
+    //
+    //    [contentView addSubview:textView];
+    //    [contentView addSubview:imageView];
+    //    [contentView addSubview:borderView];
 
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:tweet], [self height:tweet])];
-    contentView.backgroundColor = [UIColor whiteColor];
-
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(10+48+10, 0, 320-68-5, contentView.frame.size.height)];
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0,0,48,48)];
-    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
-                                                                  contentView.frame.size.height-.5,
-                                                                  contentView.frame.size.width-20,
-                                                                  .5)];
-
-    textView.text = [NSString stringWithFormat:@"%@\n\n%@",textLabel,detailTextLabel];
-    textView.font = [UIFont systemFontOfSize:13];
-    textView.editable = NO;
-    textView.selectable = NO;
-    textView.userInteractionEnabled = NO;
-
-    [imageView setImageWithURL:[NSURL URLWithString:imgUrlString] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-    imageView.center = CGPointMake(10+24, CGRectGetMidY(contentView.frame));
-    imageView.layer.masksToBounds = YES;
-    imageView.layer.cornerRadius = 48/2;
-
-    borderView.backgroundColor = [UIColor lightGrayColor];
-
-    [contentView addSubview:textView];
-    [contentView addSubview:imageView];
-    [contentView addSubview:borderView];
-
-    return @{@"contentView":contentView};
+    return @{
+             @"simple":@YES,
+             @"text":textLabel,
+             @"subtext":detailTextLabel,
+             @"image":imgUrlString,
+             //             @"contentView":contentView,
+             @"Cell1Exist":@YES,
+             @"Cell1Image":@"pocket-cell",
+             @"Cell1Color":[UIColor colorWithRed:0.941 green:0.243 blue:0.337 alpha:1],
+             @"Cell1Mode":@2,
+             @"Cell2Exist":@NO,
+             @"Cell2Image":@"twitter-cell",
+             @"Cell2Color":[UIColor colorWithRed:0 green:0.69 blue:0.929 alpha:1],
+             @"Cell2Mode":@2,
+             };
 }
 
 + (CGFloat)width:(NSDictionary *)tweet

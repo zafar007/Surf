@@ -51,6 +51,7 @@
 @property NSArray *buttonItems;
 @property NSArray *data;
 @property UISwipeGestureRecognizer *swipeLeft;
+@property UISwipeGestureRecognizer *swipeRight;
 
 @property Class selectedClass;
 @property Twitter *twitter;
@@ -79,7 +80,6 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
 //    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
 //    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-//    self.navigationController.navigationBar.translucent = NO;
 
     [self loadButtonItems];
     [self loadServiceObservers];
@@ -162,7 +162,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.backgroundColor = [UIColor lightGrayColor];
-    self.tableView.separatorInset = UIEdgeInsetsZero;
+//    self.tableView.separatorInset = UIEdgeInsetsZero;
     [self.view addSubview:self.tableView];
     self.tableView.hidden = YES;
 }
@@ -203,15 +203,36 @@
 
 - (void)createGestures
 {
-    self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeFromLeft:)];
+    self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     self.swipeLeft.delegate = self;
     self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
     [self.view addGestureRecognizer:self.swipeLeft];
+
+    self.swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    self.swipeRight.delegate = self;
+    self.swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.view addGestureRecognizer:self.swipeRight];
 }
 
-- (void)swipeFromLeft:(UISwipeGestureRecognizer *)sender
+- (void)swipeLeft:(UISwipeGestureRecognizer *)sender
 {
     [self unwind];
+//    int current = [self.pickerView selectedRowInComponent:0];
+//    if (current<self.buttonItems.count-1)
+//    {
+//        [self.pickerView selectRow:current+1 inComponent:0 animated:YES];
+//        [self selectedRow:current+1 inComponent:0];
+//    }
+}
+
+- (void)swipeRight:(UISwipeGestureRecognizer *)sender
+{
+    int current = [self.pickerView selectedRowInComponent:0];
+    if (current>0)
+    {
+        [self.pickerView selectRow:current-1 inComponent:0 animated:YES];
+        [self selectedRow:current-1 inComponent:0];
+    }
 }
 
 - (void)createActivityIndicator
@@ -247,6 +268,11 @@
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self selectedRow:row inComponent:component];
+}
+
+- (void)selectedRow:(NSInteger)row inComponent:(NSInteger)component
 {
     self.tableView.hidden = YES;
     self.collectionView.hidden = YES;
@@ -297,15 +323,17 @@
 
     if ([layoutViews[@"simple"] boolValue])
     {
+//        cell.contentView.backgroundColor = [UIColor blackColor];
         cell.textLabel.text = layoutViews[@"text"];
         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.font = [UIFont systemFontOfSize:13];
+//        cell.textLabel.textColor = [UIColor whiteColor];
         cell.detailTextLabel.text = layoutViews[@"subtext"];
         cell.detailTextLabel.textColor = [UIColor grayColor];
         cell.detailTextLabel.numberOfLines = 0;
 
-        if (self.selectedClass == [Twitter class])
+        if (self.selectedClass == [Twitter class] || self.selectedClass == [Global class])
         {
             [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
             cell.imageView.layer.masksToBounds = YES;
@@ -314,8 +342,6 @@
         else if (self.selectedClass == [Reddit class] || self.selectedClass == [Facebook class])
         {
             [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-//            cell.imageView.layer.masksToBounds = YES;
-
             CGFloat size = 70;
             CGSize itemSize = CGSizeMake(size, size);
             UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
@@ -338,8 +364,6 @@
                                 state:MCSwipeTableViewCellState1
                       completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
          {
-//             NSLog(@"%@",@(indexPath.row));
-//             NSLog(@"%@",self.data[indexPath.row]);
              if (mode == MCSwipeTableViewCellModeExit)
              {
                  [self deleteCell:cell];
@@ -367,7 +391,8 @@
                       self.selectedClass == [Hackernews class] ||
                       self.selectedClass == [Producthunt class] ||
                       self.selectedClass == [Dribbble class] ||
-                      self.selectedClass == [Reddit class])
+                      self.selectedClass == [Reddit class] ||
+                      self.selectedClass == [Designernews class])
              {
                  NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
                  [self pocket:urlString];

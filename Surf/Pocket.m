@@ -45,7 +45,7 @@
 
     [[PocketAPI sharedAPI] callAPIMethod:@"get"
                           withHTTPMethod:PocketAPIHTTPMethodPOST
-                               arguments:@{}
+                               arguments:@{@"sort":@"newest"}
                                  handler:^(PocketAPI *api, NSString *apiMethod, NSDictionary *response, NSError *error)
     {
         if (!error && response)
