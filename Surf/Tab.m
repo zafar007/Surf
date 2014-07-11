@@ -10,4 +10,21 @@
 
 @implementation Tab
 
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self)
+    {
+        [self.layer setCornerRadius:4.0];
+        [self.layer setBorderColor:[UIColor blackColor].CGColor];
+        [self.layer setBorderWidth:0.5];
+        self.layer.masksToBounds = YES;
+
+//        [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.google.com"]]];
+//        self.scalesPageToFit = YES;
+//        self.userInteractionEnabled = NO;
+    }
+    return self;
+}
+
 @end

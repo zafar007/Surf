@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
+#define tabsOffset 20
+#define showOffset 300
+
 #import "RootViewController.h"
 #import "Tab.h"
 #import "ReadingViewController.h"
@@ -24,13 +27,9 @@
                                     UIGestureRecognizerDelegate,
                                     UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
-                                    MLPAutoCompleteTextFieldDelegate>
+                                    MLPAutoCompleteTextFieldDelegate,
+                                    UIScrollViewDelegate>
 @property UIButton *circleButton;
-@property UIPanGestureRecognizer *panCircle;
-@property UIDynamicAnimator *dynamicAnimator;
-@property UIPushBehavior *pushBehavior;
-@property UICollisionBehavior *collisionBehavior;
-@property UIDynamicItemBehavior *circleButtonDynamicBehavior;
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property OmnibarDataSource *omnibarDataSource;
@@ -40,6 +39,7 @@
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
 @property CGRect omnnibarFrame;
+@property UIPanGestureRecognizer *pan;
 @property UISwipeGestureRecognizer *swipeUp;
 @property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
@@ -51,7 +51,6 @@
 @property BOOL showingTools;
 @property BOOL doneLoading;
 @property NSTimer *loadTimer;
-@property NSTimer *borderTimer;
 @property Tab *thisWebView;
 @property Tab *rightWebView;
 @property Tab *leftWebView;
@@ -131,64 +130,23 @@
     [self.circleButton addTarget:self action:@selector(toggleCircle) forControlEvents:UIControlEventTouchUpInside];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateNormal];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
-    self.circleButton.center = CGPointMake(50, self.view.frame.size.height -50);
+    self.circleButton.center = CGPointMake(20, 300);
+//    self.circleButton.center = CGPointMake(50, self.view.frame.size.height -50);
     [self.view addSubview:self.circleButton];
-
-//    self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithReferenceView:self.view];
-//    self.collisionBehavior = [[UICollisionBehavior alloc] initWithItems:@[self.circleButton]];
-//    self.collisionBehavior.collisionMode = UICollisionBehaviorModeEverything;
-//    self.collisionBehavior.translatesReferenceBoundsIntoBoundary = YES;
-//    [self.dynamicAnimator addBehavior:self.collisionBehavior];
-//    self.circleButtonDynamicBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self.circleButton]];
-//    self.circleButtonDynamicBehavior.allowsRotation = NO;
-//    self.circleButtonDynamicBehavior.elasticity = .1;
-//    self.circleButtonDynamicBehavior.friction = 0.9;
-//    self.circleButtonDynamicBehavior.resistance = 0.9;
-//    [self.dynamicAnimator addBehavior:self.circleButtonDynamicBehavior];
-//
-//    self.panCircle = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-//    [self.circleButton addGestureRecognizer:self.panCircle];
-//    self.panCircle.delegate = self;
 }
 
 - (void)toggleCircle
 {
+    self.showingTools ? NSLog(@"showing") : NSLog(@"not showing");
+
     if (!self.showingTools)
     {
         [self showTools];
     }
-    else if ([self.tabs[self.currentTabIndex] request])
+    else
     {
         [self showWeb];
     }
-}
-
-- (void)handlePan:(UIPanGestureRecognizer *)sender
-{
-
-//    if (sender.state == UIGestureRecognizerStateBegan)
-//    {
-//        [self.circleButtonDynamicBehavior addLinearVelocity:[self.circleButtonDynamicBehavior linearVelocityForItem:sender.view] forItem:sender.view];
-//    }
-
-    self.circleButton.center = [sender locationInView:self.view];
-
-    if (sender.state == UIGestureRecognizerStateEnded)
-    {
-        CGRect bottom50 = CGRectMake(self.view.frame.origin.x, self.view.frame.size.height - 200, self.view.frame.size.width, 200);
-        if (CGRectContainsPoint(bottom50, self.circleButton.center))
-        {
-            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:sender.view snapToPoint:CGPointMake(50, self.view.frame.size.height -50)];
-            [self.dynamicAnimator addBehavior:snap];
-            return;
-        }
-    }
-
-//    if (sender.state == UIGestureRecognizerStateEnded)
-//    {
-//        [self.circleButtonDynamicBehavior addLinearVelocity:[sender velocityInView:self.view] forItem:sender.view];
-//        [self.dynamicAnimator updateItemUsingCurrentState:self.circleButton];
-//    }
 }
 
 - (void)createToolsView
@@ -205,10 +163,21 @@
 
 - (void)createOmnibar
 {
-    self.omnibar = [[HTAutocompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,           //20
-                                                                              self.toolsView.frame.size.height/2,        //284
-                                                                              self.toolsView.frame.size.width-(2*20),    //280
-                                                                              2*20)];
+    if (YES)
+    {
+        self.omnibar = [[HTAutocompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,           //20
+                                                                                 self.toolsView.frame.size.height/2-40,        //284
+                                                                                 self.toolsView.frame.size.width-(2*20),    //280
+                                                                                 2*20)];
+    }
+    else
+    {
+//        self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
+//                                                                                  self.toolsView.frame.size.height/2,        //284
+//                                                                                  self.toolsView.frame.size.width-(2*20),    //280
+//                                                                                  2*20)];
+    }
+
     self.omnibar.delegate = self;
     self.omnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
     self.omnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -223,32 +192,18 @@
     [self.toolsView addSubview:self.omnibar];
     [self.omnibar becomeFirstResponder];
 
-    self.omnibarDataSource = [OmnibarDataSource new];
-    self.omnibar.autocompleteDataSource = [HTAutocompleteManager sharedManager];
-    self.omnibar.autocompleteType = HTAutocompleteTypeWebSearch;
-
-//    self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
-//                                                                              self.toolsView.frame.size.height/2,        //284
-//                                                                              self.toolsView.frame.size.width-(2*20),    //280
-//                                                                              2*20)];
-//    self.omnibar.delegate = self;
-//    self.omnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
-//    self.omnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
-//    self.omnibar.autocorrectionType = UITextAutocorrectionTypeNo;
-//    self.omnibar.keyboardType = UIKeyboardTypeEmailAddress;
-//    self.omnibar.returnKeyType = UIReturnKeyGo;
-//    self.omnibar.placeholder = @"search";
-//    self.omnibar.textColor = [UIColor lightGrayColor];
-//    self.omnibar.adjustsFontSizeToFitWidth = YES;
-//    self.omnibar.textAlignment = NSTextAlignmentCenter;
-//    self.omnibar.font = [UIFont systemFontOfSize:32];
-//    [self.toolsView addSubview:self.omnibar];
-//    [self.omnibar becomeFirstResponder];
-//
-//    self.omnibarDataSource = [OmnibarDataSource new];
-//    self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
-//    self.omnibar.autoCompleteDelegate = self;
-//    self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
+    if (YES)
+    {
+        self.omnibar.autocompleteDataSource = [HTAutocompleteManager sharedManager];
+        self.omnibar.autocompleteType = HTAutocompleteTypeWebSearch;
+    }
+    else
+    {
+//        self.omnibarDataSource = [OmnibarDataSource new];
+//        self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
+//        self.omnibar.autoCompleteDelegate = self;
+//        self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
+    }
 }
 
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
@@ -283,7 +238,7 @@
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
     self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
-                                                                                 40,
+                                                                                 tabsOffset,
                                                                                  self.view.frame.size.width,
                                                                                  148)
                                                  collectionViewLayout:flowLayout];
@@ -297,7 +252,7 @@
 - (void)createPageControl
 {
     self.pageControl = [[UIPageControl alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
-                                                                       188,
+                                                                       168,
                                                                        self.view.frame.size.width,
                                                                        20)];
     self.pageControl.pageIndicatorTintColor = [UIColor grayColor];
@@ -344,6 +299,10 @@
 
 - (void)createGestures
 {
+//    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+//    [self.view addGestureRecognizer:self.pan];
+//    self.pan.delegate = self;
+
     self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
     self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
     [self.toolsView addGestureRecognizer:self.swipeUp];
@@ -354,15 +313,15 @@
     [self.toolsView addGestureRecognizer:self.swipeDown];
     self.swipeDown.delegate = self;
 
-    self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
-    self.swipeFromRight.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:self.swipeFromRight];
-    self.swipeFromRight.delegate = self;
-
-    self.swipeFromLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromLeft:)];
-    self.swipeFromLeft.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:self.swipeFromLeft];
-    self.swipeFromLeft.delegate = self;
+//    self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
+//    self.swipeFromRight.direction = UISwipeGestureRecognizerDirectionLeft;
+//    [self.view addGestureRecognizer:self.swipeFromRight];
+//    self.swipeFromRight.delegate = self;
+//
+//    self.swipeFromLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromLeft:)];
+//    self.swipeFromLeft.direction = UISwipeGestureRecognizerDirectionRight;
+//    [self.view addGestureRecognizer:self.swipeFromLeft];
+//    self.swipeFromLeft.delegate = self;
 
     self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
     [self.edgeSwipeFromRight setEdges:UIRectEdgeRight];
@@ -381,6 +340,22 @@
     self.longPressOnStar = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(bookmarkAll:)];
     self.longPressOnStar.delegate = self;
     [self.starButton addGestureRecognizer:self.longPressOnStar];
+}
+
+- (void)handlePan:(UIPanGestureRecognizer *)sender
+{
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+//    if (scrollView.contentOffset.y == 0)
+//    {
+//        CGFloat y = [scrollView.panGestureRecognizer translationInView:self.view].y;
+//        NSLog(@"%f",y);
+//
+//        Tab *tab = self.tabs[self.currentTabIndex];
+//        tab.transform = CGAffineTransformMakeTranslation(0, y);
+//    }
 }
 
 - (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
@@ -529,6 +504,7 @@
     else
     {
         [self addTab:nil];
+        [self showTools];
     }
 }
 
@@ -552,6 +528,8 @@
 {
     Tab *newTab = [[Tab alloc] init];
     newTab.delegate = self;
+    newTab.scrollView.delegate = self;
+    newTab.scrollView.bounces = NO;
     newTab.scalesPageToFit = YES;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
@@ -569,27 +547,32 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
+    CGAffineTransform translation;
+
     for (UIView *view in self.view.subviews)
     {
         if ([view isKindOfClass:[UIWebView class]] && ![view isEqual:self.tabs[newTabIndex]])
         {
+            translation = view.transform;
             [view removeFromSuperview];
         }
     }
 
-    Tab *newTab = self.tabs[newTabIndex];
-    [self.view insertSubview:newTab belowSubview:self.toolsView];
+    Tab *tab = self.tabs[newTabIndex];
+    [self.view insertSubview:tab aboveSubview:self.toolsView];
 
     self.currentTabIndex = newTabIndex;
 
-    self.borderTimer = [NSTimer scheduledTimerWithTimeInterval:.05
-                                                        target:self
-                                                      selector:@selector(pingBorderControl)
-                                                      userInfo:nil
-                                                       repeats:NO];
     [self pingPageControlIndexPath:nil];
 
-    if (newTab.request.URL)
+    tab.frame = CGRectMake(self.view.frame.origin.x,
+                           self.view.frame.origin.y,
+                           self.view.frame.size.width,
+                           self.view.frame.size.height);
+
+    tab.transform = translation;
+
+    if (tab.request.URL)
     {
         [self showWeb];
     }
@@ -608,7 +591,6 @@
     [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
     self.currentTabIndex = 0;
-    [self pingBorderControl];
     [self pingPageControlIndexPath:nil];
     self.pageControl.numberOfPages = self.tabs.count;
 
@@ -639,7 +621,6 @@
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
     }
 
-    [self pingBorderControl];
     [self pingPageControlIndexPath:indexPath];
     return cell;
 }
@@ -653,25 +634,18 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self switchToTab:(int)indexPath.item];
-}
+//    [self switchToTab:(int)indexPath.item];
 
-#pragma mark - Border Control
-
-- (void)pingBorderControl
-{
-    for (UICollectionViewCell *cell in [self.tabsCollectionView visibleCells])
-    {
-        cell.backgroundView.layer.borderWidth = 1.0f;
-        if (self.currentTabIndex == [self.tabsCollectionView indexPathForCell:cell].item)
-        {
-            cell.backgroundView.layer.borderColor = [UIColor blueColor].CGColor;
-        }
-        else
-        {
-            cell.backgroundView.layer.borderColor = [UIColor lightGrayColor].CGColor;
-        }
-    }
+    [self.tabs[self.currentTabIndex] removeFromSuperview];
+    self.currentTabIndex = (int)indexPath.item;
+    Tab *tab = self.tabs[self.currentTabIndex];
+    tab.frame = CGRectMake(self.view.frame.origin.x,
+                           self.view.frame.origin.y+showOffset,
+                           self.view.frame.size.width,
+                           self.view.frame.size.height);
+//    tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
+    [self.view insertSubview:tab aboveSubview:self.toolsView];
+//    [self showWeb];
 }
 
 #pragma mark - Page Control
@@ -770,31 +744,36 @@
 
 - (void)showWeb
 {
-    [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
-
-    self.showingTools = false;
-    self.toolsView.hidden = YES;
-
     [self.omnibar resignFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
+    tab.userInteractionEnabled = YES;
+    [UIView animateWithDuration:.3 animations:^{
+        tab.transform = CGAffineTransformMakeTranslation(0, 0);
+    }];
 
-    tab.frame = CGRectMake(self.view.frame.origin.x,
-                                   self.view.frame.origin.y,
-                                   self.view.frame.size.width,
-                                   self.view.frame.size.height);
-
-    [self.view insertSubview:tab aboveSubview:self.toolsView];
-    [self.view bringSubviewToFront:self.circleButton];
+    [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
+    self.showingTools = false;
 }
 
 - (void)showTools
 {
-    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
-    self.showingTools = true;
-    self.toolsView.hidden = NO;
+    [self.omnibar becomeFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
+    tab.userInteractionEnabled = NO;
+    [UIView animateWithDuration:.3 animations:^{
+        tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
+    }];
+
+    [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
+    self.showingTools = true;
+
+    [self updateScreenshotOf:tab];
+}
+
+- (void)updateScreenshotOf:(Tab *)tab
+{
     NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
@@ -802,19 +781,7 @@
     [self.tabsCollectionView reloadData];
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
-    [self pingBorderControl];
-    [self.view insertSubview:self.tabs[self.currentTabIndex] belowSubview:self.toolsView];
-    [self.omnibar becomeFirstResponder];
 }
-
-- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
-{
-    if (event.subtype == UIEventSubtypeMotionShake)
-    {
-        [self showTools]; //or can use [self cancelRefreshSwitch];
-    }
-}
-
 
 #pragma mark - UIWebView Delegate Methods
 
@@ -929,14 +896,14 @@
     if (self.tabs.count*80 < self.view.frame.size.width)
     {
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.size.width/2-(45*self.tabs.count)+5,
-                                                   40,
+                                                   tabsOffset,
                                                    self.view.frame.size.width,
                                                    148);
     }
     else
     {
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
-                                                   40,
+                                                   tabsOffset,
                                                    self.view.frame.size.width,
                                                    148);
     }
@@ -968,86 +935,89 @@
     [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
-    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
+    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.stopButton addTarget:self action:@selector(cancelPage) forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
-    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-30);
+    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.stopButton];
 
     self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.readButton addTarget:self action:@selector(showReadingLinks) forControlEvents:UIControlEventTouchUpInside];
     [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
     self.readButton.frame = CGRectMake(20, 20, 48, 48);
-    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-30);
+    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.readButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.addButton addTarget:self action:@selector(addTab:) forControlEvents:UIControlEventTouchUpInside];
     [self.addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     self.addButton.frame = CGRectMake(20, 20, 32, 32);
-    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-30);
+    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.addButton];
 
     self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(20, 20, 32, 32);
-    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-30);
+    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.backButton];
 
     self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
     self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
-    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-30);
+    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.forwardButton];
+
+
 
     self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
     [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-30);
-    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
+    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-70);
+//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.shareButton];
 
-    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
-    [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
-    self.starButton.frame = CGRectMake(20, 20, 32, 32);
-    self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
-    [self.toolsView addSubview:self.starButton];
+//    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
+//    [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
+//    self.starButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
+//    [self.toolsView addSubview:self.starButton];
 
     self.pocketButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.pocketButton addTarget:self action:@selector(pocket) forControlEvents:UIControlEventTouchUpInside];
     [self.pocketButton setImage:[UIImage imageNamed:@"pocket"] forState:UIControlStateNormal];
     self.pocketButton.frame = CGRectMake(20, 20, 32, 32);
-    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
+    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-70);
+//    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.pocketButton];
 
-    self.facebookButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.facebookButton addTarget:self action:@selector(facebook) forControlEvents:UIControlEventTouchUpInside];
-    [self.facebookButton setImage:[UIImage imageNamed:@"facebook"] forState:UIControlStateNormal];
-    self.facebookButton.frame = CGRectMake(20, 20, 32, 32);
-    self.facebookButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+150);
-    [self.toolsView addSubview:self.facebookButton];
-
-    self.twitterButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.twitterButton addTarget:self action:@selector(tweet) forControlEvents:UIControlEventTouchUpInside];
-    [self.twitterButton setImage:[UIImage imageNamed:@"twitter"] forState:UIControlStateNormal];
-    self.twitterButton.frame = CGRectMake(20, 20, 32, 32);
-    self.twitterButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+150);
-    [self.toolsView addSubview:self.twitterButton];
-
-    self.mailButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.mailButton addTarget:self action:@selector(mail) forControlEvents:UIControlEventTouchUpInside];
-    [self.mailButton setImage:[UIImage imageNamed:@"mail"] forState:UIControlStateNormal];
-    self.mailButton.frame = CGRectMake(20, 20, 32, 32);
-    self.mailButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+150);
-    [self.toolsView addSubview:self.mailButton];
+//    self.facebookButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.facebookButton addTarget:self action:@selector(facebook) forControlEvents:UIControlEventTouchUpInside];
+//    [self.facebookButton setImage:[UIImage imageNamed:@"facebook"] forState:UIControlStateNormal];
+//    self.facebookButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.facebookButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+150);
+//    [self.toolsView addSubview:self.facebookButton];
+//
+//    self.twitterButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.twitterButton addTarget:self action:@selector(tweet) forControlEvents:UIControlEventTouchUpInside];
+//    [self.twitterButton setImage:[UIImage imageNamed:@"twitter"] forState:UIControlStateNormal];
+//    self.twitterButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.twitterButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+150);
+//    [self.toolsView addSubview:self.twitterButton];
+//
+//    self.mailButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.mailButton addTarget:self action:@selector(mail) forControlEvents:UIControlEventTouchUpInside];
+//    [self.mailButton setImage:[UIImage imageNamed:@"mail"] forState:UIControlStateNormal];
+//    self.mailButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.mailButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+150);
+//    [self.toolsView addSubview:self.mailButton];
 }
 
 - (void)buttonCheck
