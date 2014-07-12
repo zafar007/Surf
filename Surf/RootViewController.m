@@ -21,6 +21,7 @@
 #import "HTAutocompleteTextField.h"
 #import "HTAutocompleteManager.h"
 @import Twitter;
+#import "FBShimmering/FBShimmeringView.h"
 
 @interface RootViewController () <UITextFieldDelegate,
                                     UIWebViewDelegate,
@@ -28,10 +29,14 @@
                                     UICollectionViewDataSource,
                                     UICollectionViewDelegateFlowLayout,
                                     MLPAutoCompleteTextFieldDelegate,
-                                    UIScrollViewDelegate>
+                                    UIScrollViewDelegate,
+                                    UIPickerViewDataSource,
+                                    UIPickerViewDelegate>
 @property UIButton *circleButton;
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
+@property UIPickerView *tabsPickerView;
+@property FBShimmeringView *shimmeringView;
 @property OmnibarDataSource *omnibarDataSource;
 //@property MLPAutoCompleteTextField *omnibar;
 @property HTAutocompleteTextField *omnibar;
@@ -40,12 +45,14 @@
 @property int currentTabIndex;
 @property CGRect omnnibarFrame;
 @property UIPanGestureRecognizer *pan;
+@property UITapGestureRecognizer *tap;
 @property UISwipeGestureRecognizer *swipeUp;
 @property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
 @property UISwipeGestureRecognizer *swipeFromLeft;
 @property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
-@property UIScreenEdgePanGestureRecognizer *edgeswipeFromLeft;
+@property UIScreenEdgePanGestureRecognizer *edgeSwipeFromLeft;
+@property UIScreenEdgePanGestureRecognizer *edgeSwipeFromTop;
 @property UILongPressGestureRecognizer *longPressOnPocket;
 @property UILongPressGestureRecognizer *longPressOnStar;
 @property BOOL showingTools;
@@ -85,8 +92,9 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
-    [self createCircleButton];
-    [self createCollectionView];
+//    [self createCircleButton];
+    [self createTabsCollectionView];
+//    [self createTabsPickerView];
     [self createButtons];
     [self createOmnibar];
     [self createProgressBar];
@@ -107,7 +115,7 @@
 
     if (self.showingTools)
     {
-        [self.omnibar becomeFirstResponder];
+//        [self.omnibar becomeFirstResponder];
     }
     [[UIApplication sharedApplication]setStatusBarHidden:!self.showingTools withAnimation:UIStatusBarAnimationFade];
 }
@@ -127,18 +135,16 @@
 - (void)createCircleButton
 {
     self.circleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.circleButton addTarget:self action:@selector(toggleCircle) forControlEvents:UIControlEventTouchUpInside];
+    [self.circleButton addTarget:self action:@selector(toggleTools) forControlEvents:UIControlEventTouchUpInside];
     [self.circleButton setImage:[UIImage imageNamed:@"circle-full"] forState:UIControlStateNormal];
     self.circleButton.frame = CGRectMake(20, 20, 32, 32);
-    self.circleButton.center = CGPointMake(20, 300);
-//    self.circleButton.center = CGPointMake(50, self.view.frame.size.height -50);
+//    self.circleButton.center = CGPointMake(20, 300);
+    self.circleButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height - 50);
     [self.view addSubview:self.circleButton];
 }
 
-- (void)toggleCircle
+- (void)toggleTools
 {
-    self.showingTools ? NSLog(@"showing") : NSLog(@"not showing");
-
     if (!self.showingTools)
     {
         [self showTools];
@@ -163,20 +169,13 @@
 
 - (void)createOmnibar
 {
-    if (YES)
-    {
-        self.omnibar = [[HTAutocompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,           //20
-                                                                                 self.toolsView.frame.size.height/2-40,        //284
-                                                                                 self.toolsView.frame.size.width-(2*20),    //280
-                                                                                 2*20)];
-    }
-    else
-    {
-//        self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:CGRectMake(self.toolsView.frame.origin.x+20,          //20
-//                                                                                  self.toolsView.frame.size.height/2,        //284
-//                                                                                  self.toolsView.frame.size.width-(2*20),    //280
-//                                                                                  2*20)];
-    }
+    CGRect omnibarFrame = CGRectMake(self.toolsView.frame.origin.x+20,          //20
+                                     self.toolsView.frame.size.height/2-50,     //284
+                                     self.toolsView.frame.size.width-(2*20),    //280
+                                     2*25);
+
+    self.omnibar = [[HTAutocompleteTextField alloc] initWithFrame:omnibarFrame];
+//    self.omnibar = [[MLPAutoCompleteTextField alloc] initWithFrame:omnibarFrame];
 
     self.omnibar.delegate = self;
     self.omnibar.clearButtonMode = UITextFieldViewModeWhileEditing;
@@ -188,22 +187,33 @@
     self.omnibar.textColor = [UIColor lightGrayColor];
     self.omnibar.adjustsFontSizeToFitWidth = YES;
     self.omnibar.textAlignment = NSTextAlignmentLeft;
-    self.omnibar.font = [UIFont systemFontOfSize:32];
+    self.omnibar.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40];
     [self.toolsView addSubview:self.omnibar];
-    [self.omnibar becomeFirstResponder];
+//    [self.omnibar becomeFirstResponder];
 
-    if (YES)
-    {
-        self.omnibar.autocompleteDataSource = [HTAutocompleteManager sharedManager];
-        self.omnibar.autocompleteType = HTAutocompleteTypeWebSearch;
-    }
-    else
-    {
-//        self.omnibarDataSource = [OmnibarDataSource new];
-//        self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
-//        self.omnibar.autoCompleteDelegate = self;
-//        self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
-    }
+    self.omnibar.autocompleteDataSource = [HTAutocompleteManager sharedManager];
+    self.omnibar.autocompleteType = HTAutocompleteTypeWebSearch;
+//    self.omnibarDataSource = [OmnibarDataSource new];
+//    self.omnibar.autoCompleteDataSource = self.omnibarDataSource;
+//    self.omnibar.autoCompleteDelegate = self;
+//    self.omnibar.autoCompleteTableAppearsAsKeyboardAccessory = YES;
+//    self.omnibar.autoCompleteTableViewHidden = ![[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"] boolValue];
+
+
+    self.shimmeringView = [[FBShimmeringView alloc] initWithFrame:self.omnibar.frame];
+    self.shimmeringView.shimmering = YES;
+    self.shimmeringView.shimmeringBeginFadeDuration = 0.3;
+    self.shimmeringView.shimmeringOpacity = 0.3;
+    [self.toolsView insertSubview:self.shimmeringView belowSubview:self.omnibar];
+
+    UILabel *searchLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
+    searchLabel.text = @"search";
+    searchLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40];
+    searchLabel.textColor = [UIColor whiteColor];
+    searchLabel.textAlignment = NSTextAlignmentCenter;
+    searchLabel.backgroundColor = [UIColor clearColor];
+
+    self.shimmeringView.contentView = searchLabel;
 }
 
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
@@ -232,7 +242,7 @@
     [self.view bringSubviewToFront:self.progressBar];
 }
 
-- (void)createCollectionView
+- (void)createTabsCollectionView
 {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -248,6 +258,66 @@
     [self.tabsCollectionView registerClass:[SBCollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.toolsView addSubview:self.tabsCollectionView];
 }
+
+- (void)createTabsPickerView
+{
+    self.tabsPickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];
+    self.tabsPickerView.delegate = self;
+    self.tabsPickerView.dataSource = self;
+    self.tabsPickerView.backgroundColor = [UIColor whiteColor]; //clearColor
+    self.tabsPickerView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+    self.tabsPickerView.frame = CGRectMake(self.view.frame.origin.x,
+                                           tabsOffset,
+                                           self.view.frame.size.width,
+                                           162);
+    NSArray *subviews = self.tabsPickerView.subviews;
+    [subviews[1] setBackgroundColor:[UIColor clearColor]];
+    [subviews[2] setBackgroundColor:[UIColor clearColor]];
+    [self.toolsView addSubview:self.tabsPickerView];
+}
+
+#pragma mark - UIPickerView Delegate Methods
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self.tabs.count;
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+    if ([self.tabs[row] request])
+    {
+        [view addSubview:[self.tabs[row] screenshot]];
+    }
+    else
+    {
+        [view addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]]];
+    }
+
+//    button.frame = CGRectMake(0, 0, 32, 32);
+//    button.center = view.center;
+//    button.transform = CGAffineTransformMakeRotation(M_PI_2);
+//    return button;
+
+    return view;
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    [self selectedRow:row inComponent:component];
+}
+
+- (void)selectedRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    //select
+}
+
+#pragma mark -
 
 - (void)createPageControl
 {
@@ -299,19 +369,23 @@
 
 - (void)createGestures
 {
-//    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-//    [self.view addGestureRecognizer:self.pan];
-//    self.pan.delegate = self;
+//    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPan:)];
+//    [self.view addGestureRecognizer:self.tap];
+//    self.tap.delegate = self;
 
-    self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
-    self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.toolsView addGestureRecognizer:self.swipeUp];
-    self.swipeUp.delegate = self;
+    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPan:)];
+    [self.view addGestureRecognizer:self.pan];
+    self.pan.delegate = self;
 
-    self.swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeDown:)];
-    self.swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.toolsView addGestureRecognizer:self.swipeDown];
-    self.swipeDown.delegate = self;
+//    self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
+//    self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
+//    [self.toolsView addGestureRecognizer:self.swipeUp];
+//    self.swipeUp.delegate = self;
+//
+//    self.swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeDown:)];
+//    self.swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+//    [self.toolsView addGestureRecognizer:self.swipeDown];
+//    self.swipeDown.delegate = self;
 
 //    self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
 //    self.swipeFromRight.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -324,14 +398,19 @@
 //    self.swipeFromLeft.delegate = self;
 
     self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
-    [self.edgeSwipeFromRight setEdges:UIRectEdgeRight];
-    [self.edgeSwipeFromRight setDelegate:self];
+    self.edgeSwipeFromRight.edges = UIRectEdgeRight;
+    self.edgeSwipeFromRight.delegate = self;
     [self.view addGestureRecognizer:self.edgeSwipeFromRight];
     
-    self.edgeswipeFromLeft = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromLeft:)];
-    [self.edgeswipeFromLeft setEdges:UIRectEdgeLeft];
-    [self.edgeswipeFromLeft setDelegate:self];
-    [self.view addGestureRecognizer:self.edgeswipeFromLeft];
+    self.edgeSwipeFromLeft = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromLeft:)];
+    self.edgeSwipeFromLeft.edges = UIRectEdgeLeft;
+    self.edgeSwipeFromLeft.delegate = self;
+    [self.view addGestureRecognizer:self.edgeSwipeFromLeft];
+
+    self.edgeSwipeFromTop = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgeSwipeFromTop:)];
+    self.edgeSwipeFromTop.edges = UIRectEdgeTop;
+    self.edgeSwipeFromTop.delegate = self;
+    [self.view addGestureRecognizer:self.edgeSwipeFromTop];
 
     self.longPressOnPocket = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pocketAll:)];
     self.longPressOnPocket.delegate = self;
@@ -342,35 +421,25 @@
     [self.starButton addGestureRecognizer:self.longPressOnStar];
 }
 
-- (void)handlePan:(UIPanGestureRecognizer *)sender
+- (void)handleTapPan:(UIGestureRecognizer *)sender
 {
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request])
+    {
+        [self showWeb];
+    }
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (!self.showingTools && scrollView.contentOffset.y <= 0 && [scrollView.panGestureRecognizer translationInView:self.view].y > 0)
+    {
+        [self showTools];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-//    if (scrollView.contentOffset.y == 0)
-//    {
-//        CGFloat y = [scrollView.panGestureRecognizer translationInView:self.view].y;
-//        NSLog(@"%f",y);
-//
-//        Tab *tab = self.tabs[self.currentTabIndex];
-//        tab.transform = CGAffineTransformMakeTranslation(0, y);
-//    }
-}
-
-- (void)handleSwipeUp:(UISwipeGestureRecognizer *)sender
-{
-    [self.omnibar becomeFirstResponder];
-}
-
-- (void)handleSwipeDown:(UISwipeGestureRecognizer *)sender
-{
-    [self.omnibar resignFirstResponder];
-}
-
-- (void)handleSwipeFromRight:(UISwipeGestureRecognizer *)sender
-{
-    if (!self.showingTools)
+    if (!self.showingTools && scrollView.contentOffset.y <= 0 && scrollView.panGestureRecognizer.state == 2)
     {
         [self showTools];
     }
@@ -382,11 +451,13 @@
     {
         [self showReadingLinks];
     }
+}
 
-    if (self.showingTools && [self.tabs[self.currentTabIndex] request] &&
-        [sender locationInView:self.view].y > self.tabsCollectionView.frame.size.height + self.tabsCollectionView.frame.origin.y)
+- (void)handleEdgeSwipeFromTop:(UIScreenEdgePanGestureRecognizer *)sender
+{
+    if (!self.showingTools)
     {
-        [self showWeb];
+        [self showTools];
     }
 }
 
@@ -529,8 +600,6 @@
     Tab *newTab = [[Tab alloc] init];
     newTab.delegate = self;
     newTab.scrollView.delegate = self;
-    newTab.scrollView.bounces = NO;
-    newTab.scalesPageToFit = YES;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
 //    self.refreshButton.enabled = NO;
@@ -621,6 +690,11 @@
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
     }
 
+    cell.layer.cornerRadius = 1.0;
+    cell.layer.borderColor = [UIColor blackColor].CGColor;
+    cell.layer.borderWidth = 0.5/4;
+    cell.layer.masksToBounds = YES;
+
     [self pingPageControlIndexPath:indexPath];
     return cell;
 }
@@ -645,6 +719,7 @@
                            self.view.frame.size.height);
 //    tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
     [self.view insertSubview:tab aboveSubview:self.toolsView];
+    [self pingPageControlIndexPath:nil];
 //    [self showWeb];
 }
 
@@ -664,12 +739,26 @@
 
 #pragma mark - UITextField Delegate Methods
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.shimmeringView.hidden = YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if ([self.omnibar.text isEqualToString:@""])
+    {
+        self.shimmeringView.hidden = NO;
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self.omnibar resignFirstResponder];
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.urlString = [self searchOrLoad:textField.text];
     self.omnibar.text = @"";
+    self.shimmeringView.hidden = NO;
     [self loadPage:tab];
     return true;
 }
@@ -684,7 +773,7 @@
 
 -(NSString *)isURL:(NSString *)userInput
 {
-    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly",@".gov",@".eu",@".cn"];
+    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly",@".gov",@".eu",@".cn",@".mil"];
 
     NSString *workingInput = @"";
 
@@ -758,7 +847,7 @@
 
 - (void)showTools
 {
-    [self.omnibar becomeFirstResponder];
+//    [self.omnibar becomeFirstResponder];
 
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = NO;
@@ -796,7 +885,6 @@
                                                     selector:@selector(timerCallback)
                                                     userInfo:nil
                                                      repeats:YES];
-//    [self enableShare:YES Refresh:NO Stop:YES  Save:YES];
 }
 
 - (void)timerCallback
@@ -838,7 +926,6 @@
 {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [self animateProgressBarHide];
-//    [self enableShare:YES Refresh:YES Stop:NO Save:YES];
 }
 
 #pragma mark - Landscape Layout Adjust
@@ -1022,7 +1109,17 @@
 
 - (void)buttonCheck
 {
+    if (self.showingTools && ![self.tabs[self.currentTabIndex] request])
+    {
+        [self.tabs[self.currentTabIndex] setAlpha:.5];
+    }
+    else
+    {
+        [self.tabs[self.currentTabIndex] setAlpha:1];
+    }
+
     [self.view bringSubviewToFront:self.circleButton];
+    [self.view bringSubviewToFront:self.progressBar];
 
     if (![self.tabs[self.currentTabIndex] request])
     {
@@ -1059,14 +1156,6 @@
         self.stopButton.hidden = YES;
     }
 }
-
-//- (void)enableShare:(BOOL)B1 Refresh:(BOOL)B2 Stop:(BOOL)B3 Save:(BOOL)B4
-//{
-//    self.refreshButton.enabled = B2;
-//    self.refreshButton.hidden = !B2;
-//    self.stopButton.enabled = B3;
-//    self.stopButton.hidden = !B3;
-//}
 
 - (void)checkBackForwardButtons
 {

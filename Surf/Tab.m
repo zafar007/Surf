@@ -15,14 +15,13 @@
     self = [super initWithFrame:frame];
     if (self)
     {
-        [self.layer setCornerRadius:4.0];
-        [self.layer setBorderColor:[UIColor blackColor].CGColor];
-        [self.layer setBorderWidth:0.5];
+        self.layer.cornerRadius = 4.0;
+        self.layer.borderColor = [UIColor blackColor].CGColor;
+        self.layer.borderWidth = 0.5;
         self.layer.masksToBounds = YES;
-
+        self.scalesPageToFit = YES;
+        self.scrollView.bounces = NO;
 //        [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.google.com"]]];
-//        self.scalesPageToFit = YES;
-//        self.userInteractionEnabled = NO;
     }
     return self;
 }

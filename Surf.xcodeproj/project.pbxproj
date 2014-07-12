@@ -55,6 +55,8 @@
 		8EA1378B1957428F0032A507 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA1378A1957428F0032A507 /* SWRevealViewController.m */; };
 		8EA54258195668B9007733D3 /* History.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA54257195668B9007733D3 /* History.m */; };
 		8EA5425B19566B42007733D3 /* Designernews.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EA5425A19566B42007733D3 /* Designernews.m */; };
+		8EAFE66C1970A74100BEE3D6 /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAFE6691970A74100BEE3D6 /* FBShimmeringLayer.m */; };
+		8EAFE66D1970A74100BEE3D6 /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EAFE66B1970A74100BEE3D6 /* FBShimmeringView.m */; };
 		8EB29BFD19494FFD00147A0B /* SBCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */; };
 		8EBF3162195FA0CF00286544 /* MCSwipeTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF3161195FA0CF00286544 /* MCSwipeTableViewCell.m */; };
 		8EBF3173195FDE1800286544 /* MLPAutoCompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBF316E195FDE1800286544 /* MLPAutoCompleteTextField.m */; };
@@ -169,6 +171,12 @@
 		8EA54257195668B9007733D3 /* History.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = History.m; sourceTree = "<group>"; };
 		8EA5425919566B42007733D3 /* Designernews.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Designernews.h; sourceTree = "<group>"; };
 		8EA5425A19566B42007733D3 /* Designernews.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Designernews.m; sourceTree = "<group>"; };
+		8EAFE6661970A74100BEE3D6 /* FBShimmering-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBShimmering-Prefix.pch"; sourceTree = "<group>"; };
+		8EAFE6671970A74100BEE3D6 /* FBShimmering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmering.h; sourceTree = "<group>"; };
+		8EAFE6681970A74100BEE3D6 /* FBShimmeringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringLayer.h; sourceTree = "<group>"; };
+		8EAFE6691970A74100BEE3D6 /* FBShimmeringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringLayer.m; sourceTree = "<group>"; };
+		8EAFE66A1970A74100BEE3D6 /* FBShimmeringView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringView.h; sourceTree = "<group>"; };
+		8EAFE66B1970A74100BEE3D6 /* FBShimmeringView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringView.m; sourceTree = "<group>"; };
 		8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBCollectionViewCell.h; sourceTree = "<group>"; };
 		8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBCollectionViewCell.m; sourceTree = "<group>"; };
 		8EBF3160195FA0CF00286544 /* MCSwipeTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCSwipeTableViewCell.h; sourceTree = "<group>"; };
@@ -360,6 +368,7 @@
 				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
 				8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */,
 				8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */,
+				8EAFE6651970A74100BEE3D6 /* FBShimmering */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
@@ -431,6 +440,19 @@
 				8EA1378A1957428F0032A507 /* SWRevealViewController.m */,
 			);
 			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8EAFE6651970A74100BEE3D6 /* FBShimmering */ = {
+			isa = PBXGroup;
+			children = (
+				8EAFE6661970A74100BEE3D6 /* FBShimmering-Prefix.pch */,
+				8EAFE6671970A74100BEE3D6 /* FBShimmering.h */,
+				8EAFE6681970A74100BEE3D6 /* FBShimmeringLayer.h */,
+				8EAFE6691970A74100BEE3D6 /* FBShimmeringLayer.m */,
+				8EAFE66A1970A74100BEE3D6 /* FBShimmeringView.h */,
+				8EAFE66B1970A74100BEE3D6 /* FBShimmeringView.m */,
+			);
+			path = FBShimmering;
 			sourceTree = "<group>";
 		};
 		8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */ = {
@@ -599,6 +621,7 @@
 				8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
+				8EAFE66D1970A74100BEE3D6 /* FBShimmeringView.m in Sources */,
 				8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
 				8E5CB9B11960F5A0002B3567 /* HTAutocompleteManager.m in Sources */,
@@ -613,6 +636,7 @@
 				8E68BA96194687540019658A /* SDWebImageCompat.m in Sources */,
 				8EFF092C194EA57500379F43 /* SettingsViewController.m in Sources */,
 				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
+				8EAFE66C1970A74100BEE3D6 /* FBShimmeringLayer.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
 				8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */,
 				8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */,
