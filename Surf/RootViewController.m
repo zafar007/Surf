@@ -377,26 +377,6 @@
     [self.view addGestureRecognizer:self.pan];
     self.pan.delegate = self;
 
-//    self.swipeUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeUp:)];
-//    self.swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
-//    [self.toolsView addGestureRecognizer:self.swipeUp];
-//    self.swipeUp.delegate = self;
-//
-//    self.swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeDown:)];
-//    self.swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
-//    [self.toolsView addGestureRecognizer:self.swipeDown];
-//    self.swipeDown.delegate = self;
-
-//    self.swipeFromRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromRight:)];
-//    self.swipeFromRight.direction = UISwipeGestureRecognizerDirectionLeft;
-//    [self.view addGestureRecognizer:self.swipeFromRight];
-//    self.swipeFromRight.delegate = self;
-//
-//    self.swipeFromLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeFromLeft:)];
-//    self.swipeFromLeft.direction = UISwipeGestureRecognizerDirectionRight;
-//    [self.view addGestureRecognizer:self.swipeFromLeft];
-//    self.swipeFromLeft.delegate = self;
-
     self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
     self.edgeSwipeFromRight.edges = UIRectEdgeRight;
     self.edgeSwipeFromRight.delegate = self;
@@ -427,6 +407,11 @@
     {
         [self showWeb];
     }
+
+//    if ([sender translationInView:self.view].x > 50)
+//    {
+//        [self showReadingLinks];
+//    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -442,14 +427,6 @@
     if (!self.showingTools && scrollView.contentOffset.y <= 0 && scrollView.panGestureRecognizer.state == 2)
     {
         [self showTools];
-    }
-}
-
-- (void)handleSwipeFromLeft:(UISwipeGestureRecognizer *)sender
-{
-    if (!self.showingTools)
-    {
-        [self showReadingLinks];
     }
 }
 

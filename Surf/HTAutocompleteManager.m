@@ -29,10 +29,11 @@ static HTAutocompleteManager *sharedManager;
     {
         static dispatch_once_t colorOnceToken;
         static NSArray *top500;
+//        static NSArray *searchTerms;
+
         dispatch_once(&colorOnceToken, ^
         {
             top500 =
-
             @[
               @"facebook.com",
               @"twitter.com",
@@ -535,6 +536,33 @@ static HTAutocompleteManager *sharedManager;
               @"ihg.com",
               @"pcworld.com",
              ];
+
+//            NSMutableArray *history;
+//            for (NSDictionary *site in [[NSUserDefaults standardUserDefaults] objectForKey:@"history"])
+//            {
+//                NSString *url = site[@"url"];
+//                if ([url hasPrefix:@"http://www."])
+//                {
+//                    url = [url substringFromIndex:[@"http://www." length]];
+//                }
+//                else if ([url hasPrefix:@"https://www."])
+//                {
+//                    url = [url substringFromIndex:[@"https://www." length]];
+//                }
+//                else if ([url hasPrefix:@"http://"])
+//                {
+//                    url = [url substringFromIndex:[@"http://" length]];
+//                }
+//                else if ([url hasPrefix:@"https://"])
+//                {
+//                    url = [url substringFromIndex:[@"https://" length]];
+//                }
+//                [history addObject:url];
+//                NSLog(@"%@",url);
+//            }
+//            NSLog(@"%@",history);
+//            searchTerms = [top500 arrayByAddingObjectsFromArray:[NSArray arrayWithArray:history]];
+//            NSLog(@"%@",searchTerms);
         });
 
         NSString *stringToLookFor;
