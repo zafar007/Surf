@@ -239,7 +239,7 @@
 - (void)createActivityIndicator
 {
     self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-    self.activity.center = self.collectionView.center;
+    self.activity.center = self.view.center;
     self.activity.hidesWhenStopped = YES;
     [self.view addSubview:self.activity];
 }
@@ -852,15 +852,19 @@
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 
+    self.activity.center = self.view.center;
+    self.tableView.frame = CGRectMake(self.view.frame.origin.x,
+                                      self.view.frame.origin.y,
+                                      self.view.frame.size.width,
+                                      self.view.frame.size.height);
+
     if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
-        self.collectionView.center = CGPointMake(self.view.center.x, self.collectionView.center.y);
-        self.activity.center = self.collectionView.center;
+
     }
     else
     {
-        self.collectionView.center = CGPointMake(self.view.center.x, self.collectionView.center.y);
-        self.activity.center = self.collectionView.center;
+
     }
 }
 

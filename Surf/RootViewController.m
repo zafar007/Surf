@@ -8,6 +8,8 @@
 
 #define tabsOffset 20
 #define showOffset 300
+#define newTabAlpha .25
+#define oldTabAlpha .25
 
 #import "RootViewController.h"
 #import "Tab.h"
@@ -33,6 +35,7 @@
                                     UIPickerViewDataSource,
                                     UIPickerViewDelegate>
 @property UIButton *circleButton;
+@property UIImageView *wallPaper;
 @property UIView *toolsView;
 @property UICollectionView *tabsCollectionView;
 @property UIPickerView *tabsPickerView;
@@ -43,7 +46,6 @@
 @property UIProgressView *progressBar;
 @property NSMutableArray *tabs;
 @property int currentTabIndex;
-@property CGRect omnnibarFrame;
 @property UIPanGestureRecognizer *pan;
 @property UITapGestureRecognizer *tap;
 @property UISwipeGestureRecognizer *swipeUp;
@@ -92,7 +94,7 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
-//    [self createCircleButton];
+    [self createCircleButton];
     [self createTabsCollectionView];
     [self createButtons];
     [self createOmnibar];
@@ -129,7 +131,8 @@
 #pragma mark - Setup Scene
 - (void)editView
 {
-    [self.view addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]]];
+    self.wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+    [self.view addSubview:self.wallPaper];
 }
 
 - (void)createCircleButton
@@ -508,7 +511,8 @@
     }
     else
     {
-        [self addTab:nil];
+//        [self addTab:nil];
+        [self addTab:@"https://www.google.com"];
     }
 }
 
@@ -875,44 +879,41 @@
 
     if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
     {
-        self.omnibar.frame = self.omnnibarFrame;
-        self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
-                                          self.view.frame.origin.y,
-                                          self.view.frame.size.width,
-                                          self.view.frame.size.height);
+        CGRect frame = CGRectMake(self.view.frame.origin.x,
+                                  self.view.frame.origin.y,
+                                  self.view.frame.size.width,
+                                  self.view.frame.size.height);
 
-        [self pingTabsCollectionFrame];
+        self.wallPaper.frame = frame;
+        self.toolsView.frame = frame;
+        [self.tabs[self.currentTabIndex] setFrame:frame];
 
-        self.pageControl.frame = CGRectMake(self.view.frame.origin.x, 188, self.view.frame.size.width, 20);
-
-        [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
-                                                             self.view.frame.origin.y,
-                                                             self.view.frame.size.width,
-                                                             self.view.frame.size.height)];
+//        self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,          //20
+//                                        self.toolsView.frame.size.height/2-50,     //284
+//                                        self.toolsView.frame.size.width-(2*20),    //280
+//                                        2*25);
+//        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
+//                                            188,
+//                                            self.view.frame.size.width,
+//                                            20);
+//        [self pingTabsCollectionFrame];
     }
-    else    //landscape
+    else
     {
-        self.omnibar.frame = CGRectMake((self.view.frame.size.height-self.omnibar.frame.size.width)/2,
-                                        self.view.frame.origin.y+100,
-                                        self.omnibar.frame.size.width,
-                                        self.omnibar.frame.size.height);
+        CGRect frame = CGRectMake(self.view.frame.origin.x,
+                                  self.view.frame.origin.y,
+                                  self.view.frame.size.height,
+                                  self.view.frame.size.width);
 
-        self.toolsView.frame = CGRectMake(self.view.frame.origin.x,
-                                          self.view.frame.origin.y,
-                                          self.view.frame.size.height,
-                                          self.view.frame.size.width);
+        self.wallPaper.frame = frame;
+        self.toolsView.frame = frame;
+        [self.tabs[self.currentTabIndex] setFrame:CGRectZero];
 
-        [self pingTabsCollectionFrameLandscape];
-
-        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
-                                            self.view.frame.size.width-168,
-                                            self.view.frame.size.height,
-                                            20);
-
-        [self.tabs[self.currentTabIndex] setFrame:CGRectMake(self.view.frame.origin.x,
-                                                             self.view.frame.origin.y,
-                                                             self.view.frame.size.height,
-                                                             self.view.frame.size.width)];
+//        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
+//                                            self.view.frame.size.width-168,
+//                                            self.view.frame.size.height,
+//                                            20);
+//        [self pingTabsCollectionFrameLandscape];
     }
 }
 
@@ -1050,11 +1051,11 @@
 {
     if (self.showingTools && ![self.tabs[self.currentTabIndex] request])
     {
-        [self.tabs[self.currentTabIndex] setAlpha:.5];
+        [self.tabs[self.currentTabIndex] setAlpha:newTabAlpha];
     }
     else
     {
-        [self.tabs[self.currentTabIndex] setAlpha:1];
+        [self.tabs[self.currentTabIndex] setAlpha:oldTabAlpha];
     }
 
     [self.view bringSubviewToFront:self.circleButton];
