@@ -94,13 +94,13 @@
     [self createToolsView];
 //    [self createCircleButton];
     [self createTabsCollectionView];
-//    [self createTabsPickerView];
     [self createButtons];
     [self createOmnibar];
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
     [self createPageControl];
+//    [self createTabsPickerView];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backFromReadVC:) name:@"BackFromReadVC" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeTab:) name:@"RemoveTab" object:nil];
@@ -264,60 +264,17 @@
     self.tabsPickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];
     self.tabsPickerView.delegate = self;
     self.tabsPickerView.dataSource = self;
-    self.tabsPickerView.backgroundColor = [UIColor whiteColor]; //clearColor
+    self.tabsPickerView.backgroundColor = [UIColor whiteColor];
     self.tabsPickerView.transform = CGAffineTransformMakeRotation(-M_PI_2);
     self.tabsPickerView.frame = CGRectMake(self.view.frame.origin.x,
                                            tabsOffset,
                                            self.view.frame.size.width,
                                            162);
-    NSArray *subviews = self.tabsPickerView.subviews;
-    [subviews[1] setBackgroundColor:[UIColor clearColor]];
-    [subviews[2] setBackgroundColor:[UIColor clearColor]];
+//    NSArray *subviews = self.tabsPickerView.subviews;
+//    [subviews[1] setBackgroundColor:[UIColor clearColor]];
+//    [subviews[2] setBackgroundColor:[UIColor clearColor]];
     [self.toolsView addSubview:self.tabsPickerView];
 }
-
-#pragma mark - UIPickerView Delegate Methods
-
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-    return 1;
-}
-
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-    return self.tabs.count;
-}
-
-- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
-{
-    if ([self.tabs[row] request])
-    {
-        [view addSubview:[self.tabs[row] screenshot]];
-    }
-    else
-    {
-        [view addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]]];
-    }
-
-//    button.frame = CGRectMake(0, 0, 32, 32);
-//    button.center = view.center;
-//    button.transform = CGAffineTransformMakeRotation(M_PI_2);
-//    return button;
-
-    return view;
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    [self selectedRow:row inComponent:component];
-}
-
-- (void)selectedRow:(NSInteger)row inComponent:(NSInteger)component
-{
-    //select
-}
-
-#pragma mark -
 
 - (void)createPageControl
 {
@@ -630,7 +587,12 @@
     }
 }
 
-#pragma mark - UICollectionView DataSource Methods
+#pragma mark - UICollectionView DataSource/Delegate Methods
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self switchToTab:(int)indexPath.item];
+}
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
@@ -650,12 +612,6 @@
     {
         cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
     }
-
-    cell.layer.cornerRadius = 1.0;
-    cell.layer.borderColor = [UIColor blackColor].CGColor;
-    cell.layer.borderWidth = 0.5/4;
-    cell.layer.masksToBounds = YES;
-
     [self pingPageControlIndexPath:indexPath];
     return cell;
 }
@@ -665,11 +621,45 @@
     return CGSizeMake(80, 148);
 }
 
-#pragma mark - UICollectionView Delegate Methods
+#pragma mark - UIPickerView DataSource/Delegate Methods
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self switchToTab:(int)indexPath.item];
+    [self switchToTab:(int)row];
+}
+
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
+{
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
+{
+    return self.tabs.count;
+}
+
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
+{
+//    for (UIView *view in view.subviews)
+//    {
+//        [view removeFromSuperview];
+//    }
+
+    UIView *screenshot;
+    if ([self.tabs[row] request])
+    {
+        screenshot = [self.tabs[row] screenshot];
+    }
+    else
+    {
+        screenshot = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+    }
+
+    [view addSubview:screenshot];
+    screenshot.frame = view.bounds;
+    screenshot.center = view.center;
+    screenshot.transform = CGAffineTransformMakeRotation(M_PI_2);
+    return view;
 }
 
 #pragma mark - Page Control

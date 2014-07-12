@@ -21,6 +21,11 @@
     self = [super initWithFrame:frame];
     if (self)
     {
+        self.layer.cornerRadius = 3.0;//4
+        self.layer.borderColor = [UIColor blackColor].CGColor;
+        self.layer.borderWidth = 0.5/3;//.5
+        self.layer.masksToBounds = YES;
+
         self.originalCenter = self.center;
         self.originalFrame = self.frame;
         self.backgroundColor = [UIColor lightGrayColor];
