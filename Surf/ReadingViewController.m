@@ -217,7 +217,8 @@
 - (void)swipeLeft:(UISwipeGestureRecognizer *)sender
 {
     [self unwind];
-//    int current = [self.pickerView selectedRowInComponent:0];
+
+//    int current = (int)[self.pickerView selectedRowInComponent:0];
 //    if (current<self.buttonItems.count-1)
 //    {
 //        [self.pickerView selectRow:current+1 inComponent:0 animated:YES];
@@ -227,12 +228,12 @@
 
 - (void)swipeRight:(UISwipeGestureRecognizer *)sender
 {
-    int current = [self.pickerView selectedRowInComponent:0];
-    if (current>0)
-    {
-        [self.pickerView selectRow:current-1 inComponent:0 animated:YES];
-        [self selectedRow:current-1 inComponent:0];
-    }
+//    int current = (int)[self.pickerView selectedRowInComponent:0];
+//    if (current>0)
+//    {
+//        [self.pickerView selectRow:current-1 inComponent:0 animated:YES];
+//        [self selectedRow:current-1 inComponent:0];
+//    }
 }
 
 - (void)createActivityIndicator
