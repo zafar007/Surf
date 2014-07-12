@@ -575,7 +575,6 @@
     else
     {
         [self addTab:nil];
-        [self showTools];
     }
 }
 
@@ -616,35 +615,20 @@
 
 - (void)switchToTab:(int)newTabIndex
 {
-    CGAffineTransform translation;
-
-    for (UIView *view in self.view.subviews)
-    {
-        if ([view isKindOfClass:[UIWebView class]] && ![view isEqual:self.tabs[newTabIndex]])
-        {
-            translation = view.transform;
-            [view removeFromSuperview];
-        }
-    }
-
-    Tab *tab = self.tabs[newTabIndex];
-    [self.view insertSubview:tab aboveSubview:self.toolsView];
-
+    [self.tabs[self.currentTabIndex] removeFromSuperview];
     self.currentTabIndex = newTabIndex;
-
-    [self pingPageControlIndexPath:nil];
-
+    Tab *tab = self.tabs[self.currentTabIndex];
     tab.frame = CGRectMake(self.view.frame.origin.x,
-                           self.view.frame.origin.y,
+                           self.view.frame.origin.y+showOffset,
                            self.view.frame.size.width,
                            self.view.frame.size.height);
-
-    tab.transform = translation;
-
-    if (tab.request.URL)
-    {
-        [self showWeb];
-    }
+//    NSLog(@"%f",tab.transform.ty);
+//    if (!tab.transform.ty)
+//    {
+//        tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
+//    }
+    [self.view insertSubview:tab aboveSubview:self.toolsView];
+    [self pingPageControlIndexPath:nil];
 }
 
 - (void)removeTab:(NSNotification *)notification
@@ -708,19 +692,7 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    [self switchToTab:(int)indexPath.item];
-
-    [self.tabs[self.currentTabIndex] removeFromSuperview];
-    self.currentTabIndex = (int)indexPath.item;
-    Tab *tab = self.tabs[self.currentTabIndex];
-    tab.frame = CGRectMake(self.view.frame.origin.x,
-                           self.view.frame.origin.y+showOffset,
-                           self.view.frame.size.width,
-                           self.view.frame.size.height);
-//    tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
-    [self.view insertSubview:tab aboveSubview:self.toolsView];
-    [self pingPageControlIndexPath:nil];
-//    [self showWeb];
+    [self switchToTab:(int)indexPath.item];
 }
 
 #pragma mark - Page Control
@@ -838,7 +810,7 @@
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = YES;
     [UIView animateWithDuration:.3 animations:^{
-        tab.transform = CGAffineTransformMakeTranslation(0, 0);
+        tab.transform = CGAffineTransformMakeTranslation(0, -showOffset);
     }];
 
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
@@ -852,7 +824,7 @@
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = NO;
     [UIView animateWithDuration:.3 animations:^{
-        tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
+        tab.transform = CGAffineTransformMakeTranslation(0, 0);
     }];
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
