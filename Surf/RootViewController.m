@@ -8,7 +8,7 @@
 
 #define tabsOffset 20
 #define showOffset 300
-#define newTabAlpha 1//.25
+#define newTabAlpha .25
 #define oldTabAlpha 1
 
 #import "RootViewController.h"
@@ -530,14 +530,16 @@
 {
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
-    if ([self.tabs[indexPath.item] request])
-    {
-        cell.backgroundView = [self.tabs[indexPath.item] screenshot];
-    }
-    else
-    {
-        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
-    }
+    cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+
+//    if ([self.tabs[indexPath.item] request])
+//    {
+//        cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+//    }
+//    else
+//    {
+//        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+//    }
     [self pingPageControlIndexPath:indexPath];
     return cell;
 }
@@ -725,7 +727,10 @@
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     self.showingTools = true;
 
-    [self updateScreenshotOf:tab];
+    if (tab.request)
+    {
+        [self updateScreenshotOf:tab];
+    }
 }
 
 - (void)updateScreenshotOf:(Tab *)tab
