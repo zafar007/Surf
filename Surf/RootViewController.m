@@ -329,7 +329,7 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request] &&
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && //[self.tabs[self.currentTabIndex] request] &&
         [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
@@ -459,14 +459,11 @@
     self.currentTabIndex = newTabIndex;
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.frame = CGRectMake(self.view.frame.origin.x,
-                           self.view.frame.origin.y+showOffset,
+                           self.view.frame.origin.y,
                            self.view.frame.size.width,
                            self.view.frame.size.height);
-//    NSLog(@"%f",tab.transform.ty);
-//    if (!tab.transform.ty)
-//    {
-//        tab.transform = CGAffineTransformMakeTranslation(0, showOffset);
-//    }
+    tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx,tab.transform.ty+showOffset);
+    tab.userInteractionEnabled = NO;
     [self.view insertSubview:tab aboveSubview:self.toolsView];
     [self pingPageControlIndexPath:nil];
 }
@@ -989,7 +986,7 @@
         }
     }
 
-    if (self.showingTools && ![self.tabs[self.currentTabIndex] request])
+    if (![self.tabs[self.currentTabIndex] request])
     {
         [self.tabs[self.currentTabIndex] setAlpha:newTabAlpha];
     }
