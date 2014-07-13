@@ -20,7 +20,7 @@
         self.layer.borderWidth = 0.5;
         self.layer.masksToBounds = YES;
         self.scalesPageToFit = YES;
-        self.scrollView.bounces = NO;
+//        self.scrollView.bounces = NO;
 //        [self loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://www.google.com"]]];
     }
     return self;

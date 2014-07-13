@@ -143,18 +143,6 @@
     [self.view addSubview:self.circleButton];
 }
 
-- (void)toggleTools
-{
-    if (!self.showingTools)
-    {
-        [self showTools];
-    }
-    else
-    {
-        [self showWeb];
-    }
-}
-
 - (void)createToolsView
 {
     self.toolsView = [[UIView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
@@ -733,6 +721,26 @@
     cell.backgroundView = tab.screenshot;
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
+}
+
+- (void)toggleTools
+{
+    if (!self.showingTools)
+    {
+        [self showTools];
+    }
+    else
+    {
+        [self showWeb];
+    }
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (event.subtype == UIEventSubtypeMotionShake)
+    {
+        [self toggleTools];
+    }
 }
 
 #pragma mark - UIWebView Delegate Methods
