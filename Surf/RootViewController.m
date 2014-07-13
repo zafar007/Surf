@@ -91,7 +91,7 @@
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
-    [self createCircleButton];
+//    [self createCircleButton];
     [self createTabsCollectionView];
     [self createButtons];
     [self createOmnibar];
@@ -341,7 +341,7 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && //[self.tabs[self.currentTabIndex] request] &&
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request] &&
         [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
@@ -531,16 +531,8 @@
     SBCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"Cell" forIndexPath:indexPath];
 
     cell.backgroundView = [self.tabs[indexPath.item] screenshot];
+    [self.tabs[indexPath.item] request] ? [cell setAlpha:oldTabAlpha] : [cell setAlpha:newTabAlpha];
 
-//    if ([self.tabs[indexPath.item] request])
-//    {
-//        cell.backgroundView = [self.tabs[indexPath.item] screenshot];
-//    }
-//    else
-//    {
-//        cell.backgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
-//    }
-    [self pingPageControlIndexPath:indexPath];
     return cell;
 }
 
@@ -727,7 +719,7 @@
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
     self.showingTools = true;
 
-    if (tab.request)
+    if (newTabAlpha==1 || tab.request)
     {
         [self updateScreenshotOf:tab];
     }
@@ -977,6 +969,18 @@
 
 - (void)buttonCheck
 {
+    for (UICollectionViewCell *cell in self.tabsCollectionView.visibleCells)
+    {
+        if ([self.tabs[[self.tabsCollectionView indexPathForCell:cell].item] request])
+        {
+            cell.alpha = oldTabAlpha;
+        }
+        else
+        {
+            cell.alpha = newTabAlpha;
+        }
+    }
+
     if (self.showingTools && ![self.tabs[self.currentTabIndex] request])
     {
         [self.tabs[self.currentTabIndex] setAlpha:newTabAlpha];

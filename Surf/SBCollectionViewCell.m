@@ -41,7 +41,7 @@
     CGPoint translation = [sender translationInView:self];
     CGPoint velocity = [sender velocityInView:self];
 
-    if (translation.y < 0)
+    if (translation.y != 0)
     {
         self.transform = CGAffineTransformMakeTranslation(0, translation.y);
     }
@@ -61,7 +61,7 @@
 {
     if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
     {
-        if ([gestureRecognizer translationInView:self].y < -1)
+        if ([gestureRecognizer translationInView:self].y != 0)
         {
             return YES;
         }
