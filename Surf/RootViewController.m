@@ -417,8 +417,8 @@
     }
     else
     {
-//        [self addTab:nil];
-        [self addTab:@"https://www.google.com"];
+        [self addTab:nil];
+//        [self addTab:@"https://www.google.com"];
     }
 }
 
@@ -453,6 +453,10 @@
     {
         newTab.urlString = [self searchOrLoad:urlString];
         [self loadPage:newTab];
+    }
+    else
+    {
+//        [self.omnibar becomeFirstResponder];
     }
 }
 
@@ -500,6 +504,14 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+//    if ([self.tabs[indexPath.item] request])
+//    {
+//        [self.omnibar resignFirstResponder];
+//    }
+//    else
+//    {
+//        [self.omnibar becomeFirstResponder];
+//    }
     [self switchToTab:(int)indexPath.item];
 }
 
