@@ -420,8 +420,7 @@
     newTab.scrollView.delegate = self;
     [self.tabs addObject:newTab];
     self.pageControl.numberOfPages = self.tabs.count;
-//    self.refreshButton.enabled = NO;
-    [self.tabsCollectionView reloadData];
+    [self.tabsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.tabs.count-1 inSection:0]]];
 
     [self switchToTab:(int)self.tabs.count-1];
 
@@ -693,7 +692,6 @@
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
     tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
     cell.backgroundView = tab.screenshot;
-    [self.tabsCollectionView reloadData];
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];
 }
