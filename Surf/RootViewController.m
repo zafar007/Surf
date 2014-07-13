@@ -9,7 +9,7 @@
 #define tabsOffset 20
 #define showOffset 300
 #define newTabAlpha .25
-#define oldTabAlpha .25
+#define oldTabAlpha 1
 
 #import "RootViewController.h"
 #import "Tab.h"
