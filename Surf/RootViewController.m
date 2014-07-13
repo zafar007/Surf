@@ -8,7 +8,7 @@
 
 #define tabsOffset 20
 #define showOffset 300
-#define newTabAlpha .25
+#define newTabAlpha 1//.25
 #define oldTabAlpha 1
 
 #import "RootViewController.h"
@@ -341,7 +341,7 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request] &&
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && //[self.tabs[self.currentTabIndex] request] &&
         [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
@@ -350,6 +350,11 @@
     if (self.showingTools && [sender locationInView:self.view].y > showOffset && [sender translationInView:self.view].y > 0)
     {
         [self.omnibar resignFirstResponder];
+    }
+
+    if (!self.showingTools && ![self.tabs[self.currentTabIndex] request] && [sender translationInView:self.view].y > 0)
+    {
+        [self showTools];
     }
 
     if ([sender translationInView:self.view].x < 0)
@@ -1082,7 +1087,7 @@
     {
         if(!error)
         {
-            [self showStatusBarMessage:@"Saved to Pocket" hideAfter:1];
+            [self showStatusBarMessage:@"Pocketed" hideAfter:1];
 //            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Saved to Pocket!"
 //                                                              message:nil
 //                                                             delegate:nil
@@ -1260,30 +1265,23 @@
 
 -(void)showStatusBarMessage:(NSString *)message hideAfter:(NSTimeInterval)delay
 {
-    __block UIWindow *statusWindow = [[UIWindow alloc] initWithFrame:[UIApplication sharedApplication].statusBarFrame];
-    statusWindow.windowLevel = UIWindowLevelStatusBar + 1;
-    UILabel *label = [[UILabel alloc] initWithFrame:statusWindow.bounds];
+    UILabel *label = [[UILabel alloc] initWithFrame:[UIApplication sharedApplication].statusBarFrame];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = [UIColor clearColor];
-    label.textColor = [UIColor whiteColor];
-    label.font = [UIFont boldSystemFontOfSize:13];
+    label.textColor = [UIColor whiteColor];//[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+    label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:12];
     label.text = message;
-    [statusWindow addSubview:label];
-    [statusWindow makeKeyAndVisible];
-    label.layer.transform = CATransform3DMakeRotation(M_PI * 0.5, 1, 0, 0);
-    [UIView animateWithDuration:0.7 animations:^{
-        label.layer.transform = CATransform3DIdentity;
-    }completion:^(BOOL finished){
-        double delayInSeconds = delay;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [UIView animateWithDuration:0.5 animations:^{
-                label.layer.transform = CATransform3DMakeRotation(M_PI * 0.5, -1, 0, 0);
-            }completion:^(BOOL finished){
-                statusWindow = nil;
-                [[[UIApplication sharedApplication].delegate window] makeKeyAndVisible];
-            }];
-        });
+    label.alpha = 0;
+    [self.toolsView addSubview:label];
+
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    [UIView animateWithDuration:delay animations:^{
+        label.alpha = 1;
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:delay animations:^{
+            label.alpha = 0;
+            [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+        }];
     }];
 }
 

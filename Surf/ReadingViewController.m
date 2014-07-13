@@ -311,6 +311,7 @@
     {
         cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
     }
+    cell.defaultColor = [UIColor colorWithRed:227.0 / 255.0 green:227.0 / 255.0 blue:227.0 / 255.0 alpha:1.0];
 
     for (UIView *view in cell.contentView.subviews)
     {
