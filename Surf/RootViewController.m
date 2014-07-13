@@ -52,9 +52,6 @@
 @property UISwipeGestureRecognizer *swipeDown;
 @property UISwipeGestureRecognizer *swipeFromRight;
 @property UISwipeGestureRecognizer *swipeFromLeft;
-@property UIScreenEdgePanGestureRecognizer *edgeSwipeFromRight;
-@property UIScreenEdgePanGestureRecognizer *edgeSwipeFromLeft;
-@property UIScreenEdgePanGestureRecognizer *edgeSwipeFromTop;
 @property UILongPressGestureRecognizer *longPressOnPocket;
 @property UILongPressGestureRecognizer *longPressOnStar;
 @property BOOL showingTools;
@@ -329,28 +326,9 @@
 
 - (void)createGestures
 {
-//    self.tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPan:)];
-//    [self.view addGestureRecognizer:self.tap];
-//    self.tap.delegate = self;
-
-    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapPan:)];
-    [self.view addGestureRecognizer:self.pan];
+    self.pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     self.pan.delegate = self;
-
-    self.edgeSwipeFromRight = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromRight:)];
-    self.edgeSwipeFromRight.edges = UIRectEdgeRight;
-    self.edgeSwipeFromRight.delegate = self;
-    [self.view addGestureRecognizer:self.edgeSwipeFromRight];
-    
-    self.edgeSwipeFromLeft = [[UIScreenEdgePanGestureRecognizer alloc]initWithTarget:self action:@selector(handleEdgeSwipeFromLeft:)];
-    self.edgeSwipeFromLeft.edges = UIRectEdgeLeft;
-    self.edgeSwipeFromLeft.delegate = self;
-    [self.view addGestureRecognizer:self.edgeSwipeFromLeft];
-
-    self.edgeSwipeFromTop = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(handleEdgeSwipeFromTop:)];
-    self.edgeSwipeFromTop.edges = UIRectEdgeTop;
-    self.edgeSwipeFromTop.delegate = self;
-    [self.view addGestureRecognizer:self.edgeSwipeFromTop];
+    [self.view addGestureRecognizer:self.pan];
 
     self.longPressOnPocket = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(pocketAll:)];
     self.longPressOnPocket.delegate = self;
@@ -361,17 +339,22 @@
     [self.starButton addGestureRecognizer:self.longPressOnStar];
 }
 
-- (void)handleTapPan:(UIGestureRecognizer *)sender
+- (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request])
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [self.tabs[self.currentTabIndex] request] &&
+        [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
     }
 
-//    if ([sender translationInView:self.view].x > 50)
-//    {
-//        [self showReadingLinks];
-//    }
+    if ([sender translationInView:self.view].x < 0)
+    {
+
+    }
+    else if ([sender translationInView:self.view].x > 0)
+    {
+
+    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -387,108 +370,6 @@
     if (!self.showingTools && scrollView.contentOffset.y <= 0 && scrollView.panGestureRecognizer.state == 2)
     {
         [self showTools];
-    }
-}
-
-- (void)handleEdgeSwipeFromTop:(UIScreenEdgePanGestureRecognizer *)sender
-{
-    if (!self.showingTools)
-    {
-        [self showTools];
-    }
-}
-
-- (void)handleEdgeSwipeFromRight:(UIScreenEdgePanGestureRecognizer *)sender
-{
-    CGPoint point = [sender locationInView:self.view];
-
-    if (!self.showingTools && self.tabs.count > (self.currentTabIndex+1) && [self.tabs[self.currentTabIndex+1] request])
-    {
-        if (sender.state == UIGestureRecognizerStateBegan)
-        {
-            self.thisWebView = self.tabs[self.currentTabIndex];
-            self.rightWebView = self.tabs[self.currentTabIndex+1];
-
-            self.view.userInteractionEnabled = NO;
-            [self.view addSubview:self.rightWebView];
-        }
-
-        self.thisWebView.transform = CGAffineTransformMakeTranslation(-320+point.x, 0);
-        self.rightWebView.transform = CGAffineTransformMakeTranslation(point.x+20, 0);
-
-        if (sender.state == UIGestureRecognizerStateEnded)
-        {
-            if (point.x < self.view.frame.size.width/2)
-            {
-                [UIView animateWithDuration:.1 animations:^{
-                    self.thisWebView.transform = CGAffineTransformMakeTranslation(-340, 0);
-                    self.rightWebView.transform = CGAffineTransformMakeTranslation(0, 0);
-                }];
-
-                self.currentTabIndex++;
-                [self.thisWebView removeFromSuperview];
-                self.thisWebView = nil;
-                self.rightWebView = nil;
-            }
-            else
-            {
-                [UIView animateWithDuration:.1 animations:^{
-                    self.thisWebView.transform = CGAffineTransformMakeTranslation(0, 0);
-                    self.rightWebView.transform = CGAffineTransformMakeTranslation(340, 0);
-                }];
-                [self.rightWebView removeFromSuperview];
-                self.thisWebView = nil;
-                self.rightWebView = nil;
-            }
-            self.view.userInteractionEnabled = YES;
-        }
-    }
-}
-
-- (void)handleEdgeSwipeFromLeft:(UIScreenEdgePanGestureRecognizer *)sender
-{
-    CGPoint point = [sender locationInView:self.view];
-
-    if (!self.showingTools && (self.currentTabIndex-1) >= 0 && [self.tabs[self.currentTabIndex-1] request])
-    {
-        if (sender.state == UIGestureRecognizerStateBegan)
-        {
-            self.thisWebView = self.tabs[self.currentTabIndex];
-            self.leftWebView = self.tabs[self.currentTabIndex-1];
-
-            self.view.userInteractionEnabled = NO;
-            [self.view addSubview:self.leftWebView];
-        }
-
-        self.thisWebView.transform = CGAffineTransformMakeTranslation(point.x, 0);
-        self.leftWebView.transform = CGAffineTransformMakeTranslation(point.x-340, 0);
-
-        if (sender.state == UIGestureRecognizerStateEnded)
-        {
-            if (point.x > self.view.frame.size.width/2)
-            {
-                [UIView animateWithDuration:.1 animations:^{
-                    self.thisWebView.transform = CGAffineTransformMakeTranslation(340, 0);
-                    self.leftWebView.transform = CGAffineTransformMakeTranslation(0, 0);
-                }];
-
-                self.currentTabIndex--;
-                [self.thisWebView removeFromSuperview];
-                self.thisWebView = nil;
-                self.leftWebView = nil;
-            }
-            else
-            {
-                [UIView animateWithDuration:.1 animations:^{
-                    self.thisWebView.transform = CGAffineTransformMakeTranslation(0, 0);
-                    self.leftWebView.transform = CGAffineTransformMakeTranslation(-340, 0);
-                }];
-                [self.leftWebView removeFromSuperview];
-                self.thisWebView = nil;
-                self.leftWebView = nil;
-            }
-            self.view.userInteractionEnabled = YES;
-        }
     }
 }
 
@@ -781,7 +662,8 @@
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = YES;
     [UIView animateWithDuration:.3 animations:^{
-        tab.transform = CGAffineTransformMakeTranslation(0, -showOffset);
+//        tab.transform = CGAffineTransformMakeTranslation(0, -showOffset);
+        tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx, tab.transform.ty-showOffset);
     }];
 
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
@@ -795,7 +677,8 @@
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = NO;
     [UIView animateWithDuration:.3 animations:^{
-        tab.transform = CGAffineTransformMakeTranslation(0, 0);
+//        tab.transform = CGAffineTransformMakeTranslation(0, 0);
+        tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx, tab.transform.ty+showOffset);
     }];
 
     [[UIApplication sharedApplication]setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
