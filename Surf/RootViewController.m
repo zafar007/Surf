@@ -349,11 +349,31 @@
 
     if ([sender translationInView:self.view].x < 0)
     {
+        if (sender.state == UIGestureRecognizerStateBegan)
+        {
+            NSLog(@"setup");
+        }
 
+        NSLog(@"translate based on x");
+
+        if (sender.state == UIGestureRecognizerStateEnded)
+        {
+            NSLog(@"cleanup");
+        }
     }
     else if ([sender translationInView:self.view].x > 0)
     {
+        if (sender.state == UIGestureRecognizerStateBegan)
+        {
+            NSLog(@"setup");
+        }
 
+        NSLog(@"translate based on x");
+
+        if (sender.state == UIGestureRecognizerStateEnded)
+        {
+            NSLog(@"cleanup");
+        }
     }
 }
 
