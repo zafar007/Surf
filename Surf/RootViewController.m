@@ -347,6 +347,11 @@
         [self showWeb];
     }
 
+    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [sender translationInView:self.view].y > 0)
+    {
+        [self.omnibar resignFirstResponder];
+    }
+
     if ([sender translationInView:self.view].x < 0)
     {
         if (sender.state == UIGestureRecognizerStateBegan)
