@@ -488,20 +488,17 @@
     {
         [self addTab:nil];
     }
+    else
+    {
+        [self switchToTab:0];
+    }
 }
 
 #pragma mark - UICollectionView DataSource/Delegate Methods
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if ([self.tabs[indexPath.item] request])
-//    {
-//        [self.omnibar resignFirstResponder];
-//    }
-//    else
-//    {
-//        [self.omnibar becomeFirstResponder];
-//    }
+//    [self.tabs[indexPath.item] request] ? [self.omnibar resignFirstResponder] : [self.omnibar becomeFirstResponder];
     [self switchToTab:(int)indexPath.item];
 }
 
