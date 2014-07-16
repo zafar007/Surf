@@ -109,6 +109,20 @@
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+
+    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        [self adjustViews];
+    }
+    else
+    {
+        [self adjustViews];
+    }
+}
+
 - (void)loadButtonItems
 {
     self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
@@ -847,24 +861,13 @@
 
 #pragma mark - Landscape Layout Adjust
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+- (void)adjustViews
 {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-
     self.activity.center = self.view.center;
     self.tableView.frame = CGRectMake(self.view.frame.origin.x,
                                       self.view.frame.origin.y,
                                       self.view.frame.size.width,
                                       self.view.frame.size.height);
-
-    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
-    {
-
-    }
-    else
-    {
-
-    }
 }
 
 @end

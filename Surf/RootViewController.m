@@ -37,9 +37,11 @@
 @property UIButton *circleButton;
 @property UIImageView *wallPaper;
 @property UIView *toolsView;
+@property UICollectionViewFlowLayout *flowLayout;
 @property UICollectionView *tabsCollectionView;
 @property UIPickerView *tabsPickerView;
 @property FBShimmeringView *shimmeringView;
+@property UILabel *searchLabel;
 @property OmnibarDataSource *omnibarDataSource;
 //@property MLPAutoCompleteTextField *omnibar;
 @property HTAutocompleteTextField *omnibar;
@@ -125,6 +127,18 @@
     [self saveTabs];
 }
 
+//- (void)viewWillAppear:(BOOL)animated
+//{
+//    [super viewWillAppear:animated];
+//    [self adjustViews];
+//}
+
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+    [self adjustViews];
+}
+
 #pragma mark - Setup Scene
 - (void)editView
 {
@@ -158,7 +172,7 @@
 - (void)createOmnibar
 {
     CGRect omnibarFrame = CGRectMake(self.toolsView.frame.origin.x+20,          //20
-                                     self.toolsView.frame.size.height/2-50,     //284
+                                     self.toolsView.frame.size.height/2-50,     //234
                                      self.toolsView.frame.size.width-(2*20),    //280
                                      2*25);
 
@@ -194,14 +208,14 @@
     self.shimmeringView.shimmeringOpacity = 0.3;
     [self.toolsView insertSubview:self.shimmeringView belowSubview:self.omnibar];
 
-    UILabel *searchLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
-    searchLabel.text = @"search";
-    searchLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40];
-    searchLabel.textColor = [UIColor whiteColor];
-    searchLabel.textAlignment = NSTextAlignmentCenter;
-    searchLabel.backgroundColor = [UIColor clearColor];
+    self.searchLabel = [[UILabel alloc] initWithFrame:self.shimmeringView.bounds];
+    self.searchLabel.text = @"search";
+    self.searchLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40];
+    self.searchLabel.textColor = [UIColor whiteColor];
+    self.searchLabel.textAlignment = NSTextAlignmentCenter;
+    self.searchLabel.backgroundColor = [UIColor clearColor];
 
-    self.shimmeringView.contentView = searchLabel;
+    self.shimmeringView.contentView = self.searchLabel;
 }
 
 - (void)autoCompleteTextField:(MLPAutoCompleteTextField *)textField
@@ -232,14 +246,10 @@
 
 - (void)createTabsCollectionView
 {
-    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
 
-    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(self.view.frame.origin.x,
-                                                                                 tabsOffset,
-                                                                                 self.view.frame.size.width,
-                                                                                 148)
-                                                 collectionViewLayout:flowLayout];
+    self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
     self.tabsCollectionView.backgroundColor = [UIColor blackColor];
@@ -329,18 +339,27 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && //[self.tabs[self.currentTabIndex] request] &&
+    NSLog(self.showingTools ? @"1 YES" : @"1 NO");
+    NSLog([sender locationInView:self.view].y > showOffset ? @"1 YES" : @"1 NO");
+    NSLog([sender translationInView:self.view].y < 0 ? @"1 YES" : @"1 NO");
+
+    if (self.showingTools &&
+        [sender locationInView:self.view].y > showOffset &&
         [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
     }
 
-    if (self.showingTools && [sender locationInView:self.view].y > showOffset && [sender translationInView:self.view].y > 0)
+    if (self.showingTools &&
+        [sender locationInView:self.view].y > showOffset &&
+        [sender translationInView:self.view].y > 0)
     {
         [self.omnibar resignFirstResponder];
     }
 
-    if (!self.showingTools && ![self.tabs[self.currentTabIndex] request] && [sender translationInView:self.view].y > 0)
+    if (!self.showingTools &&
+        ![self.tabs[self.currentTabIndex] request] &&
+        [sender translationInView:self.view].y > 0)
     {
         [self showTools];
     }
@@ -349,28 +368,28 @@
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            NSLog(@"setup");
+//            NSLog(@"setup");
         }
 
-        NSLog(@"translate based on x");
+//        NSLog(@"translate based on x");
 
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            NSLog(@"cleanup");
+//            NSLog(@"cleanup");
         }
     }
     else if ([sender translationInView:self.view].x > 0)
     {
         if (sender.state == UIGestureRecognizerStateBegan)
         {
-            NSLog(@"setup");
+//            NSLog(@"setup");
         }
 
-        NSLog(@"translate based on x");
+//        NSLog(@"translate based on x");
 
         if (sender.state == UIGestureRecognizerStateEnded)
         {
-            NSLog(@"cleanup");
+//            NSLog(@"cleanup");
         }
     }
 }
@@ -458,11 +477,22 @@
     [self.tabs[self.currentTabIndex] removeFromSuperview];
     self.currentTabIndex = newTabIndex;
     Tab *tab = self.tabs[self.currentTabIndex];
-    tab.frame = CGRectMake(self.view.frame.origin.x,
-                           self.view.frame.origin.y,
-                           self.view.frame.size.width,
-                           self.view.frame.size.height);
-    tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx,tab.transform.ty+showOffset);
+    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        tab.frame = CGRectMake(self.view.frame.origin.x,
+                               self.view.frame.origin.y,
+                               self.view.frame.size.width,
+                               self.view.frame.size.height);
+        tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx,tab.transform.ty+showOffset);
+    }
+    else
+    {
+        tab.frame = CGRectMake(self.view.frame.origin.x,
+                               self.view.frame.origin.y,
+                               self.view.frame.size.height,
+                               self.view.frame.size.width);
+        tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx, tab.transform.ty+showOffset);
+    }
     tab.userInteractionEnabled = NO;
     [self.view insertSubview:tab aboveSubview:self.toolsView];
     [self pingPageControlIndexPath:nil];
@@ -504,7 +534,14 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    [self pingTabsCollectionFrame];
+    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        [self pingTabsCollectionFramePortrait];
+    }
+    else
+    {
+        [self pingTabsCollectionFrameLandscape];
+    }
     return self.tabs.count;
 }
 
@@ -520,7 +557,14 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(80, 148);
+//    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+//    {
+        return CGSizeMake(80, 148);
+//    }
+//    else
+//    {
+//        return CGSizeMake(148, 80);
+//    }
 }
 
 #pragma mark - UIPickerView DataSource/Delegate Methods
@@ -795,82 +839,135 @@
 
 #pragma mark - Landscape Layout Adjust
 
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+//move tabs
+//move page control
+//move 5 buttons
+//move search bar & shimmer view & search label
+
+- (void)adjustViews
 {
-    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
-
-    if (fromInterfaceOrientation == UIInterfaceOrientationLandscapeLeft || fromInterfaceOrientation == UIInterfaceOrientationLandscapeRight)
+    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
     {
-        CGRect frame = CGRectMake(self.view.frame.origin.x,
-                                  self.view.frame.origin.y,
-                                  self.view.frame.size.width,
-                                  self.view.frame.size.height);
-
-        self.wallPaper.frame = frame;
-        self.toolsView.frame = frame;
-        [self.tabs[self.currentTabIndex] setFrame:frame];
-
-//        self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,          //20
-//                                        self.toolsView.frame.size.height/2-50,     //284
-//                                        self.toolsView.frame.size.width-(2*20),    //280
-//                                        2*25);
-//        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
-//                                            188,
-//                                            self.view.frame.size.width,
-//                                            20);
-//        [self pingTabsCollectionFrame];
+        [self adjustViewsToPortrait];
     }
     else
     {
-        CGRect frame = CGRectMake(self.view.frame.origin.x,
-                                  self.view.frame.origin.y,
-                                  self.view.frame.size.height,
-                                  self.view.frame.size.width);
-
-        self.wallPaper.frame = frame;
-        self.toolsView.frame = frame;
-        [self.tabs[self.currentTabIndex] setFrame:CGRectZero];
-
-//        self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
-//                                            self.view.frame.size.width-168,
-//                                            self.view.frame.size.height,
-//                                            20);
-//        [self pingTabsCollectionFrameLandscape];
+        [self adjustViewsToLandscape];
     }
 }
 
-
-- (void)pingTabsCollectionFrame
+- (void)adjustViewsToPortrait
 {
+    CGRect frame = CGRectMake(self.view.frame.origin.x,
+                              self.view.frame.origin.y,
+                              self.view.frame.size.width,
+                              self.view.frame.size.height);
+
+    self.wallPaper.frame = frame;
+    self.toolsView.frame = frame;
+
+    Tab *tab = self.tabs[self.currentTabIndex];
+    tab.frame = CGRectMake(tab.frame.origin.x, tab.frame.origin.y, frame.size.width, frame.size.height);
+
+    [self pingTabsCollectionFramePortrait];
+
+    self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
+                                    self.toolsView.frame.size.height/2-50,
+                                    self.omnibar.frame.size.width,
+                                    self.omnibar.frame.size.height);
+    self.shimmeringView.frame = self.omnibar.frame;
+    self.searchLabel.frame = self.shimmeringView.bounds;
+
+    self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
+                                        168,
+                                        self.view.frame.size.width,
+                                        20);
+
+    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
+    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
+    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-70);
+    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-70);
+    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-70);
+    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-70);
+    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-70);
+    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-70);
+}
+
+- (void)adjustViewsToLandscape
+{
+    CGRect frame = CGRectMake(self.view.frame.origin.x,
+                              self.view.frame.origin.y,
+                              self.view.frame.size.height,
+                              self.view.frame.size.width);
+
+    self.wallPaper.frame = frame;
+    self.toolsView.frame = frame;
+
+    Tab *tab = self.tabs[self.currentTabIndex];
+    tab.frame = CGRectMake(tab.frame.origin.x, tab.frame.origin.y, frame.size.width, frame.size.height);
+
+    [self pingTabsCollectionFrameLandscape];
+
+    self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
+                                    self.toolsView.frame.origin.y+20,
+                                    frame.size.width,
+                                    self.omnibar.frame.size.height);
+
+    self.shimmeringView.frame = CGRectMake(frame.size.width/2-280/2, 20, 280, 50);
+
+    self.shimmeringView.center = CGPointMake(frame.size.width/2, self.shimmeringView.center.y);
+    self.searchLabel.frame = self.shimmeringView.bounds;
+
+    self.pageControl.frame =CGRectMake(self.view.frame.origin.x,
+                                       268,
+                                       self.view.frame.size.height,
+                                       20);
+
+    self.readButton.center = CGPointMake(frame.size.width/2, 90);
+    self.addButton.center = CGPointMake(frame.size.width/2-50, 90);
+    self.backButton.center = CGPointMake(frame.size.width/2-90, 90);
+    self.refreshButton.center = CGPointMake(frame.size.width/2+50, 90);
+    self.stopButton.center = CGPointMake(frame.size.width/2+50, 90);
+    self.forwardButton.center = CGPointMake(frame.size.width/2+90, 90);
+    self.shareButton.center = CGPointMake(frame.size.width/2-130, 90);
+    self.pocketButton.center = CGPointMake(frame.size.width/2+130, 90);
+}
+
+- (void)pingTabsCollectionFramePortrait
+{
+//    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+
     if (self.tabs.count*80 < self.view.frame.size.width)
     {
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.size.width/2-(45*self.tabs.count)+5,
-                                                   tabsOffset,
+                                                   self.view.frame.origin.y,
                                                    self.view.frame.size.width,
-                                                   148);
+                                                   148+2*tabsOffset);
     }
     else
     {
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
-                                                   tabsOffset,
+                                                   self.view.frame.origin.y,
                                                    self.view.frame.size.width,
-                                                   148);
+                                                   148+2*tabsOffset);
     }
 }
 
 - (void)pingTabsCollectionFrameLandscape
 {
+//    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+
     if (self.tabs.count*80 < self.view.frame.size.height)
     {
         self.tabsCollectionView.frame = CGRectMake(self.view.frame.size.height/2-(45*self.tabs.count)+5,
-                                                   self.view.frame.size.width - 148,
+                                                   self.omnibar.frame.size.height + self.readButton.frame.size.height+20,
                                                    self.view.frame.size.height,
                                                    148);
     }
     else
     {
-        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.x,
-                                                   self.view.frame.size.width - 148,
+        self.tabsCollectionView.frame = CGRectMake(self.view.frame.origin.y,
+                                                   self.omnibar.frame.size.height + self.readButton.frame.size.height+20,
                                                    self.view.frame.size.height,
                                                    148);
     }
@@ -884,52 +981,42 @@
     [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
-    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.stopButton addTarget:self action:@selector(cancelPage) forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
-    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.stopButton];
 
     self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.readButton addTarget:self action:@selector(showReadingLinks) forControlEvents:UIControlEventTouchUpInside];
     [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
     self.readButton.frame = CGRectMake(20, 20, 48, 48);
-    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.readButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.addButton addTarget:self action:@selector(addTab:) forControlEvents:UIControlEventTouchUpInside];
     [self.addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     self.addButton.frame = CGRectMake(20, 20, 32, 32);
-    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.addButton];
 
     self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(20, 20, 32, 32);
-    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.backButton];
 
     self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
     self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
-    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-70);
     [self.toolsView addSubview:self.forwardButton];
-
-
 
     self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
     [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     self.shareButton.frame = CGRectMake(20, 20, 32, 32);
-    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-70);
-//    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.shareButton];
 
 //    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -943,8 +1030,6 @@
     [self.pocketButton addTarget:self action:@selector(pocket) forControlEvents:UIControlEventTouchUpInside];
     [self.pocketButton setImage:[UIImage imageNamed:@"pocket"] forState:UIControlStateNormal];
     self.pocketButton.frame = CGRectMake(20, 20, 32, 32);
-    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-70);
-//    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2+100);
     [self.toolsView addSubview:self.pocketButton];
 
 //    self.facebookButton = [UIButton buttonWithType:UIButtonTypeSystem];
