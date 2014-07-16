@@ -91,6 +91,7 @@
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
+//    cell.backgroundColor = [UIColor lightGrayColor];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.separatorInset =  UIEdgeInsetsMake(0, 0, 0, 0);
     cell.imageView.image = [UIImage imageNamed:self.fullButtons[indexPath.row]];
