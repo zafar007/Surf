@@ -339,58 +339,28 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    NSLog(self.showingTools &&
-          [sender locationInView:self.view].y > showOffset &&
-          [sender translationInView:self.view].y < 0 ? @"YES" : @"NO");
+    int threshold;
+    if(UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
+    {
+        threshold = showOffset;
+    }
+    else
+    {
+        threshold = showOffset - 200;
+    }
 
     if (self.showingTools &&
-        [sender locationInView:self.view].y > showOffset &&
+        [sender locationInView:self.view].y > threshold &&
         [sender translationInView:self.view].y < 0)
     {
         [self showWeb];
     }
 
     if (self.showingTools &&
-        [sender locationInView:self.view].y > showOffset &&
+        [sender locationInView:self.view].y > threshold &&
         [sender translationInView:self.view].y > 0)
     {
         [self.omnibar resignFirstResponder];
-    }
-
-    if (!self.showingTools &&
-        ![self.tabs[self.currentTabIndex] request] &&
-        [sender translationInView:self.view].y > 0)
-    {
-        [self showTools];
-    }
-
-    if ([sender translationInView:self.view].x < 0)
-    {
-        if (sender.state == UIGestureRecognizerStateBegan)
-        {
-//            NSLog(@"setup");
-        }
-
-//        NSLog(@"translate based on x");
-
-        if (sender.state == UIGestureRecognizerStateEnded)
-        {
-//            NSLog(@"cleanup");
-        }
-    }
-    else if ([sender translationInView:self.view].x > 0)
-    {
-        if (sender.state == UIGestureRecognizerStateBegan)
-        {
-//            NSLog(@"setup");
-        }
-
-//        NSLog(@"translate based on x");
-
-        if (sender.state == UIGestureRecognizerStateEnded)
-        {
-//            NSLog(@"cleanup");
-        }
     }
 }
 
