@@ -48,8 +48,13 @@
 
     if (sender.state == UIGestureRecognizerStateEnded && (translation.y < -100 || velocity.y < -1000))
     {
-        self.transform = CGAffineTransformMakeTranslation(0, -150);     //slowdown
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
+        [UIView animateWithDuration:.3 animations:^{
+            self.transform = CGAffineTransformMakeTranslation(0, -300);     //slowdown
+        }
+        completion:^(BOOL finished)
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
+        }];
     }
     else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
     {

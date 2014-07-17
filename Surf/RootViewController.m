@@ -527,14 +527,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
-//    {
-        return CGSizeMake(80, 148);
-//    }
-//    else
-//    {
-//        return CGSizeMake(148, 80);
-//    }
+    return CGSizeMake(80, 148);
 }
 
 #pragma mark - UIPickerView DataSource/Delegate Methods
@@ -840,6 +833,7 @@
     tab.frame = CGRectMake(tab.frame.origin.x, tab.frame.origin.y, frame.size.width, frame.size.height);
 
     [self pingTabsCollectionFramePortrait];
+    self.tabsCollectionView.hidden = NO;
 
     self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
                                     self.toolsView.frame.size.height/2-50,
@@ -877,14 +871,16 @@
     tab.frame = CGRectMake(tab.frame.origin.x, tab.frame.origin.y, frame.size.width, frame.size.height);
 
     [self pingTabsCollectionFrameLandscape];
+    self.tabsCollectionView.hidden = !YES;
+
+    int omnibarYOffset = 20;
+    int buttonsYOffset = 90;
 
     self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
-                                    self.toolsView.frame.origin.y+20,
+                                    self.toolsView.frame.origin.y+omnibarYOffset,
                                     frame.size.width,
                                     self.omnibar.frame.size.height);
-
-    self.shimmeringView.frame = CGRectMake(frame.size.width/2-280/2, 20, 280, 50);
-
+    self.shimmeringView.frame = CGRectMake(frame.size.width/2-280/2, omnibarYOffset, 280, 50);
     self.shimmeringView.center = CGPointMake(frame.size.width/2, self.shimmeringView.center.y);
     self.searchLabel.frame = self.shimmeringView.bounds;
 
@@ -893,14 +889,14 @@
                                        self.view.frame.size.height,
                                        20);
 
-    self.readButton.center = CGPointMake(frame.size.width/2, 90);
-    self.addButton.center = CGPointMake(frame.size.width/2-50, 90);
-    self.backButton.center = CGPointMake(frame.size.width/2-90, 90);
-    self.refreshButton.center = CGPointMake(frame.size.width/2+50, 90);
-    self.stopButton.center = CGPointMake(frame.size.width/2+50, 90);
-    self.forwardButton.center = CGPointMake(frame.size.width/2+90, 90);
-    self.shareButton.center = CGPointMake(frame.size.width/2-130, 90);
-    self.pocketButton.center = CGPointMake(frame.size.width/2+130, 90);
+    self.readButton.center = CGPointMake(frame.size.width/2,        buttonsYOffset);
+    self.addButton.center = CGPointMake(frame.size.width/2-50,      buttonsYOffset);
+    self.backButton.center = CGPointMake(frame.size.width/2-90,     buttonsYOffset);
+    self.refreshButton.center = CGPointMake(frame.size.width/2+50,  buttonsYOffset);
+    self.stopButton.center = CGPointMake(frame.size.width/2+50,     buttonsYOffset);
+    self.forwardButton.center = CGPointMake(frame.size.width/2+90,  buttonsYOffset);
+    self.shareButton.center = CGPointMake(frame.size.width/2-130,   buttonsYOffset);
+    self.pocketButton.center = CGPointMake(frame.size.width/2+130,  buttonsYOffset);
 }
 
 - (void)pingTabsCollectionFramePortrait
