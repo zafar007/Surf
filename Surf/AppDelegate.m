@@ -32,13 +32,12 @@
                          @"feedly",
                          @"pocket",
                          @"instapaper",
-                         @"readability"
+                         @"readability",
+                         @"rss"
                          ];
-    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"])
-    {
-        [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
+
+    [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 

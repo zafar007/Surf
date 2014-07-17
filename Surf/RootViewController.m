@@ -718,7 +718,14 @@
 {
     NSIndexPath *path = [NSIndexPath indexPathForItem:self.currentTabIndex inSection:0];
     UICollectionViewCell *cell = [self.tabsCollectionView cellForItemAtIndexPath:path];
-    tab.screenshot = [tab snapshotViewAfterScreenUpdates:YES];
+    UIView *view = [tab snapshotViewAfterScreenUpdates:YES];
+
+    if (view.frame.size.width == self.view.frame.size.height)
+    {
+        view.transform = CGAffineTransformMakeRotation(M_PI_2);
+    }
+
+    tab.screenshot = view;
     cell.backgroundView = tab.screenshot;
 
     [self pingPageControlIndexPath:[NSIndexPath indexPathForItem:self.currentTabIndex inSection:0]];

@@ -29,6 +29,7 @@
 #import "Reddit.h"
 #import "Producthunt.h"
 #import "Gmail.h"
+#import "RSS.h"
 @import Twitter;
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
@@ -69,6 +70,7 @@
 @property Reddit *reddit;
 @property Producthunt *producthunt;
 @property Gmail *gmail;
+@property RSS *rss;
 @end
 
 @implementation ReadingViewController
@@ -151,6 +153,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadReddit) name:@"reddit" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGmail) name:@"gmail" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadRss) name:@"rss" object:nil];
 }
 
 - (void)createButtons
@@ -780,6 +783,27 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Gmail" object:nil];
     self.data = notification.object;
     self.selectedClass = [Gmail class];
+    [self loadServiceUsing:PickTableView];
+}
+
+- (void)loadRss
+{
+    if (!self.rss)
+    {
+        self.rss = [RSS new];
+    }
+    [self.rss getData:@""];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactRss:) name:@"Rss" object:nil];
+
+    //@"http://techcrunch.com/feed/"
+    //@"http://www.theverge.com/rss/index.xml"
+}
+
+- (void)reactRss:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Rss" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [RSS class];
     [self loadServiceUsing:PickTableView];
 }
 

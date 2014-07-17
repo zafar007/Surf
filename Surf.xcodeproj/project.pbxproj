@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E4641F519788D5B00E36923 /* MWFeedParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641F019788D5B00E36923 /* MWFeedParser.m */; };
+		8E4641F619788D5B00E36923 /* MWFeedInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641F219788D5B00E36923 /* MWFeedInfo.m */; };
+		8E4641F719788D5B00E36923 /* MWFeedItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641F419788D5B00E36923 /* MWFeedItem.m */; };
+		8E46420119788D9200E36923 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641FA19788D9200E36923 /* NSString+HTML.m */; };
+		8E46420219788D9200E36923 /* NSDate+InternetDateTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641FC19788D9200E36923 /* NSDate+InternetDateTime.m */; };
+		8E46420319788D9200E36923 /* GTMNSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4641FE19788D9200E36923 /* GTMNSString+HTML.m */; };
+		8E46420419788D9200E36923 /* NSString+XMLEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E46420019788D9200E36923 /* NSString+XMLEntities.m */; };
+		8E4642071978902D00E36923 /* RSS.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4642061978902D00E36923 /* RSS.m */; };
 		8E4E0FD0195300E400477A54 /* Producthunt.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E4E0FCF195300E400477A54 /* Producthunt.m */; };
 		8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5972D6195400F800B849D3 /* SBSwitch.m */; };
 		8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */; };
@@ -82,6 +90,23 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8E4641EE19788D5B00E36923 /* MWFeedParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWFeedParser.h; sourceTree = "<group>"; };
+		8E4641EF19788D5B00E36923 /* MWFeedParser_Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWFeedParser_Private.h; sourceTree = "<group>"; };
+		8E4641F019788D5B00E36923 /* MWFeedParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWFeedParser.m; sourceTree = "<group>"; };
+		8E4641F119788D5B00E36923 /* MWFeedInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWFeedInfo.h; sourceTree = "<group>"; };
+		8E4641F219788D5B00E36923 /* MWFeedInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWFeedInfo.m; sourceTree = "<group>"; };
+		8E4641F319788D5B00E36923 /* MWFeedItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MWFeedItem.h; sourceTree = "<group>"; };
+		8E4641F419788D5B00E36923 /* MWFeedItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MWFeedItem.m; sourceTree = "<group>"; };
+		8E4641F919788D9200E36923 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
+		8E4641FA19788D9200E36923 /* NSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+HTML.m"; sourceTree = "<group>"; };
+		8E4641FB19788D9200E36923 /* NSDate+InternetDateTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+InternetDateTime.h"; sourceTree = "<group>"; };
+		8E4641FC19788D9200E36923 /* NSDate+InternetDateTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+InternetDateTime.m"; sourceTree = "<group>"; };
+		8E4641FD19788D9200E36923 /* GTMNSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTMNSString+HTML.h"; sourceTree = "<group>"; };
+		8E4641FE19788D9200E36923 /* GTMNSString+HTML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTMNSString+HTML.m"; sourceTree = "<group>"; };
+		8E4641FF19788D9200E36923 /* NSString+XMLEntities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+XMLEntities.h"; sourceTree = "<group>"; };
+		8E46420019788D9200E36923 /* NSString+XMLEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+XMLEntities.m"; sourceTree = "<group>"; };
+		8E4642051978902D00E36923 /* RSS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSS.h; sourceTree = "<group>"; };
+		8E4642061978902D00E36923 /* RSS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSS.m; sourceTree = "<group>"; };
 		8E4E0FCE195300E400477A54 /* Producthunt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Producthunt.h; sourceTree = "<group>"; };
 		8E4E0FCF195300E400477A54 /* Producthunt.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Producthunt.m; sourceTree = "<group>"; };
 		8E5972D5195400F800B849D3 /* SBSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBSwitch.h; sourceTree = "<group>"; };
@@ -265,8 +290,32 @@
 				8E97B4B41951D06000068AEB /* Readability.m */,
 				8EF62FAD195BE5D00084754F /* Gmail.h */,
 				8EF62FAE195BE5D00084754F /* Gmail.m */,
+				8E4642051978902D00E36923 /* RSS.h */,
+				8E4642061978902D00E36923 /* RSS.m */,
 			);
 			name = Services;
+			sourceTree = "<group>";
+		};
+		8E4641F819788D7300E36923 /* MWFeedParser */ = {
+			isa = PBXGroup;
+			children = (
+				8E4641EE19788D5B00E36923 /* MWFeedParser.h */,
+				8E4641EF19788D5B00E36923 /* MWFeedParser_Private.h */,
+				8E4641F019788D5B00E36923 /* MWFeedParser.m */,
+				8E4641F119788D5B00E36923 /* MWFeedInfo.h */,
+				8E4641F219788D5B00E36923 /* MWFeedInfo.m */,
+				8E4641F319788D5B00E36923 /* MWFeedItem.h */,
+				8E4641F419788D5B00E36923 /* MWFeedItem.m */,
+				8E4641F919788D9200E36923 /* NSString+HTML.h */,
+				8E4641FA19788D9200E36923 /* NSString+HTML.m */,
+				8E4641FB19788D9200E36923 /* NSDate+InternetDateTime.h */,
+				8E4641FC19788D9200E36923 /* NSDate+InternetDateTime.m */,
+				8E4641FD19788D9200E36923 /* GTMNSString+HTML.h */,
+				8E4641FE19788D9200E36923 /* GTMNSString+HTML.m */,
+				8E4641FF19788D9200E36923 /* NSString+XMLEntities.h */,
+				8E46420019788D9200E36923 /* NSString+XMLEntities.m */,
+			);
+			name = MWFeedParser;
 			sourceTree = "<group>";
 		};
 		8E5972D8195404A700B849D3 /* SettingsVC */ = {
@@ -370,6 +419,7 @@
 				8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */,
 				8EAFE6651970A74100BEE3D6 /* FBShimmering */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
+				8E4641F819788D7300E36923 /* MWFeedParser */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,
@@ -596,6 +646,7 @@
 				8EBF3162195FA0CF00286544 /* MCSwipeTableViewCell.m in Sources */,
 				8E97B4C11951D0B400068AEB /* Bookmarks.m in Sources */,
 				8EC7CF0D1958E25200C61C3F /* SFHFKeychainUtils.m in Sources */,
+				8E4641F619788D5B00E36923 /* MWFeedInfo.m in Sources */,
 				8EC7CF0B1958E25200C61C3F /* PocketAPILogin.m in Sources */,
 				8E97B4CA1951D0DA00068AEB /* Reddit.m in Sources */,
 				8E6CA4DE19450D8800148137 /* AppDelegate.m in Sources */,
@@ -604,8 +655,10 @@
 				8E911ECE194E5B11005FC87F /* Twitter.m in Sources */,
 				8EBF3173195FDE1800286544 /* MLPAutoCompleteTextField.m in Sources */,
 				8EBF31781960AE3400286544 /* OmnibarDataSource.m in Sources */,
+				8E4642071978902D00E36923 /* RSS.m in Sources */,
 				8E68BA95194687540019658A /* SDImageCache.m in Sources */,
 				8E68BA99194687540019658A /* SDWebImageDownloaderOperation.m in Sources */,
+				8E46420419788D9200E36923 /* NSString+XMLEntities.m in Sources */,
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,
 				8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */,
 				8E97B4B81951D08400068AEB /* Facebook.m in Sources */,
@@ -621,8 +674,10 @@
 				8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
+				8E46420319788D9200E36923 /* GTMNSString+HTML.m in Sources */,
 				8EAFE66D1970A74100BEE3D6 /* FBShimmeringView.m in Sources */,
 				8E5972D7195400F800B849D3 /* SBSwitch.m in Sources */,
+				8E4641F519788D5B00E36923 /* MWFeedParser.m in Sources */,
 				8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */,
 				8E5CB9B11960F5A0002B3567 /* HTAutocompleteManager.m in Sources */,
 				8E97B4A91951CFE300068AEB /* Feedly.m in Sources */,
@@ -638,9 +693,12 @@
 				8E97B4B21951D01E00068AEB /* Instapaper.m in Sources */,
 				8EAFE66C1970A74100BEE3D6 /* FBShimmeringLayer.m in Sources */,
 				8E6CA50319450DCD00148137 /* Tab.m in Sources */,
+				8E46420119788D9200E36923 /* NSString+HTML.m in Sources */,
 				8E97B4BE1951D0A100068AEB /* Dribbble.m in Sources */,
+				8E4641F719788D5B00E36923 /* MWFeedItem.m in Sources */,
 				8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */,
 				8E97B4AC1951CFE900068AEB /* Pocket.m in Sources */,
+				8E46420219788D9200E36923 /* NSDate+InternetDateTime.m in Sources */,
 				8E68BA9E194687540019658A /* UIImage+MultiFormat.m in Sources */,
 				8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */,
 				8E68BA9D194687540019658A /* UIImage+GIF.m in Sources */,
