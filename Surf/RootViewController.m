@@ -339,9 +339,9 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    NSLog(self.showingTools ? @"1 YES" : @"1 NO");
-    NSLog([sender locationInView:self.view].y > showOffset ? @"1 YES" : @"1 NO");
-    NSLog([sender translationInView:self.view].y < 0 ? @"1 YES" : @"1 NO");
+    NSLog(self.showingTools &&
+          [sender locationInView:self.view].y > showOffset &&
+          [sender translationInView:self.view].y < 0 ? @"YES" : @"NO");
 
     if (self.showingTools &&
         [sender locationInView:self.view].y > showOffset &&
