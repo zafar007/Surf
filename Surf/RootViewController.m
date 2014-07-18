@@ -11,6 +11,8 @@
 #define newTabAlpha .25
 #define oldTabAlpha 1
 
+#define kWall @"3"
+
 #import "RootViewController.h"
 #import "Tab.h"
 #import "ReadingViewController.h"
@@ -142,7 +144,7 @@
 #pragma mark - Setup Scene
 - (void)editView
 {
-    self.wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"back"]];
+    self.wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:kWall]];
     [self.view addSubview:self.wallPaper];
 }
 

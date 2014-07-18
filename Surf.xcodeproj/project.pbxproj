@@ -34,6 +34,7 @@
 		8E68BA9F194687540019658A /* UIImage+WebP.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA8E194687540019658A /* UIImage+WebP.m */; };
 		8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA90194687540019658A /* UIImageView+HighlightedWebCache.m */; };
 		8E68BAA1194687540019658A /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA92194687540019658A /* UIImageView+WebCache.m */; };
+		8E69CFDE197959F000BE166C /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E69CFDD197959F000BE166C /* UIImage+ImageEffects.m */; };
 		8E6CA4CE19450D8800148137 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6CA4CD19450D8800148137 /* Foundation.framework */; };
 		8E6CA4D019450D8800148137 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6CA4CF19450D8800148137 /* CoreGraphics.framework */; };
 		8E6CA4D219450D8800148137 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E6CA4D119450D8800148137 /* UIKit.framework */; };
@@ -146,6 +147,8 @@
 		8E68BA90194687540019658A /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
 		8E68BA91194687540019658A /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		8E68BA92194687540019658A /* UIImageView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+WebCache.m"; sourceTree = "<group>"; };
+		8E69CFDC197959F000BE166C /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
+		8E69CFDD197959F000BE166C /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		8E6CA4CA19450D8800148137 /* Surf.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Surf.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E6CA4CD19450D8800148137 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8E6CA4CF19450D8800148137 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -378,6 +381,15 @@
 			path = SDWebImage;
 			sourceTree = "<group>";
 		};
+		8E69CFDF19795C5400BE166C /* ImageBlur */ = {
+			isa = PBXGroup;
+			children = (
+				8E69CFDC197959F000BE166C /* UIImage+ImageEffects.h */,
+				8E69CFDD197959F000BE166C /* UIImage+ImageEffects.m */,
+			);
+			name = ImageBlur;
+			sourceTree = "<group>";
+		};
 		8E6CA4C119450D8800148137 = {
 			isa = PBXGroup;
 			children = (
@@ -420,6 +432,7 @@
 				8EAFE6651970A74100BEE3D6 /* FBShimmering */,
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E4641F819788D7300E36923 /* MWFeedParser */,
+				8E69CFDF19795C5400BE166C /* ImageBlur */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,
@@ -699,6 +712,7 @@
 				8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */,
 				8E97B4AC1951CFE900068AEB /* Pocket.m in Sources */,
 				8E46420219788D9200E36923 /* NSDate+InternetDateTime.m in Sources */,
+				8E69CFDE197959F000BE166C /* UIImage+ImageEffects.m in Sources */,
 				8E68BA9E194687540019658A /* UIImage+MultiFormat.m in Sources */,
 				8E68BAA0194687540019658A /* UIImageView+HighlightedWebCache.m in Sources */,
 				8E68BA9D194687540019658A /* UIImage+GIF.m in Sources */,

@@ -10,6 +10,8 @@
 #define PickTableView 0
 #define PickCollectionView 1
 
+#define kWall @"back"
+
 #import "ReadingViewController.h"
 #import "SettingsViewController.h"
 #import "MCSwipeTableViewCell.h"
@@ -34,6 +36,7 @@
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
 #import "PocketAPI.h"
+#import "UIImage+ImageEffects.h"
 
 @interface ReadingViewController () <
                                     UITableViewDataSource,
@@ -80,8 +83,8 @@
     [super viewDidLoad];
 
     self.view.backgroundColor = [UIColor lightGrayColor];
-//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
     [self loadButtonItems];
     [self loadServiceObservers];
@@ -178,7 +181,19 @@
                                                   style:UITableViewStylePlain];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.backgroundColor = [UIColor lightGrayColor];
+    self.tableView.backgroundColor = [UIColor clearColor];
+
+//    UIView *background = [[UIView alloc] initWithFrame:self.tableView.bounds];
+//    UIImageView *wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:kWall]];
+//    [background addSubview:wallPaper];
+//    UIView *black = [[UIView alloc] initWithFrame:self.tableView.bounds];
+//    black.backgroundColor = [UIColor blackColor];
+//    black.alpha = .75;
+//    [background addSubview:black];
+//
+//    self.tableView.backgroundView = background;
+
+//    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:kWall] applyDarkEffect]];
 //    self.tableView.separatorInset = UIEdgeInsetsZero;
     [self.view addSubview:self.tableView];
     self.tableView.hidden = YES;
@@ -327,6 +342,7 @@
         cell = [[MCSwipeTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"TableCell"];
     }
     cell.defaultColor = [UIColor colorWithRed:227.0 / 255.0 green:227.0 / 255.0 blue:227.0 / 255.0 alpha:1.0];
+//    cell.backgroundColor = [UIColor clearColor];
 
     for (UIView *view in cell.contentView.subviews)
     {
@@ -340,7 +356,6 @@
 
     if ([layoutViews[@"simple"] boolValue])
     {
-//        cell.contentView.backgroundColor = [UIColor blackColor];
         cell.textLabel.text = layoutViews[@"text"];
         cell.textLabel.lineBreakMode = NSLineBreakByWordWrapping;
         cell.textLabel.numberOfLines = 0;
@@ -792,11 +807,9 @@
     {
         self.rss = [RSS new];
     }
-    [self.rss getData:@""];
+    [self.rss getData:@"http://techcrunch.com/feed/"];
+//    [self.rss getData:@"http://www.theverge.com/rss/index.xml"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactRss:) name:@"Rss" object:nil];
-
-    //@"http://techcrunch.com/feed/"
-    //@"http://www.theverge.com/rss/index.xml"
 }
 
 - (void)reactRss:(NSNotification *)notification
