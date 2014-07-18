@@ -149,7 +149,13 @@
 {
 //    NSString *text = post[@"text"];
 //    CGSize constraint = CGSizeMake(CELL_CONTENT_WIDTH - (CELL_CONTENT_MARGIN * 2), 20000.0f);
-//    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
+////    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:FONT_SIZE] constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
+//    CGSize size = [text sizeWithFont:[UIFont systemFontOfSize:13] forWidth:320 lineBreakMode:NSLineBreakByWordWrapping];
+//
+//    CGRect frame = text boundingRectWithSize:<#(CGSize)#> options:<#(NSStringDrawingOptions)#> attributes:<#(NSDictionary *)#> context:<#(NSStringDrawingContext *)#>
+//
+//    NSLog(@"height: %f",size.height);
+
 //    CGFloat height = MAX(size.height, 44.0f);
 //    return height + (CELL_CONTENT_MARGIN * 2);
 

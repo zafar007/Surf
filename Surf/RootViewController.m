@@ -724,7 +724,7 @@
 
     if (view.frame.size.width == self.view.frame.size.height)
     {
-        view.transform = CGAffineTransformMakeRotation(M_PI_2);
+        view.transform = CGAffineTransformMakeRotation(-M_PI_2);
     }
 
     tab.screenshot = view;
@@ -1088,6 +1088,15 @@
     {
         self.refreshButton.hidden = NO;
         self.stopButton.hidden = YES;
+    }
+
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"])
+    {
+        self.pocketButton.hidden = NO;
+    }
+    else
+    {
+        self.pocketButton.hidden = YES;
     }
 }
 

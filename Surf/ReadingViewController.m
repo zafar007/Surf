@@ -194,7 +194,7 @@
 //    self.tableView.backgroundView = background;
 
 //    self.tableView.backgroundView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:kWall] applyDarkEffect]];
-//    self.tableView.separatorInset = UIEdgeInsetsZero;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
     [self.view addSubview:self.tableView];
     self.tableView.hidden = YES;
 }
@@ -238,12 +238,12 @@
     self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
     self.swipeLeft.delegate = self;
     self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:self.swipeLeft];
+//    [self.view addGestureRecognizer:self.swipeLeft];
 
     self.swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
     self.swipeRight.delegate = self;
     self.swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:self.swipeRight];
+//    [self.view addGestureRecognizer:self.swipeRight];
 }
 
 - (void)swipeLeft:(UISwipeGestureRecognizer *)sender
@@ -388,99 +388,99 @@
         [cell.contentView addSubview:layoutViews[@"contentView"]];
     }
 
-//    if ([layoutViews[@"Cell1Exist"] boolValue])
-//    {
-//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell1Image"]]
-//                                color:layoutViews[@"Cell1Color"]
-//                                 mode:[layoutViews[@"Cell1Mode"] intValue]
-//                                state:MCSwipeTableViewCellState1
-//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-//         {
-//             if (mode == MCSwipeTableViewCellModeExit)
-//             {
-//                 [self deleteCell:cell];
-//             }
-//             if (self.selectedClass == [Pocket class])
-//             {
-//                 NSLog(@"%@",self.data);
-//                 NSLog(@"%@",self.data[indexPath.row][@"item_id"]);
-//                 [Pocket archivePocket:self.data[indexPath.row][@"item_id"]];
-//             }
-//             else if (self.selectedClass == [History class])
-//             {
-//                 NSMutableArray *temp = [self.data mutableCopy];
-//                 [temp removeObject:self.data[indexPath.row]];
-//                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"history"];
-//             }
-//             else if (self.selectedClass == [Bookmarks class])
-//             {
-//                 NSMutableArray *temp = [self.data mutableCopy];
-//                 [temp removeObject:self.data[indexPath.row]];
-//                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"bookmarks"];
-//             }
-//             else if (self.selectedClass == [Twitter class] ||
-//                      self.selectedClass == [Facebook class] ||
-//                      self.selectedClass == [Hackernews class] ||
-//                      self.selectedClass == [Producthunt class] ||
-//                      self.selectedClass == [Dribbble class] ||
-//                      self.selectedClass == [Reddit class] ||
-//                      self.selectedClass == [Designernews class])
-//             {
-//                 NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
-//                 [self pocket:urlString];
-//             }
-//         }];
-//    }
-//    if ([layoutViews[@"Cell2Exist"] boolValue])
-//    {
-//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell2Image"]]
-//                                color:layoutViews[@"Cell2Color"]
-//                                 mode:[layoutViews[@"Cell2Mode"] intValue]
-//                                state:MCSwipeTableViewCellState2
-//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-//         {
-//             if (mode == MCSwipeTableViewCellModeExit)
-//             {
-//                 [self deleteCell:cell];
-//             }
-//             if (self.selectedClass == [Pocket class])
-//             {
-//                 [Pocket deletePocket:self.data[indexPath.row][@"item_id"]];
-//             }
-//             else if (self.selectedClass == [Twitter class])
-//             {
-//                 [Twitter retweetAdvanced:self.data[indexPath.row]];
-//             }
-//         }];
-//    }
-//    if ([layoutViews[@"Cell3Exist"] boolValue])
-//    {
-//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell3Image"]]
-//                                color:layoutViews[@"Cell3Color"]
-//                                 mode:[layoutViews[@"Cell3Mode"] intValue]
-//                                state:MCSwipeTableViewCellState3
-//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-//         {
-//             if (mode == MCSwipeTableViewCellModeExit)
-//             {
-//                 [self deleteCell:cell];
-//             }
-//         }];
-//    }
-//    if ([layoutViews[@"Cell4Exist"] boolValue])
-//    {
-//        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell4Image"]]
-//                                color:layoutViews[@"Cell4Color"]
-//                                 mode:[layoutViews[@"Cell4Mode"] intValue]
-//                                state:MCSwipeTableViewCellState4
-//                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
-//         {
-//             if (mode == MCSwipeTableViewCellModeExit)
-//             {
-//                 [self deleteCell:cell];
-//             }
-//         }];
-//    }
+    if ([layoutViews[@"Cell1Exist"] boolValue])
+    {
+        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell1Image"]]
+                                color:layoutViews[@"Cell1Color"]
+                                 mode:[layoutViews[@"Cell1Mode"] intValue]
+                                state:MCSwipeTableViewCellState1
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             if (mode == MCSwipeTableViewCellModeExit)
+             {
+                 [self deleteCell:cell];
+             }
+             if (self.selectedClass == [Pocket class])
+             {
+                 NSLog(@"%@",self.data);
+                 NSLog(@"%@",self.data[indexPath.row][@"item_id"]);
+                 [Pocket archivePocket:self.data[indexPath.row][@"item_id"]];
+             }
+             else if (self.selectedClass == [History class])
+             {
+                 NSMutableArray *temp = [self.data mutableCopy];
+                 [temp removeObject:self.data[indexPath.row]];
+                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"history"];
+             }
+             else if (self.selectedClass == [Bookmarks class])
+             {
+                 NSMutableArray *temp = [self.data mutableCopy];
+                 [temp removeObject:self.data[indexPath.row]];
+                 [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:temp] forKey:@"bookmarks"];
+             }
+             else if (self.selectedClass == [Twitter class] ||
+                      self.selectedClass == [Facebook class] ||
+                      self.selectedClass == [Hackernews class] ||
+                      self.selectedClass == [Producthunt class] ||
+                      self.selectedClass == [Dribbble class] ||
+                      self.selectedClass == [Reddit class] ||
+                      self.selectedClass == [Designernews class])
+             {
+                 NSString *urlString = [self.selectedClass selected:self.data[indexPath.row]];
+                 [self pocket:urlString];
+             }
+         }];
+    }
+    if ([layoutViews[@"Cell2Exist"] boolValue])
+    {
+        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell2Image"]]
+                                color:layoutViews[@"Cell2Color"]
+                                 mode:[layoutViews[@"Cell2Mode"] intValue]
+                                state:MCSwipeTableViewCellState2
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             if (mode == MCSwipeTableViewCellModeExit)
+             {
+                 [self deleteCell:cell];
+             }
+             if (self.selectedClass == [Pocket class])
+             {
+                 [Pocket deletePocket:self.data[indexPath.row][@"item_id"]];
+             }
+             else if (self.selectedClass == [Twitter class])
+             {
+                 [Twitter retweetAdvanced:self.data[indexPath.row]];
+             }
+         }];
+    }
+    if ([layoutViews[@"Cell3Exist"] boolValue])
+    {
+        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell3Image"]]
+                                color:layoutViews[@"Cell3Color"]
+                                 mode:[layoutViews[@"Cell3Mode"] intValue]
+                                state:MCSwipeTableViewCellState3
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             if (mode == MCSwipeTableViewCellModeExit)
+             {
+                 [self deleteCell:cell];
+             }
+         }];
+    }
+    if ([layoutViews[@"Cell4Exist"] boolValue])
+    {
+        [cell setSwipeGestureWithView:[self viewWithImageName:layoutViews[@"Cell4Image"]]
+                                color:layoutViews[@"Cell4Color"]
+                                 mode:[layoutViews[@"Cell4Mode"] intValue]
+                                state:MCSwipeTableViewCellState4
+                      completionBlock:^(MCSwipeTableViewCell *cell, MCSwipeTableViewCellState state, MCSwipeTableViewCellMode mode)
+         {
+             if (mode == MCSwipeTableViewCellModeExit)
+             {
+                 [self deleteCell:cell];
+             }
+         }];
+    }
 
     return cell;
 }
