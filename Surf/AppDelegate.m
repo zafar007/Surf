@@ -18,22 +18,22 @@
     [[PocketAPI sharedAPI] setConsumerKey:@"29159-d90fcf8425ecacb6bcdf588e"];
 
     NSArray *services = @[
-                         @"bookmarks",
-                         @"history",
                          @"twitter",
                          @"global",
-                         @"gmail",
                          @"hackernews",
-//                         @"producthunt",
-                         @"dribbble",
                          @"designernews",
-                         @"facebook",
-                         @"reddit",
-                         @"feedly",
+                         @"dribbble",
                          @"pocket",
-                         @"instapaper",
-                         @"readability",
-                         @"rss"
+                         @"history",
+//                         @"facebook",
+//                         @"reddit",
+//                         @"gmail",
+//                         @"feedly",
+//                         @"instapaper",
+//                         @"readability",
+//                         @"producthunt",
+//                         @"rss"
+//                         @"bookmarks",
                          ];
 
     [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];

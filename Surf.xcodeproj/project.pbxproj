@@ -285,8 +285,6 @@
 				8E97B4BD1951D0A100068AEB /* Dribbble.m */,
 				8E97B4A71951CFE300068AEB /* Feedly.h */,
 				8E97B4A81951CFE300068AEB /* Feedly.m */,
-				8EA5425919566B42007733D3 /* Designernews.h */,
-				8EA5425A19566B42007733D3 /* Designernews.m */,
 				8E97B4B01951D01E00068AEB /* Instapaper.h */,
 				8E97B4B11951D01E00068AEB /* Instapaper.m */,
 				8E97B4B31951D06000068AEB /* Readability.h */,
@@ -295,6 +293,8 @@
 				8EF62FAE195BE5D00084754F /* Gmail.m */,
 				8E4642051978902D00E36923 /* RSS.h */,
 				8E4642061978902D00E36923 /* RSS.m */,
+				8EA5425919566B42007733D3 /* Designernews.h */,
+				8EA5425A19566B42007733D3 /* Designernews.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";

@@ -130,8 +130,8 @@
 
 - (void)loadButtonItems
 {
-    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
-    if (!self.buttonItems)
+//    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
+//    if (!self.buttonItems)
     {
         self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
         [[NSUserDefaults standardUserDefaults] setObject:self.buttonItems forKey:@"buttonsSome"];
@@ -800,7 +800,7 @@
     {
         self.rss = [RSS new];
     }
-    [self.rss getData:@"http://techcrunch.com/feed/"];
+//    [self.rss getData:@"http://techcrunch.com/feed/"];
 //    [self.rss getData:@"http://www.theverge.com/rss/index.xml"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactRss:) name:@"Rss" object:nil];
 }

@@ -58,7 +58,10 @@
     }
     else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
     {
-        self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
+        [UIView animateWithDuration:.3 animations:^{
+            self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
+        }];
+//        self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
     }
 }
 
