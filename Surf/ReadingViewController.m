@@ -374,13 +374,6 @@
         else if (self.selectedClass == [Reddit class] || self.selectedClass == [Facebook class])
         {
             [cell.imageView setImageWithURL:[NSURL URLWithString:layoutViews[@"image"]] placeholderImage:[UIImage imageNamed:@"bluewave"]];
-            CGFloat size = 70;
-            CGSize itemSize = CGSizeMake(size, size);
-            UIGraphicsBeginImageContextWithOptions(itemSize, NO, UIScreen.mainScreen.scale);
-            CGRect imageRect = CGRectMake(0.0, 0.0, itemSize.width, itemSize.height);
-            [cell.imageView.image drawInRect:imageRect];
-            cell.imageView.image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
         }
     }
     else

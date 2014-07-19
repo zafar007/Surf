@@ -94,17 +94,23 @@
 
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-    contentView.backgroundColor = [UIColor whiteColor];
+    NSString *textLabel = @"";
+    NSString *detailTextLabel = @"";
+    NSString *image = @"";
 
-    NSString *textLabel = post[@"name"];
-    NSString *detailTextLabel = post[@"from"][@"name"];
-//    NSString *detailTextLabel = [NSString stringWithFormat:@"%@\n%@", post[@"description"], post[@"from"][@"name"]];
-    NSString *image = post[@"picture"];
+    if (post[@"message"])
+    {
+        textLabel = post[@"message"];
+    }
+    else if (post[@"name"])
+    {
+        textLabel = post[@"name"];
+    }
+    detailTextLabel = post[@"from"][@"name"];
+    image = post[@"picture"];
 
     return @{
              @"simple":@YES,
-//             @"contentView":contentView,
              @"text":textLabel,
              @"subtext":detailTextLabel,
              @"image":image,
