@@ -14,6 +14,7 @@
 @property NSArray *fullButtons;
 @property NSMutableArray *someButtons;
 @property UIBarButtonItem *editButton;
+@property UIBarButtonItem *doneButton;
 @property UIBarButtonItem *cancelButton;
 @end
 
@@ -46,6 +47,10 @@
                                                                                 target:self
                                                                                 action:@selector(edit)];
 
+    self.doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                    target:self
+                                                                    action:@selector(edit)];
+
     self.cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemStop
                                                                                   target:self
                                                                                   action:@selector(unwind)];
@@ -69,12 +74,12 @@
     if ([self.tableView isEditing])
     {
         [self.tableView setEditing:NO animated:YES];
-        self.editButton.style = UIBarButtonSystemItemEdit;
+        self.navigationItem.leftBarButtonItem = self.editButton;
     }
     else
     {
         [self.tableView setEditing:YES animated:YES];
-        self.editButton.style = UIBarButtonSystemItemDone;
+        self.navigationItem.leftBarButtonItem = self.doneButton;
     }
 }
 
