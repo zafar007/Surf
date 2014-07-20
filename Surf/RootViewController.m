@@ -341,8 +341,6 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
-    NSLog(@"handlePan %f",[sender locationInView:self.view].y);
-
     int threshold;
     if(UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
     {
