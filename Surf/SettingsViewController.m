@@ -23,9 +23,9 @@
 {
     [super viewDidLoad];
 
-//    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
-//    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-    self.navigationController.navigationBar.translucent = NO;
+    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
+    self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
 
     self.fullButtons = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
@@ -37,6 +37,7 @@
                                                                    self.view.frame.size.height)
                                                   style:UITableViewStylePlain];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.scrollEnabled = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];

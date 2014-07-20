@@ -50,6 +50,8 @@
 		8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA4FD19450DC200148137 /* RootViewController.m */; };
 		8E6CA50319450DCD00148137 /* Tab.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50019450DCD00148137 /* Tab.m */; };
 		8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* ReadingViewController.m */; };
+		8E89D505197B52410068E967 /* Theverge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89D504197B52410068E967 /* Theverge.m */; };
+		8E89D508197B52490068E967 /* Techcrunch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89D507197B52490068E967 /* Techcrunch.m */; };
 		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
 		8E97B4A41951CA6400068AEB /* Global.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4A31951CA6400068AEB /* Global.m */; };
 		8E97B4A91951CFE300068AEB /* Feedly.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E97B4A81951CFE300068AEB /* Feedly.m */; };
@@ -171,6 +173,10 @@
 		8E6CA50019450DCD00148137 /* Tab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab.m; sourceTree = "<group>"; };
 		8E6CA50119450DCD00148137 /* ReadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadingViewController.h; sourceTree = "<group>"; };
 		8E6CA50219450DCD00148137 /* ReadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadingViewController.m; sourceTree = "<group>"; };
+		8E89D503197B52410068E967 /* Theverge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Theverge.h; sourceTree = "<group>"; };
+		8E89D504197B52410068E967 /* Theverge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Theverge.m; sourceTree = "<group>"; };
+		8E89D506197B52490068E967 /* Techcrunch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Techcrunch.h; sourceTree = "<group>"; };
+		8E89D507197B52490068E967 /* Techcrunch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Techcrunch.m; sourceTree = "<group>"; };
 		8E911ECC194E5B11005FC87F /* Twitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Twitter.h; sourceTree = "<group>"; };
 		8E911ECD194E5B11005FC87F /* Twitter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Twitter.m; sourceTree = "<group>"; };
 		8E97B4A21951CA6400068AEB /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
@@ -295,6 +301,10 @@
 				8E4642061978902D00E36923 /* RSS.m */,
 				8EA5425919566B42007733D3 /* Designernews.h */,
 				8EA5425A19566B42007733D3 /* Designernews.m */,
+				8E89D506197B52490068E967 /* Techcrunch.h */,
+				8E89D507197B52490068E967 /* Techcrunch.m */,
+				8E89D503197B52410068E967 /* Theverge.h */,
+				8E89D504197B52410068E967 /* Theverge.m */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -679,12 +689,14 @@
 				8E68BA94194687540019658A /* NSData+ImageContentType.m in Sources */,
 				8E97B4B51951D06000068AEB /* Readability.m in Sources */,
 				8E68BA9B194687540019658A /* SDWebImagePrefetcher.m in Sources */,
+				8E89D505197B52410068E967 /* Theverge.m in Sources */,
 				8E68BA98194687540019658A /* SDWebImageDownloader.m in Sources */,
 				8EC7CF0C1958E25200C61C3F /* PocketAPIOperation.m in Sources */,
 				8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */,
 				8E68BA9F194687540019658A /* UIImage+WebP.m in Sources */,
 				8E68BAA1194687540019658A /* UIImageView+WebCache.m in Sources */,
 				8EC7CF0A1958E25200C61C3F /* PocketAPI.m in Sources */,
+				8E89D508197B52490068E967 /* Techcrunch.m in Sources */,
 				8E68BA97194687540019658A /* SDWebImageDecoder.m in Sources */,
 				8EA5425B19566B42007733D3 /* Designernews.m in Sources */,
 				8E46420319788D9200E36923 /* GTMNSString+HTML.m in Sources */,

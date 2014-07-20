@@ -32,6 +32,8 @@
 #import "Producthunt.h"
 #import "Gmail.h"
 #import "RSS.h"
+#import "Techcrunch.h"
+#import "Theverge.h"
 @import Twitter;
 #import <Accounts/Accounts.h>
 #import <Social/Social.h>
@@ -74,6 +76,8 @@
 @property Producthunt *producthunt;
 @property Gmail *gmail;
 @property RSS *rss;
+@property Techcrunch *techcrunch;
+@property Theverge *theverge;
 @end
 
 @implementation ReadingViewController
@@ -130,8 +134,8 @@
 
 - (void)loadButtonItems
 {
-//    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
-//    if (!self.buttonItems)
+    self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsSome"];
+    if (!self.buttonItems)
     {
         self.buttonItems = [[NSUserDefaults standardUserDefaults] objectForKey:@"buttonsFull"];
         [[NSUserDefaults standardUserDefaults] setObject:self.buttonItems forKey:@"buttonsSome"];
@@ -157,6 +161,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadProducthunt) name:@"producthunt" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadGmail) name:@"gmail" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadRss) name:@"rss" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadTechcrunch) name:@"techcrunch" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadTheverge) name:@"theverge" object:nil];
 }
 
 - (void)createButtons
@@ -800,8 +806,7 @@
     {
         self.rss = [RSS new];
     }
-//    [self.rss getData:@"http://techcrunch.com/feed/"];
-//    [self.rss getData:@"http://www.theverge.com/rss/index.xml"];
+    [self.rss getData:@"http://techcrunch.com/feed/"];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactRss:) name:@"Rss" object:nil];
 }
 
@@ -810,6 +815,42 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Rss" object:nil];
     self.data = notification.object;
     self.selectedClass = [RSS class];
+    [self loadServiceUsing:PickTableView];
+}
+
+- (void)loadTechcrunch
+{
+    if (!self.techcrunch)
+    {
+        self.techcrunch = [Techcrunch new];
+    }
+    [self.techcrunch getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactTechcrunch:) name:@"Techcrunch" object:nil];
+}
+
+- (void)reactTechcrunch:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Techcrunch" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [Techcrunch class];
+    [self loadServiceUsing:PickTableView];
+}
+
+- (void)loadTheverge
+{
+    if (!self.theverge)
+    {
+        self.theverge = [Theverge new];
+    }
+    [self.theverge getData];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(reactTheverge:) name:@"Theverge" object:nil];
+}
+
+- (void)reactTheverge:(NSNotification *)notification
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"Theverge" object:nil];
+    self.data = notification.object;
+    self.selectedClass = [Theverge class];
     [self loadServiceUsing:PickTableView];
 }
 

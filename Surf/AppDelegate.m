@@ -19,11 +19,13 @@
 
     NSArray *services = @[
                          @"twitter",
-                         @"global",
                          @"hackernews",
                          @"designernews",
                          @"dribbble",
+                         @"techcrunch",
+                         @"theverge",
                          @"pocket",
+                         @"global",
                          @"history",
 //                         @"facebook",
 //                         @"reddit",
@@ -63,10 +65,6 @@
 
 - (void)tempSettings
 {
-    //[[NSUserDefaults standardUserDefaults] objectForKey:@"MLPAutoComplete"]
-    //[[[NSUserDefaults standardUserDefaults] objectForKey:@"reloadOldTabsOnStart"]
-    //[[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"]
-
     [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"reloadOldTabsOnStart"];
     [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"MLPAutoComplete"];
     [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
