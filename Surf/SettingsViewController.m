@@ -8,6 +8,7 @@
 
 #import "SettingsViewController.h"
 #import "SBSwitch.h"
+#import "UIImage+ImageEffects.h"
 
 @interface SettingsViewController () <UITableViewDelegate, UITableViewDataSource>
 @property UITableView *tableView;
@@ -24,7 +25,7 @@
 {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor lightGrayColor];
+    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationController.navigationBar.tintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
@@ -41,6 +42,17 @@
     self.tableView.scrollEnabled = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    self.tableView.backgroundColor = [UIColor clearColor];
+
+//    UIView *background = [[UIView alloc] initWithFrame:self.tableView.bounds];
+//    UIImageView *wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"3"]];
+//    [background addSubview:wallPaper];
+//    UIView *black = [[UIView alloc] initWithFrame:self.tableView.bounds];
+//    black.backgroundColor = [UIColor blackColor];
+//    black.alpha = .75;
+//    [background addSubview:black];
+//    self.tableView.backgroundView = background;
+
     [self.view addSubview:self.tableView];
 
     self.editButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
@@ -97,11 +109,10 @@
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"Cell"];
     }
-//    cell.backgroundColor = [UIColor lightGrayColor];
+    cell.backgroundColor = [UIColor clearColor];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.separatorInset =  UIEdgeInsetsMake(0, 0, 0, 0);
     cell.imageView.image = [UIImage imageNamed:self.fullButtons[indexPath.row]];
-//    cell.contentView.backgroundColor = [UIColor blackColor];
     SBSwitch *currentSwitch = nil;
     for (UIView *view in cell.contentView.subviews)
     {
