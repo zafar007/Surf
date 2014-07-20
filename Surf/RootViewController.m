@@ -341,6 +341,8 @@
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender
 {
+    NSLog(@"handlePan %f",[sender locationInView:self.view].y);
+
     int threshold;
     if(UIInterfaceOrientationIsPortrait([[UIApplication sharedApplication] statusBarOrientation]))
     {
@@ -687,6 +689,7 @@
 
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = YES;
+//    tab.scrollView.panGestureRecognizer.enabled = YES;
     [UIView animateWithDuration:.3 animations:^{
 //        tab.transform = CGAffineTransformMakeTranslation(0, -showOffset);
         tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx, tab.transform.ty-showOffset);
@@ -702,6 +705,7 @@
 
     Tab *tab = self.tabs[self.currentTabIndex];
     tab.userInteractionEnabled = NO;
+//    tab.scrollView.panGestureRecognizer.enabled = NO;
     [UIView animateWithDuration:.3 animations:^{
 //        tab.transform = CGAffineTransformMakeTranslation(0, 0);
         tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx, tab.transform.ty+showOffset);
