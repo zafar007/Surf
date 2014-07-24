@@ -844,6 +844,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Sapan Bhuta (HKM58E3T66)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sapan Bhuta (HKM58E3T66)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
@@ -857,10 +859,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Sapan Bhuta (RRLNMM84G4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sapan Bhuta (RRLNMM84G4)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F5ABFA9D-A5E7-4B76-B51C-7E85E26D4331";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

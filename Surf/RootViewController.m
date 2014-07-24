@@ -10,6 +10,7 @@
 #define showOffset 300
 #define newTabAlpha .25
 #define oldTabAlpha 1
+#define tabProportion 4
 
 #define kWall @"3"
 
@@ -529,7 +530,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGSizeMake(80, 148);
+    return CGSizeMake(self.view.frame.size.width/tabProportion, self.view.frame.size.height/tabProportion);
 }
 
 #pragma mark - UIPickerView DataSource/Delegate Methods
