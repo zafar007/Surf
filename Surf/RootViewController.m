@@ -624,7 +624,7 @@
 
 -(NSString *)isURL:(NSString *)userInput
 {
-    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly",@".gov",@".eu",@".cn",@".mil"];
+    NSArray *urlEndings = @[@".com",@".co",@".net",@".io",@".org",@".edu",@".to",@".ly",@".gov",@".eu",@".cn",@".mil",@".gl"];
 
     NSString *workingInput = @"";
 
