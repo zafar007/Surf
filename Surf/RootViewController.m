@@ -996,19 +996,19 @@
     self.shareButton.frame = CGRectMake(20, 20, 32, 32);
     [self.toolsView addSubview:self.shareButton];
 
-//    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
-//    [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
-//    self.starButton.frame = CGRectMake(20, 20, 32, 32);
-//    self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
-//    [self.toolsView addSubview:self.starButton];
-
     self.pocketButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.pocketButton addTarget:self action:@selector(pocket) forControlEvents:UIControlEventTouchUpInside];
     [self.pocketButton setImage:[UIImage imageNamed:@"pocket"] forState:UIControlStateNormal];
     self.pocketButton.frame = CGRectMake(20, 20, 32, 32);
     [self.toolsView addSubview:self.pocketButton];
 
+//    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];
+//    [self.starButton addTarget:self action:@selector(bookmark) forControlEvents:UIControlEventTouchUpInside];
+//    [self.starButton setImage:[UIImage imageNamed:@"star-1"] forState:UIControlStateNormal];
+//    self.starButton.frame = CGRectMake(20, 20, 32, 32);
+//    self.starButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2+100);
+//    [self.toolsView addSubview:self.starButton];
+//
 //    self.facebookButton = [UIButton buttonWithType:UIButtonTypeSystem];
 //    [self.facebookButton addTarget:self action:@selector(facebook) forControlEvents:UIControlEventTouchUpInside];
 //    [self.facebookButton setImage:[UIImage imageNamed:@"facebook"] forState:UIControlStateNormal];

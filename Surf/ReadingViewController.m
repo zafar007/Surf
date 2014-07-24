@@ -58,7 +58,6 @@
 @property NSArray *data;
 @property UISwipeGestureRecognizer *swipeLeft;
 @property UISwipeGestureRecognizer *swipeRight;
-
 @property Class selectedClass;
 @property Twitter *twitter;
 @property Global *global;
