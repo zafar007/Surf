@@ -847,25 +847,20 @@
     self.tabsCollectionView.hidden = NO;
 
     self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
-                                    self.toolsView.frame.size.height/2-50,
+                                    showOffset-66,
                                     self.omnibar.frame.size.width,
                                     self.omnibar.frame.size.height);
     self.shimmeringView.frame = self.omnibar.frame;
     self.searchLabel.frame = self.shimmeringView.bounds;
+
 
     self.pageControl.frame = CGRectMake(self.view.frame.origin.x,
                                         168,
                                         self.view.frame.size.width,
                                         20);
 
-    self.refreshButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
-    self.stopButton.center = CGPointMake(self.view.frame.size.width/2+50, self.view.frame.size.height/2-70);
-    self.readButton.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height/2-70);
-    self.addButton.center = CGPointMake(self.view.frame.size.width/2-50, self.view.frame.size.height/2-70);
-    self.backButton.center = CGPointMake(self.view.frame.size.width/2-90, self.view.frame.size.height/2-70);
-    self.forwardButton.center = CGPointMake(self.view.frame.size.width/2+90, self.view.frame.size.height/2-70);
-    self.shareButton.center = CGPointMake(self.view.frame.size.width/2-130, self.view.frame.size.height/2-70);
-    self.pocketButton.center = CGPointMake(self.view.frame.size.width/2+130, self.view.frame.size.height/2-70);
+    int buttonsYOffset = showOffset-86;
+    [self setButtonsWith:buttonsYOffset frame:frame];
 }
 
 - (void)adjustViewsToLandscape
@@ -885,7 +880,6 @@
     self.tabsCollectionView.hidden = !YES;
 
     int omnibarYOffset = 20;
-    int buttonsYOffset = 90;
 
     self.omnibar.frame = CGRectMake(self.toolsView.frame.origin.x+20,
                                     self.toolsView.frame.origin.y+omnibarYOffset,
@@ -900,6 +894,12 @@
                                        self.view.frame.size.height,
                                        20);
 
+    int buttonsYOffset = 90;
+    [self setButtonsWith:buttonsYOffset frame:frame];
+}
+
+- (void)setButtonsWith:(int)buttonsYOffset frame:(CGRect)frame
+{
     self.readButton.center = CGPointMake(frame.size.width/2,        buttonsYOffset);
     self.addButton.center = CGPointMake(frame.size.width/2-50,      buttonsYOffset);
     self.backButton.center = CGPointMake(frame.size.width/2-90,     buttonsYOffset);
