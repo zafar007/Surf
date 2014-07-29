@@ -187,6 +187,7 @@
     self.omnibar.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.omnibar.autocorrectionType = UITextAutocorrectionTypeNo;
     self.omnibar.keyboardType = UIKeyboardTypeEmailAddress;
+    self.omnibar.keyboardAppearance = UIKeyboardAppearanceDark;
     self.omnibar.returnKeyType = UIReturnKeyGo;
     self.omnibar.placeholder = @"search";
     self.omnibar.textColor = [UIColor lightGrayColor];
@@ -255,7 +256,7 @@
     self.tabsCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
     self.tabsCollectionView.dataSource = self;
     self.tabsCollectionView.delegate = self;
-    self.tabsCollectionView.backgroundColor = [UIColor blackColor];
+    self.tabsCollectionView.backgroundColor = [UIColor clearColor];
     [self.tabsCollectionView registerClass:[SBCollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
     [self.toolsView addSubview:self.tabsCollectionView];
 }
