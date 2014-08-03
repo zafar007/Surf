@@ -86,6 +86,10 @@
                       }
                   }];
              }
+             else
+             {
+                 [[NSNotificationCenter defaultCenter] postNotificationName:@"stopSpinner" object:nil];
+             }
          }
          else
          {

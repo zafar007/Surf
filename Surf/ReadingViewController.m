@@ -100,6 +100,7 @@
 
     [self.activity startAnimating];
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopSpinner) name:@"stopSpinner" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -276,7 +277,12 @@
     self.activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     self.activity.center = self.view.center;
     self.activity.hidesWhenStopped = YES;
-    [self.view addSubview:self.activity];
+//    [self.view addSubview:self.activity];
+}
+
+- (void)stopSpinner
+{
+    [self.activity stopAnimating];
 }
 
 #pragma mark - UIPickerView Delegate Methods

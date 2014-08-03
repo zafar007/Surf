@@ -18,10 +18,10 @@
     [[PocketAPI sharedAPI] setConsumerKey:@"29159-d90fcf8425ecacb6bcdf588e"];
 
     NSArray *services = @[
-                         @"twitter",
-                         @"hackernews",
-                         @"designernews",
                          @"dribbble",
+                         @"designernews",
+                         @"hackernews",
+                         @"twitter",
                          @"techcrunch",
                          @"theverge",
                          @"pocket",
