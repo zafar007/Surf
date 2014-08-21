@@ -20,71 +20,89 @@
 {
     NSLog(@"Producthunt");
     self.posts = [NSMutableArray new];
+    [self RESTCALLP1];
+}
 
-    [NSURLConnection sendAsynchronousRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kAPI]]
+- (void)RESTCALLP1
+{
+    NSString *apiKey = @"e9af2cf386088f8348d8b4b1077d437ff3b72eaa4133ae55a81f6ca9e4f02829";
+    NSString *apiSecret = @"96d1a541080f78260044b228693e98d105fa9c3edd5150742ad6c31ae8baa0be";
+    NSString *urlString = [NSString stringWithFormat:@"https://www.producthunt.com/v1/oauth/token"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
+    NSString *params = [NSString stringWithFormat:@"client_id=%@&client_secret=%@&grant_type=client_credentials",apiKey,apiSecret];
+    request.HTTPMethod = @"POST";
+    request.HTTPBody = [params dataUsingEncoding:NSUTF8StringEncoding];
+
+    [NSURLConnection sendAsynchronousRequest:request
                                        queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError)
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
      {
-         if (!connectionError)
+         if (error)
          {
-             NSDictionary *output = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&connectionError];
-             NSArray *hunts = output[@"hunts"];
-
-             for (NSDictionary *hunt in hunts)
-             {
-                 NSString *productLink = hunt[@"url"];
-                 NSString *title = hunt[@"title"];
-                 NSString *subtitle = hunt[@"tagline"];
-                 NSString *commentLink = [NSString stringWithFormat:@"http://www.producthunt.com%@", hunt[@"permalink"]];
-
-                 NSDictionary *post = @{@"productLink":productLink,
-                                        @"title":title,
-                                        @"subtitle":subtitle,
-                                        @"commentLink":commentLink};
-
-                 [self.posts addObject:post];
-             }
-
-             [[NSNotificationCenter defaultCenter] postNotificationName:@"Producthunt" object:self.posts];
+             NSLog(@"%@",error.localizedDescription);
          }
          else
          {
-             UIAlertView *alert = [[UIAlertView alloc] init];
-             alert.title = @"Error Retrieving Data";
-             alert.message = @"Please check your internet connection & for an app update (API might be broken)";
-             [alert addButtonWithTitle:@"Dismiss"];
-             [alert show];
+             NSDictionary *output = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+             NSLog(@"%@",output);
+             NSString *authorization = [NSString stringWithFormat:@"Bearer %@",output[@"access_token"]];
+             [self RESTCALLP2:authorization];
          }
      }];
 }
 
+- (void)RESTCALLP2:(NSString *)authorization
+{
+    NSString *urlString = [NSString stringWithFormat:@"https://www.producthunt.com/v1/posts"];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
+    request.HTTPMethod = @"GET";
+    [request setValue:authorization forHTTPHeaderField:@"Authorization"];
+
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+     {
+         if (error)
+         {
+             NSLog(@"error: %@",error.localizedDescription);
+         }
+         else
+         {
+             NSDictionary *output2 = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
+             NSLog(@"success: %@",output2);
+             [self handleSuccess:output2[@"posts"]];
+         }
+     }];
+}
+
+- (void)handleSuccess:(NSArray *)posts
+{
+    for (NSDictionary *hunt in posts)
+    {
+        NSString *productLink = hunt[@"redirect_url"];
+        NSString *title = hunt[@"name"];
+        NSString *subtitle = hunt[@"tagline"];
+        NSString *commentLink = hunt[@"discussion_url"];
+        NSString *imageLink = hunt[@"screenshot_url"][@"300px"];
+
+        NSDictionary *post = @{@"productLink":productLink,
+                               @"title":title,
+                               @"subtitle":subtitle,
+                               @"commentLink":commentLink,
+                               @"imageLink":imageLink};
+
+        [self.posts addObject:post];
+    }
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Producthunt" object:self.posts];
+}
+
 + (NSDictionary *)layoutFrom:(NSDictionary *)post
 {
-//    UIView *contentView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [self width:post], [self height:post])];
-//    contentView.backgroundColor = [UIColor whiteColor];
-//
-//    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(20, 0, 320-68-5, contentView.frame.size.height)];
-//    UIView *borderView = [[UIView alloc] initWithFrame:CGRectMake(contentView.frame.origin.x+20,
-//                                                                  contentView.frame.size.height-.5,
-//                                                                  contentView.frame.size.width-20,
-//                                                                  .5)];
-//
-//    textView.text = [NSString stringWithFormat:@"%@\n%@",post[@"title"],post[@"subtitle"]];
-//    textView.font = [UIFont systemFontOfSize:13];
-//    textView.editable = NO;
-//    textView.selectable = NO;
-//    textView.userInteractionEnabled = NO;
-//
-//    borderView.backgroundColor = [UIColor lightGrayColor];
-//
-//    [contentView addSubview:textView];
-//    [contentView addSubview:borderView];
-
     NSString *textLabel = post[@"title"];
     NSString *detailTextLabel = post[@"subtitle"];
 
     return @{
-//             @"contentView":contentView,
              @"simple":@YES,
              @"text":textLabel,
              @"subtext":detailTextLabel,

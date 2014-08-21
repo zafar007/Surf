@@ -21,6 +21,7 @@
                          @"dribbble",
                          @"designernews",
                          @"hackernews",
+                         @"producthunt",
                          @"twitter",
                          @"techcrunch",
                          @"theverge",
@@ -33,7 +34,6 @@
 //                         @"feedly",
 //                         @"instapaper",
 //                         @"readability",
-//                         @"producthunt",
 //                         @"rss"
 //                         @"bookmarks",
                          ];
