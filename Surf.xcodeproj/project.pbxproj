@@ -400,6 +400,22 @@
 			name = ImageBlur;
 			sourceTree = "<group>";
 		};
+		8E6B892C19BCAFA500E30F45 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				8E68BA73194687540019658A /* SDWebImage */,
+				8EA137881957428F0032A507 /* SWRevealViewController */,
+				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
+				8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */,
+				8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */,
+				8EAFE6651970A74100BEE3D6 /* FBShimmering */,
+				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
+				8E4641F819788D7300E36923 /* MWFeedParser */,
+				8E69CFDF19795C5400BE166C /* ImageBlur */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		8E6CA4C119450D8800148137 = {
 			isa = PBXGroup;
 			children = (
@@ -434,15 +450,7 @@
 		8E6CA4D319450D8800148137 /* Surf */ = {
 			isa = PBXGroup;
 			children = (
-				8E68BA73194687540019658A /* SDWebImage */,
-				8EA137881957428F0032A507 /* SWRevealViewController */,
-				8EBF315F195FA0CF00286544 /* MCSwipeTableViewCell */,
-				8EBF3175195FDE2800286544 /* MLPAutoCompleteTextField */,
-				8E5CB9AE1960F587002B3567 /* HTAutocompleteTextField */,
-				8EAFE6651970A74100BEE3D6 /* FBShimmering */,
-				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
-				8E4641F819788D7300E36923 /* MWFeedParser */,
-				8E69CFDF19795C5400BE166C /* ImageBlur */,
+				8E6B892C19BCAFA500E30F45 /* Libraries */,
 				8E6CA4DC19450D8800148137 /* AppDelegate.h */,
 				8E6CA4DD19450D8800148137 /* AppDelegate.m */,
 				8E3F809319512BA80021E38C /* Services */,

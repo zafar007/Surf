@@ -145,8 +145,10 @@
 #pragma mark - Setup Scene
 - (void)editView
 {
-    self.wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:kWall]];
-    [self.view addSubview:self.wallPaper];
+    UIColor *iconColor = [UIColor colorWithRed:88/255.0f green:86/255.0f blue:214/255.0f alpha:1.0f];
+    self.view.backgroundColor = iconColor;
+//    self.wallPaper = [[UIImageView alloc] initWithImage:[UIImage imageNamed:kWall]];
+//    [self.view addSubview:self.wallPaper];
 }
 
 - (void)createCircleButton
