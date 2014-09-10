@@ -11,7 +11,7 @@
 #define newTabAlpha .25
 #define oldTabAlpha 1
 #define tabProportion 4
-
+#define toolsColor [UIColor blackColor]
 #define kWall @"3"
 
 #import "RootViewController.h"
@@ -168,7 +168,7 @@
                                                               self.view.frame.origin.y,
                                                               self.view.frame.size.width,
                                                               self.view.frame.size.height)];
-    self.toolsView.backgroundColor = [UIColor blackColor];
+    self.toolsView.backgroundColor = toolsColor;
     self.toolsView.alpha = .85;
     self.showingTools = true;
     [self.view addSubview:self.toolsView];
