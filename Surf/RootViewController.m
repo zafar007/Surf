@@ -962,48 +962,56 @@
     [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
+    self.refreshButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.stopButton addTarget:self action:@selector(cancelPage) forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
+    self.stopButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.stopButton];
 
     self.readButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.readButton addTarget:self action:@selector(showReadingLinks) forControlEvents:UIControlEventTouchUpInside];
     [self.readButton setImage:[UIImage imageNamed:@"read"] forState:UIControlStateNormal];
     self.readButton.frame = CGRectMake(20, 20, 48, 48);
+    self.readButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.readButton];
 
     self.addButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.addButton addTarget:self action:@selector(addTab:) forControlEvents:UIControlEventTouchUpInside];
     [self.addButton setImage:[UIImage imageNamed:@"add"] forState:UIControlStateNormal];
     self.addButton.frame = CGRectMake(20, 20, 32, 32);
+    self.addButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.addButton];
 
     self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(20, 20, 32, 32);
+    self.backButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.backButton];
 
     self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
     self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
+    self.forwardButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.forwardButton];
 
     self.shareButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.shareButton addTarget:self action:@selector(share) forControlEvents:UIControlEventTouchUpInside];
     [self.shareButton setImage:[UIImage imageNamed:@"share"] forState:UIControlStateNormal];
     self.shareButton.frame = CGRectMake(20, 20, 32, 32);
+    self.shareButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.shareButton];
 
     self.pocketButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [self.pocketButton addTarget:self action:@selector(pocket) forControlEvents:UIControlEventTouchUpInside];
     [self.pocketButton setImage:[UIImage imageNamed:@"pocket"] forState:UIControlStateNormal];
     self.pocketButton.frame = CGRectMake(20, 20, 32, 32);
+    self.pocketButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.pocketButton];
 
 //    self.starButton = [UIButton buttonWithType:UIButtonTypeSystem];

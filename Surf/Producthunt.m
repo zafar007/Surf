@@ -53,7 +53,7 @@
 
 - (void)RESTCALLP2:(NSString *)authorization
 {
-    NSString *urlString = [NSString stringWithFormat:@"https://www.producthunt.com/v1/posts"];
+    NSString *urlString = [NSString stringWithFormat:@"https://api.producthunt.com/v1/posts"];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:urlString]];
     request.HTTPMethod = @"GET";
     [request setValue:authorization forHTTPHeaderField:@"Authorization"];
