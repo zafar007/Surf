@@ -10,41 +10,29 @@
 	<string>Surf</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>63B3033E-4AD7-420D-84F3-C46A6BA8D021</key>
+		<key>487D1A609F52DBFCB95B328AFDD9212D5A68A4DE</key>
 		<string>https://github.com/sapanbhuta/Surf</string>
-		<key>E3EC4B2E-B49C-478C-906A-0E04338F391C</key>
-		<string>https://github.com/mwaterfall/MWFeedParser</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Surf.xcodeproj/project.xcworkspace</string>
+	<string>Surf.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>63B3033E-4AD7-420D-84F3-C46A6BA8D021</key>
+		<key>487D1A609F52DBFCB95B328AFDD9212D5A68A4DE</key>
 		<string>../..</string>
-		<key>E3EC4B2E-B49C-478C-906A-0E04338F391C</key>
-		<string>../../../LIBRARIES/MWFeedParser</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/sapanbhuta/Surf</string>
 	<key>IDESourceControlProjectVersion</key>
-	<integer>110</integer>
+	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>63B3033E-4AD7-420D-84F3-C46A6BA8D021</string>
+	<string>487D1A609F52DBFCB95B328AFDD9212D5A68A4DE</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>E3EC4B2E-B49C-478C-906A-0E04338F391C</string>
-			<key>IDESourceControlWCCName</key>
-			<string>MWFeedParser</string>
-		</dict>
-		<dict>
-			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
-			<string>public.vcs.git</string>
-			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>63B3033E-4AD7-420D-84F3-C46A6BA8D021</string>
+			<string>487D1A609F52DBFCB95B328AFDD9212D5A68A4DE</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Surf</string>
 		</dict>

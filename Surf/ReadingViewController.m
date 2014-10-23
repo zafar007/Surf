@@ -39,6 +39,7 @@
 #import <Social/Social.h>
 #import "PocketAPI.h"
 #import "UIImage+ImageEffects.h"
+#import "V8HorizontalPickerView.h"
 
 @interface ReadingViewController () <
                                     UITableViewDataSource,
@@ -47,12 +48,14 @@
                                     UICollectionViewDelegateFlowLayout,
                                     UIPickerViewDelegate,
                                     UIPickerViewDataSource,
-                                    UIGestureRecognizerDelegate
+                                    UIGestureRecognizerDelegate,
+                                    V8HorizontalPickerViewDataSource,
+                                    V8HorizontalPickerViewDelegate
                                     >
 @property UITableView *tableView;
 @property UICollectionView *collectionView;
 @property UICollectionView *buttons;
-@property UIPickerView *pickerView;
+@property V8HorizontalPickerView *pickerView;
 @property UIActivityIndicatorView *activity;
 @property NSArray *buttonItems;
 @property NSArray *data;
@@ -101,6 +104,7 @@
     [self.activity startAnimating];
     [[NSNotificationCenter defaultCenter] postNotificationName:self.buttonItems[0] object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(stopSpinner) name:@"stopSpinner" object:nil];
+    [self.pickerView scrollToElement:0 animated:NO];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -109,7 +113,7 @@
     [[UIApplication sharedApplication]setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
 
     [self loadButtonItems];
-    [self.pickerView reloadAllComponents];
+    [self.pickerView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -224,52 +228,17 @@
     self.collectionView.hidden = YES;
 }
 
-- (void)createPicker
-{
-    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];
-    self.pickerView.delegate = self;
-    self.pickerView.dataSource = self;
-    self.pickerView.backgroundColor = [UIColor clearColor];
-    self.pickerView.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    self.navigationItem.titleView = self.pickerView;
-    self.pickerView.frame = CGRectMake(52, -52, 216, 162);  //to remove height error
-    NSArray *subviews = self.pickerView.subviews;
-    [subviews[1] setBackgroundColor:[UIColor clearColor]];
-    [subviews[2] setBackgroundColor:[UIColor clearColor]];
-
-}
-
 - (void)createGestures
 {
-    self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-    self.swipeLeft.delegate = self;
-    self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
+//    self.swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+//    self.swipeLeft.delegate = self;
+//    self.swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
 //    [self.view addGestureRecognizer:self.swipeLeft];
 
-    self.swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
-    self.swipeRight.delegate = self;
-    self.swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
+//    self.swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+//    self.swipeRight.delegate = self;
+//    self.swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
 //    [self.view addGestureRecognizer:self.swipeRight];
-}
-
-- (void)swipeLeft:(UISwipeGestureRecognizer *)sender
-{
-    int current = (int)[self.pickerView selectedRowInComponent:0];
-    if (current<self.buttonItems.count-1)
-    {
-        [self.pickerView selectRow:current+1 inComponent:0 animated:YES];
-        [self selectedRow:current+1 inComponent:0];
-    }
-}
-
-- (void)swipeRight:(UISwipeGestureRecognizer *)sender
-{
-    int current = (int)[self.pickerView selectedRowInComponent:0];
-    if (current>0)
-    {
-        [self.pickerView selectRow:current-1 inComponent:0 animated:YES];
-        [self selectedRow:current-1 inComponent:0];
-    }
 }
 
 - (void)createActivityIndicator
@@ -284,6 +253,56 @@
 {
     [self.activity stopAnimating];
 }
+
+- (void)createPicker
+{
+//    self.pickerView = [[UIPickerView alloc] initWithFrame:CGRectZero];
+//    self.pickerView.delegate = self;
+//    self.pickerView.dataSource = self;
+//    self.pickerView.backgroundColor = [UIColor clearColor];
+//    self.pickerView.transform = CGAffineTransformMakeRotation(-M_PI_2);
+//    self.navigationItem.titleView = self.pickerView;
+//    self.pickerView.frame = CGRectMake(52, -52, 216, 162);  //to remove height error
+
+    self.pickerView = [[V8HorizontalPickerView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    self.pickerView.delegate = self;
+    self.pickerView.dataSource = self;
+    self.navigationItem.titleView = self.pickerView;
+    self.pickerView.indicatorPosition = V8HorizontalPickerIndicatorBottom;
+    self.pickerView.selectionPoint = CGPointMake(60, 0);
+    UIImageView *indicator = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"indicator"]];
+    self.pickerView.selectionIndicatorView = indicator;
+}
+
+- (NSInteger)numberOfElementsInHorizontalPickerView:(V8HorizontalPickerView *)picker
+{
+    return self.buttonItems.count;
+}
+
+- (UIView *)horizontalPickerView:(V8HorizontalPickerView *)picker viewForElementAtIndex:(NSInteger)index
+{
+    UIImage *image = [UIImage imageNamed:self.buttonItems[index]];
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
+    [button setImage:image forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 32, 32);
+
+    return button;
+}
+
+- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index
+{
+    [self selectedRow:index inComponent:0];
+}
+
+- (NSInteger)horizontalPickerView:(V8HorizontalPickerView *)picker widthForElementAtIndex:(NSInteger)index
+{
+    return 32;
+}
+
+//- (void)horizontalPickerView:(V8HorizontalPickerView *)picker didSelectElementAtIndex:(NSInteger)index;
+//- (NSString *)horizontalPickerView:(V8HorizontalPickerView *)picker titleForElementAtIndex:(NSInteger)index;
+//- (UIView *)  horizontalPickerView:(V8HorizontalPickerView *)picker  viewForElementAtIndex:(NSInteger)index;
+//- (NSInteger) horizontalPickerView:(V8HorizontalPickerView *)picker widthForElementAtIndex:(NSInteger)index;
 
 #pragma mark - UIPickerView Delegate Methods
 
@@ -302,6 +321,7 @@
     UIImage *image = [UIImage imageNamed:self.buttonItems[row]];
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     [button setImage:image forState:UIControlStateNormal];
+//    button.userInteractionEnabled = NO;
     button.frame = CGRectMake(0, 0, 32, 32);
     button.center = view.center;
     button.transform = CGAffineTransformMakeRotation(M_PI_2);

@@ -50,6 +50,8 @@
 		8E6CA4FE19450DC200148137 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA4FD19450DC200148137 /* RootViewController.m */; };
 		8E6CA50319450DCD00148137 /* Tab.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50019450DCD00148137 /* Tab.m */; };
 		8E6CA50419450DCD00148137 /* ReadingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E6CA50219450DCD00148137 /* ReadingViewController.m */; };
+		8E7E975C19F8918D005EB6A6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E7E975B19F8918D005EB6A6 /* QuartzCore.framework */; };
+		8E7E976019F89342005EB6A6 /* V8HorizontalPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E7E975E19F89342005EB6A6 /* V8HorizontalPickerView.m */; };
 		8E89D505197B52410068E967 /* Theverge.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89D504197B52410068E967 /* Theverge.m */; };
 		8E89D508197B52490068E967 /* Techcrunch.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E89D507197B52490068E967 /* Techcrunch.m */; };
 		8E911ECE194E5B11005FC87F /* Twitter.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E911ECD194E5B11005FC87F /* Twitter.m */; };
@@ -173,6 +175,10 @@
 		8E6CA50019450DCD00148137 /* Tab.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Tab.m; sourceTree = "<group>"; };
 		8E6CA50119450DCD00148137 /* ReadingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReadingViewController.h; sourceTree = "<group>"; };
 		8E6CA50219450DCD00148137 /* ReadingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReadingViewController.m; sourceTree = "<group>"; };
+		8E7E975B19F8918D005EB6A6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		8E7E975D19F89342005EB6A6 /* V8HorizontalPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V8HorizontalPickerView.h; sourceTree = "<group>"; };
+		8E7E975E19F89342005EB6A6 /* V8HorizontalPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = V8HorizontalPickerView.m; sourceTree = "<group>"; };
+		8E7E975F19F89342005EB6A6 /* V8HorizontalPickerViewProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = V8HorizontalPickerViewProtocol.h; sourceTree = "<group>"; };
 		8E89D503197B52410068E967 /* Theverge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Theverge.h; sourceTree = "<group>"; };
 		8E89D504197B52410068E967 /* Theverge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Theverge.m; sourceTree = "<group>"; };
 		8E89D506197B52490068E967 /* Techcrunch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Techcrunch.h; sourceTree = "<group>"; };
@@ -246,6 +252,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E7E975C19F8918D005EB6A6 /* QuartzCore.framework in Frameworks */,
 				8EC7CF0F1958E2E100C61C3F /* Security.framework in Frameworks */,
 				8E6CA4D019450D8800148137 /* CoreGraphics.framework in Frameworks */,
 				8E6CA4D219450D8800148137 /* UIKit.framework in Frameworks */,
@@ -412,6 +419,7 @@
 				8EC7CEFF1958E25200C61C3F /* PocketSDK */,
 				8E4641F819788D7300E36923 /* MWFeedParser */,
 				8E69CFDF19795C5400BE166C /* ImageBlur */,
+				8E7E976119F89351005EB6A6 /* V8HorizontalPickerView */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -438,6 +446,7 @@
 		8E6CA4CC19450D8800148137 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8E7E975B19F8918D005EB6A6 /* QuartzCore.framework */,
 				8EC7CF0E1958E2E100C61C3F /* Security.framework */,
 				8E6CA4CD19450D8800148137 /* Foundation.framework */,
 				8E6CA4CF19450D8800148137 /* CoreGraphics.framework */,
@@ -490,6 +499,16 @@
 				8E6CA4EF19450D8800148137 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8E7E976119F89351005EB6A6 /* V8HorizontalPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				8E7E975F19F89342005EB6A6 /* V8HorizontalPickerViewProtocol.h */,
+				8E7E975D19F89342005EB6A6 /* V8HorizontalPickerView.h */,
+				8E7E975E19F89342005EB6A6 /* V8HorizontalPickerView.m */,
+			);
+			name = V8HorizontalPickerView;
 			sourceTree = "<group>";
 		};
 		8E97B4A51951CB1600068AEB /* ReadVC */ = {
@@ -691,6 +710,7 @@
 				8E68BA99194687540019658A /* SDWebImageDownloaderOperation.m in Sources */,
 				8E46420419788D9200E36923 /* NSString+XMLEntities.m in Sources */,
 				8E6CA4DA19450D8800148137 /* main.m in Sources */,
+				8E7E976019F89342005EB6A6 /* V8HorizontalPickerView.m in Sources */,
 				8E97B4C71951D0CF00068AEB /* Hackernews.m in Sources */,
 				8E97B4B81951D08400068AEB /* Facebook.m in Sources */,
 				8E68BA9C194687540019658A /* UIButton+WebCache.m in Sources */,
@@ -857,6 +877,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -872,6 +893,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "F5ABFA9D-A5E7-4B76-B51C-7E85E26D4331";
 				WRAPPER_EXTENSION = app;

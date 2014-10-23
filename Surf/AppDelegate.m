@@ -21,7 +21,7 @@
                          @"dribbble",
                          @"designernews",
                          @"hackernews",
-                         @"producthunt",
+//                         @"producthunt",
                          @"twitter",
                          @"techcrunch",
                          @"theverge",
