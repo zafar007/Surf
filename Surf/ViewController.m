@@ -88,8 +88,8 @@
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
-    [self adjustViewsToPortrait];
     self.buttonCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1/10 target:self selector:@selector(buttonCheck) userInfo:nil repeats:YES];
+    [self adjustViewsToPortrait];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -275,6 +275,7 @@
     tab.transform = CGAffineTransformMakeTranslation(tab.transform.tx,tab.transform.ty+showOffset);
     tab.userInteractionEnabled = NO;
     tab.hidden = NO;
+    [self updateScreenshotOf:tab];
 }
 
 - (void)removeTab:(UICollectionViewCell *)cell {
@@ -282,18 +283,16 @@
 
     NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
     Tab *tab = self.tabs[path.item];
-
-    [tab removeFromSuperview];
+//    [tab removeFromSuperview];
+//    [self.tabsCollectionView reloadData];
+//    [self.tabs removeObject:tab];
+//    [cell removeFromSuperview];
     [self.tabs removeObject:tab];
-    [cell removeFromSuperview];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
-    self.currentTabIndex = 0;
+    tab.hidden = YES;
 
-    if (self.tabs.count == 0) {
-        [self addTab:nil];
-    } else {
-        [self switchToTab:0];
-    }
+    self.currentTabIndex = 0;
+    self.tabs.count == 0 ? [self addTab:nil] : [self switchToTab:0];
 }
 
 #pragma mark - UICollectionView DataSource/Delegate Methods
@@ -417,19 +416,6 @@
     self.showingTools = true;
 
     [self updateScreenshotOf:tab];
-//    [self updateScreenshots];
-}
-
-- (void)updateScreenshots {
-    for (Tab *tab in self.tabs) {
-        UIView *view = [tab snapshotViewAfterScreenUpdates:YES];
-        tab.screenshot = view;
-    }
-    for (UICollectionViewCell *cell in self.tabsCollectionView.visibleCells) {
-        NSIndexPath *indexPath = [self.tabsCollectionView indexPathForCell:cell];
-        int index = (int)indexPath.item;
-        cell.backgroundView = [self.tabs[index] screenshot];
-    }
 }
 
 - (void)updateScreenshotOf:(Tab *)tab {
@@ -467,13 +453,6 @@
     }
 }
 
-- (void)animateProgressBarHide {
-    self.progressBar.progress = 1;
-    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
-    self.progressBar.hidden = YES;
-    self.doneLoading = true;
-}
-
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     [self endLoadingUI];
 }
@@ -484,7 +463,10 @@
 
 - (void)endLoadingUI {
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    [self animateProgressBarHide];
+    self.progressBar.progress = 1;
+    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
+    self.progressBar.hidden = YES;
+    self.doneLoading = true;
 }
 
 #pragma mark - Landscape Layout Adjust

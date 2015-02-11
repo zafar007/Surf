@@ -15,9 +15,7 @@
     if (self) {
         self.layer.cornerRadius = 4.0;
         self.layer.masksToBounds = YES;
-//        self.scalesPageToFit = YES;
         self.backgroundColor = [UIColor clearColor];
-        self.scrollView.bounces = NO;
     }
     return self;
 }

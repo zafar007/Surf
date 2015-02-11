@@ -68,7 +68,6 @@
 		8E5CB9AF1960F5A0002B3567 /* HTAutocompleteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTAutocompleteManager.h; sourceTree = "<group>"; };
 		8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTAutocompleteManager.m; sourceTree = "<group>"; };
 		8E6572031A8AEE2B00151114 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
-		8E6572051A8AFCF800151114 /* ButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonView.h; sourceTree = "<group>"; };
 		8E68BA74194687540019658A /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		8E68BA75194687540019658A /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		8E68BA76194687540019658A /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -286,7 +285,6 @@
 				8E6CA50019450DCD00148137 /* Tab.m */,
 				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
 				8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */,
-				8E6572051A8AFCF800151114 /* ButtonView.h */,
 				8E6CA4FC19450DC200148137 /* ViewController.h */,
 				8E6CA4FD19450DC200148137 /* ViewController.m */,
 				8E6CA4DF19450D8800148137 /* Images.xcassets */,
