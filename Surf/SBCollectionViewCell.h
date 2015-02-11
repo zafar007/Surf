@@ -10,4 +10,5 @@
 #import "Tab.h"
 
 @interface SBCollectionViewCell : UICollectionViewCell
+@property (weak) ViewController *vc;
 @end

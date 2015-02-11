@@ -16,11 +16,9 @@
 
 @implementation SBCollectionViewCell
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-    if (self)
-    {
+    if (self) {
         self.layer.cornerRadius = 3.0;//4
         self.layer.borderColor = [UIColor blackColor].CGColor;
         self.layer.borderWidth = 0.5/3;//.5
@@ -36,56 +34,29 @@
     return self;
 }
 
-- (void)handlePanFrom:(UIPanGestureRecognizer *)sender
-{
+- (void)handlePanFrom:(UIPanGestureRecognizer *)sender {
     CGPoint translation = [sender translationInView:self];
     CGPoint velocity = [sender velocityInView:self];
 
-    if (translation.y != 0)
-    {
+    if (translation.y != 0) {
         self.transform = CGAffineTransformMakeTranslation(0, translation.y);
     }
 
-    if (sender.state == UIGestureRecognizerStateEnded && (translation.y < -100 || velocity.y < -1000))
-    {
+    if (sender.state == UIGestureRecognizerStateEnded && (translation.y < -100 || velocity.y < -1000)) {
         [UIView animateWithDuration:.3 animations:^{
             self.transform = CGAffineTransformMakeTranslation(0, -300);     //slowdown
-        }
-        completion:^(BOOL finished)
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"RemoveTab" object:self];
+        } completion:^(BOOL finished) {
+            [self.vc removeTab:self];
         }];
-    }
-    else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled)
-    {
-//        [UIView animateWithDuration:.3 animations:^{
-//            self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
-//        }];
-
+    } else if (sender.state == UIGestureRecognizerStateEnded || sender.state == UIGestureRecognizerStateCancelled) {
         [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{
             self.transform = CGAffineTransformMakeTranslation(0, self.originalCenter.y-self.center.y);
         } completion:^(BOOL finished) { }];
-
     }
 }
 
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer
-{
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]])
-    {
-        if ([gestureRecognizer translationInView:self].y != 0)
-        {
-            return YES;
-        }
-        else
-        {
-            return NO;
-        }
-    }
-    else
-    {
-        return NO;
-    }
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gestureRecognizer {
+    return [gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && ([gestureRecognizer translationInView:self].y != 0);
 }
 
 @end

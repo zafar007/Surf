@@ -11,63 +11,20 @@
 
 @implementation AppDelegate
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    [self tempSettings];
-
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [[PocketAPI sharedAPI] setConsumerKey:@"29159-d90fcf8425ecacb6bcdf588e"];
-
-    NSArray *services = @[
-                         @"dribbble",
-                         @"designernews",
-                         @"hackernews",
-//                         @"producthunt",
-                         @"twitter",
-                         @"techcrunch",
-                         @"theverge",
-                         @"pocket",
-                         @"global",
-                         @"history",
-//                         @"facebook",
-//                         @"reddit",
-//                         @"gmail",
-//                         @"feedly",
-//                         @"instapaper",
-//                         @"readability",
-//                         @"rss"
-//                         @"bookmarks",
-                         ];
-
-    [[NSUserDefaults standardUserDefaults] setObject:services forKey:@"buttonsFull"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"reloadOldTabsOnStart"];
+    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
-    RootViewController *rootViewController = [[RootViewController alloc] init];
-    [self.window setRootViewController:rootViewController];
-
+    self.window.rootViewController = [ViewController new];
     self.window.backgroundColor = [UIColor blackColor];
     [self.window makeKeyAndVisible];
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-{
-    if ([[PocketAPI sharedAPI] handleOpenURL:url])
-    {
-        return YES;
-    }
-    else
-    {
-        return NO;
-    }
-}
-
-- (void)tempSettings
-{
-    [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"reloadOldTabsOnStart"];
-    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"MLPAutoComplete"];
-    [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"pocketLoggedIn"];
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+    return [[PocketAPI sharedAPI] handleOpenURL:url];
 }
 
 @end
