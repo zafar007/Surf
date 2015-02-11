@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8E5CB9AD1960F581002B3567 /* HTAutocompleteTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */; };
 		8E5CB9B11960F5A0002B3567 /* HTAutocompleteManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */; };
+		8E6572041A8AEE2B00151114 /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E6572031A8AEE2B00151114 /* Launch Screen.xib */; };
 		8E68BA93194687540019658A /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA75194687540019658A /* MKAnnotationView+WebCache.m */; };
 		8E68BA94194687540019658A /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA77194687540019658A /* NSData+ImageContentType.m */; };
 		8E68BA95194687540019658A /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E68BA79194687540019658A /* SDImageCache.m */; };
@@ -66,6 +67,8 @@
 		8E5CB9AC1960F581002B3567 /* HTAutocompleteTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTAutocompleteTextField.m; sourceTree = "<group>"; };
 		8E5CB9AF1960F5A0002B3567 /* HTAutocompleteManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTAutocompleteManager.h; sourceTree = "<group>"; };
 		8E5CB9B01960F5A0002B3567 /* HTAutocompleteManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTAutocompleteManager.m; sourceTree = "<group>"; };
+		8E6572031A8AEE2B00151114 /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = "Launch Screen.xib"; sourceTree = "<group>"; };
+		8E6572051A8AFCF800151114 /* ButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonView.h; sourceTree = "<group>"; };
 		8E68BA74194687540019658A /* MKAnnotationView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKAnnotationView+WebCache.h"; sourceTree = "<group>"; };
 		8E68BA75194687540019658A /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		8E68BA76194687540019658A /* NSData+ImageContentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+ImageContentType.h"; sourceTree = "<group>"; };
@@ -283,9 +286,11 @@
 				8E6CA50019450DCD00148137 /* Tab.m */,
 				8EB29BFB19494FFD00147A0B /* SBCollectionViewCell.h */,
 				8EB29BFC19494FFD00147A0B /* SBCollectionViewCell.m */,
+				8E6572051A8AFCF800151114 /* ButtonView.h */,
 				8E6CA4FC19450DC200148137 /* ViewController.h */,
 				8E6CA4FD19450DC200148137 /* ViewController.m */,
 				8E6CA4DF19450D8800148137 /* Images.xcassets */,
+				8E6572031A8AEE2B00151114 /* Launch Screen.xib */,
 				8E6CA4D419450D8800148137 /* Supporting Files */,
 			);
 			path = Surf;
@@ -428,6 +433,7 @@
 			files = (
 				8E6CA4D819450D8800148137 /* InfoPlist.strings in Resources */,
 				8E6CA4E019450D8800148137 /* Images.xcassets in Resources */,
+				8E6572041A8AEE2B00151114 /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,13 +597,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Sapan Bhuta (HKM58E3T66)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Sapan Bhuta (HKM58E3T66)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -607,13 +612,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Sapan Bhuta (RRLNMM84G4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Sapan Bhuta (RRLNMM84G4)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Surf/Surf-Prefix.pch";
 				INFOPLIST_FILE = "Surf/Surf-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "F5ABFA9D-A5E7-4B76-B51C-7E85E26D4331";
 				WRAPPER_EXTENSION = app;

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "ViewController.h"
+#import <WebKit/WebKit.h>
 
-@interface Tab : UIWebView
+@interface Tab : WKWebView
 @property NSString *urlString;
 @property UIView *screenshot;
 @end
