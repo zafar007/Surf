@@ -16,6 +16,7 @@
         self.layer.cornerRadius = 4.0;
         self.layer.masksToBounds = YES;
         self.backgroundColor = [UIColor clearColor];
+        self.scrollView.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

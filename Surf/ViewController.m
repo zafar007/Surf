@@ -22,7 +22,7 @@
 #import <QuartzCore/QuartzCore.h>
 @import Twitter;
 
-@interface ViewController () <UITextFieldDelegate, UIWebViewDelegate, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
+@interface ViewController () <UITextFieldDelegate, WKNavigationDelegate, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
 
 //views
 @property UIImageView *wallPaper;
@@ -252,6 +252,7 @@
 
 - (void)addTab:(NSString *)urlString {
     Tab *newTab = [[Tab alloc] init];
+    newTab.navigationDelegate = self;
     newTab.scrollView.delegate = self;
     [self.tabs addObject:newTab];
     [self.tabsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.tabs.count-1 inSection:0]]];
@@ -435,40 +436,6 @@
     }
 }
 
-#pragma mark - UIWebView Delegate Methods
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    self.progressBar.hidden = NO;
-    self.progressBar.progress = 0;
-    self.doneLoading = false;
-    self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
-}
-
-- (void)timerCallback {
-    if (self.doneLoading) {
-        self.progressBar.progress = 1;
-    } else if (self.progressBar.progress < 0.75) {
-        self.progressBar.progress += 0.01;
-    }
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [self endLoadingUI];
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    [self endLoadingUI];
-}
-
-- (void)endLoadingUI {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    self.progressBar.progress = 1;
-    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
-    self.progressBar.hidden = YES;
-    self.doneLoading = true;
-}
-
 #pragma mark - Landscape Layout Adjust
 
 - (void)adjustViewsToPortrait {
@@ -650,8 +617,7 @@
 
         if (url) {
             SLComposeViewController *tweetSheet = [SLComposeViewController composeViewControllerForServiceType:SLServiceTypeTwitter];
-            [tweetSheet setInitialText:@""];
-            [tweetSheet addURL:url];
+            [tweetSheet setInitialText:[NSString stringWithFormat:@"Check this out: \n\n%@", url]];
             [self presentViewController:tweetSheet animated:YES completion:nil];
         }
     } else {
@@ -661,10 +627,11 @@
 
 - (void)share {
     Tab *tab = self.tabs[self.currentTabIndex];
+    NSString *text = @"Check this out: ";
     NSURL *url = tab.URL;
 
     if (url) {
-        UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
+        UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:@[text, url] applicationActivities:nil];
         controller.excludedActivityTypes = @[UIActivityTypeAddToReadingList, UIActivityTypeAssignToContact, UIActivityTypeSaveToCameraRoll, UIActivityTypePostToFlickr, UIActivityTypePostToVimeo];
         [self presentViewController:controller animated:YES completion:nil];
     }
@@ -698,6 +665,45 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+
+
+#pragma mark - WKWebView Delegate Methods
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    [self startLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [self endLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    [self endLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    [self endLoadingUI];
+}
+
+- (void)timerCallback {
+    self.progressBar.progress = [self.tabs[self.currentTabIndex] estimatedProgress];
+}
+
+- (void)startLoadingUI {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    self.progressBar.hidden = NO;
+    self.progressBar.progress = 0;
+    self.doneLoading = false;
+    self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+}
+
+- (void)endLoadingUI {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    self.progressBar.progress = 1;
+    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
+    self.progressBar.hidden = YES;
+    self.doneLoading = true;
 }
 
 @end
