@@ -21,4 +21,22 @@
     return self;
 }
 
+#pragma mark - WKWebView Delegate Methods
+
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
+    [(RootViewController *)self.vc startLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    [(RootViewController *)self.vc endLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    [(RootViewController *)self.vc endLoadingUI];
+}
+
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    [(RootViewController *)self.vc endLoadingUI];
+}
+
 @end

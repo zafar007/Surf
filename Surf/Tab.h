@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ViewController.h"
+#import "RootViewController.h"
 #import <WebKit/WebKit.h>
 
-@interface Tab : WKWebView
+@interface Tab : WKWebView <WKNavigationDelegate>
 @property NSString *urlString;
 @property UIView *screenshot;
+@property (weak) UIViewController *vc;
 @end

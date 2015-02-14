@@ -46,7 +46,7 @@
         [UIView animateWithDuration:.3 animations:^{
             self.transform = CGAffineTransformMakeTranslation(0, -300);
         } completion:^(BOOL finished) {
-            [self.vc removeTab:self];
+            [(RootViewController *)self.vc removeTab:self];
         }];
     } else {
         [UIView animateWithDuration:0.7 delay:0 usingSpringWithDamping:0.5 initialSpringVelocity:0 options:0 animations:^{

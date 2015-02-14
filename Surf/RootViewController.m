@@ -6,78 +6,24 @@
 //  Copyright (c) 2014 SapanBhuta. All rights reserved.
 //
 
-#define tabsOffset 30
-#define showOffset 320
-#define newTabAlpha .25
-#define oldTabAlpha 1
-#define tabProportion 4
+#import "RootViewController.h"
 
-#import "ViewController.h"
-#import "Tab.h"
-#import "SBCollectionViewCell.h"
-#import "PocketAPI.h"
-#import "HTAutocompleteTextField.h"
-#import "HTAutocompleteManager.h"
-#import "FBShimmering/FBShimmeringView.h"
-#import <QuartzCore/QuartzCore.h>
-@import Twitter;
-
-@interface ViewController () <UITextFieldDelegate, WKNavigationDelegate, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
-
-//views
-@property UIImageView *wallPaper;
-@property UIView *toolsView;
-@property UICollectionViewFlowLayout *flowLayout;
-@property UICollectionView *tabsCollectionView;
-@property UIPickerView *tabsPickerView;
-@property FBShimmeringView *shimmeringView;
-@property UILabel *searchLabel;
-@property HTAutocompleteTextField *omnibar;
-@property UIProgressView *progressBar;
-
-//gestures
-@property UIPanGestureRecognizer *pan;
-@property UITapGestureRecognizer *tap;
-@property UISwipeGestureRecognizer *swipeUp;
-@property UISwipeGestureRecognizer *swipeDown;
-@property UISwipeGestureRecognizer *swipeFromRight;
-@property UISwipeGestureRecognizer *swipeFromLeft;
-@property UILongPressGestureRecognizer *longPressOnPocket;
-@property UILongPressGestureRecognizer *longPressOnStar;
-
-//state checks
-@property BOOL showingTools;
-@property BOOL doneLoading;
-
-//tabs
-@property NSMutableArray *tabs;
-@property int currentTabIndex;
-@property Tab *thisWebView;
-@property Tab *rightWebView;
-@property Tab *leftWebView;
-
-//buttons
-@property UIButton *circleButton;
-@property UIButton *stopButton;
-@property UIButton *refreshButton;
-@property UIButton *addButton;
-@property UIButton *backButton;
-@property UIButton *forwardButton;
-@property UIButton *shareButton;
-@property UIButton *twitterButton;
-@property UIButton *pocketButton;
-
-//timers
-@property NSTimer *loadTimer;
-@property NSTimer *delayTimer;
-@property NSTimer *buttonCheckTimer;
-@end
-
-@implementation ViewController
+@implementation RootViewController
 
 #pragma mark - View Life Cycle
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+    [self setup];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [self saveTabs];
+}
+
+#pragma mark - Setup Scene
+- (void)setup {
     [super viewDidLoad];
     [self editView];
     [self createToolsView];
@@ -88,16 +34,10 @@
     [self createProgressBar];
     [self createGestures];
     [self loadTabs];
-    self.buttonCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1/10 target:self selector:@selector(buttonCheck) userInfo:nil repeats:YES];
     [self adjustViewsToPortrait];
+    self.buttonCheckTimer = [NSTimer scheduledTimerWithTimeInterval:1/10 target:self selector:@selector(buttonCheck) userInfo:nil repeats:YES];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self saveTabs];
-}
-
-#pragma mark - Setup Scene
 - (void)editView {
     UIColor *iconColor = [UIColor colorWithRed:88/255.0f green:86/255.0f blue:214/255.0f alpha:1.0f];
     self.view.backgroundColor = iconColor;
@@ -252,7 +192,7 @@
 
 - (void)addTab:(NSString *)urlString {
     Tab *newTab = [[Tab alloc] init];
-    newTab.navigationDelegate = self;
+    newTab.navigationDelegate = newTab;
     newTab.scrollView.delegate = self;
     [self.tabs addObject:newTab];
     [self.tabsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.tabs.count-1 inSection:0]]];
@@ -284,10 +224,6 @@
 
     NSIndexPath *path = [self.tabsCollectionView indexPathForCell:cell];
     Tab *tab = self.tabs[path.item];
-//    [tab removeFromSuperview];
-//    [self.tabsCollectionView reloadData];
-//    [self.tabs removeObject:tab];
-//    [cell removeFromSuperview];
     [self.tabs removeObject:tab];
     [self.tabsCollectionView deleteItemsAtIndexPaths:@[path]];
     tab.hidden = YES;
@@ -436,6 +372,26 @@
     }
 }
 
+- (void)startLoadingUI {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    self.progressBar.hidden = NO;
+    self.progressBar.progress = 0;
+    self.doneLoading = false;
+    self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
+}
+
+- (void)timerCallback {
+    self.progressBar.progress = [self.tabs[self.currentTabIndex] estimatedProgress];
+}
+
+- (void)endLoadingUI {
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    self.progressBar.progress = 1;
+    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
+    self.progressBar.hidden = YES;
+    self.doneLoading = true;
+}
+
 #pragma mark - Landscape Layout Adjust
 
 - (void)adjustViewsToPortrait {
@@ -463,14 +419,14 @@
 
 - (void)createButtons {
     self.refreshButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.refreshButton addTarget:self action:@selector(refreshPage) forControlEvents:UIControlEventTouchUpInside];
+    [self.refreshButton addTarget:self.tabs[self.currentTabIndex] action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
     [self.refreshButton setImage:[UIImage imageNamed:@"refresh"] forState:UIControlStateNormal];
     self.refreshButton.frame = CGRectMake(77, 17, 38, 38);
     self.refreshButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.refreshButton];
 
     self.stopButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.stopButton addTarget:self action:@selector(cancelPage) forControlEvents:UIControlEventTouchUpInside];
+    [self.stopButton addTarget:self.tabs[self.currentTabIndex] action:@selector(stopLoading) forControlEvents:UIControlEventTouchUpInside];
     [self.stopButton setImage:[UIImage imageNamed:@"stop"] forState:UIControlStateNormal];
     self.stopButton.frame = CGRectMake(80, 20, 32, 32);
     self.stopButton.tintColor = [UIColor whiteColor];
@@ -484,14 +440,14 @@
     [self.toolsView addSubview:self.addButton];
 
     self.backButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.backButton addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
+    [self.backButton addTarget:self.tabs[self.currentTabIndex] action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [self.backButton setImage:[UIImage imageNamed:@"goBack"] forState:UIControlStateNormal];
     self.backButton.frame = CGRectMake(20, 20, 32, 32);
     self.backButton.tintColor = [UIColor whiteColor];
     [self.toolsView addSubview:self.backButton];
 
     self.forwardButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.forwardButton addTarget:self action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
+    [self.forwardButton addTarget:self.tabs[self.currentTabIndex] action:@selector(goForward) forControlEvents:UIControlEventTouchUpInside];
     [self.forwardButton setImage:[UIImage imageNamed:@"goForward"] forState:UIControlStateNormal];
     self.forwardButton.frame = CGRectMake(20, 20, 32, 32);
     self.forwardButton.tintColor = [UIColor whiteColor];
@@ -550,19 +506,6 @@
     self.refreshButton.hidden = [self.tabs[self.currentTabIndex] isLoading];
     self.stopButton.hidden = !([self.tabs[self.currentTabIndex] isLoading]);
     self.pocketButton.hidden = !((BOOL)[[NSUserDefaults standardUserDefaults] objectForKey:@"pocketLoggedIn"]);
-}
-
-- (void)goBack {
-    [(Tab*)self.tabs[self.currentTabIndex] goBack];
-}
-- (void)goForward {
-    [(Tab*)self.tabs[self.currentTabIndex] goForward];
-}
-- (void)refreshPage {
-    [(Tab*)self.tabs[self.currentTabIndex] reload];
-}
-- (void)cancelPage {
-    [(Tab*)self.tabs[self.currentTabIndex] stopLoading];
 }
 
 #pragma mark - Tab Saving
@@ -665,45 +608,6 @@
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
-}
-
-
-#pragma mark - WKWebView Delegate Methods
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    [self startLoadingUI];
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    [self endLoadingUI];
-}
-
-- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    [self endLoadingUI];
-}
-
-- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
-    [self endLoadingUI];
-}
-
-- (void)timerCallback {
-    self.progressBar.progress = [self.tabs[self.currentTabIndex] estimatedProgress];
-}
-
-- (void)startLoadingUI {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    self.progressBar.hidden = NO;
-    self.progressBar.progress = 0;
-    self.doneLoading = false;
-    self.loadTimer = [NSTimer scheduledTimerWithTimeInterval:0.025 target:self selector:@selector(timerCallback) userInfo:nil repeats:YES];
-}
-
-- (void)endLoadingUI {
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-    self.progressBar.progress = 1;
-    [UIView transitionWithView:self.progressBar duration:0.4 options:UIViewAnimationOptionTransitionCrossDissolve animations:NULL completion:NULL];
-    self.progressBar.hidden = YES;
-    self.doneLoading = true;
 }
 
 @end

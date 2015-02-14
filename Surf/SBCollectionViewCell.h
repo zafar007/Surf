@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "Tab.h"
+#import "RootViewController.h"
 
 @interface SBCollectionViewCell : UICollectionViewCell
-@property (weak) ViewController *vc;
+@property (weak) UIViewController *vc;
 @end
