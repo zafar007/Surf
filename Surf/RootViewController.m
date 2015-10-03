@@ -524,8 +524,7 @@
 }
 
 - (void)pocket2:(NSURL *)url {
-    [[PocketAPI sharedAPI] saveURL:url
-                           handler:^(PocketAPI *API, NSURL *URL, NSError *error) {
+    [[PocketAPI sharedAPI] saveURL:url handler:^(PocketAPI *API, NSURL *URL, NSError *error) {
         if(!error) {
             [self showStatusBarMessage:@"Pocketed" hideAfter:1];
         } else {

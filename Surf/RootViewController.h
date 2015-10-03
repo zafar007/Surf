@@ -23,6 +23,7 @@
 @import Twitter;
 
 @interface RootViewController : UIViewController <UITextFieldDelegate, UIGestureRecognizerDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UIScrollViewDelegate>
+
 //views
 @property UIImageView *wallPaper;
 @property UIView *toolsView;
